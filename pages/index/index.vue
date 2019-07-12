@@ -23,7 +23,7 @@
 							
 				</view>
 				<view class="index-content-left-info flex row row_between">
-					<view class="flex col index-content-left-info-left">
+					<view class="flex col index-content-left-info-left"> 
 							<view class="iconfont icon-jiaoyijilu icon"></view>
 							<view class="index-content-left-info-word">
 								供求信息
@@ -396,26 +396,27 @@ page{
 		padding-bottom: 30upx;
 		.index-notice-content-img{
 			.img{
-				width: 230upx;
-				height: 230upx;
+				width: 200upx;
+				height: 200upx;
 			}
 		}
 		.index-notice-content-right{
+			justify-content: space-between;
 			margin-left: 20upx;
 			flex: 1;
 			font-size: 28upx;
 			.index-notice-content-right-title{
-				font-size: 36upx;
+				font-size: 32upx;
 				color: #000000;
 				font-weight: 600;
 			}
 			.index-notice-content-right-text{
 				font-size: 28upx;
 				color: #999999;
-				margin-top: 20upx;
+				margin-top: 10upx;
 			}
 			.index-notice-content-right-date{
-				margin-top: 20upx;
+				margin-top: 10upx;
 				font-size: 24upx;
 				color: #999999;
 			}

@@ -1,33 +1,36 @@
 <template>
-	<view class="box">
-		<!-- 选择 -->
-		<view class="select">
+		<view class="box">
 			
-			 <picker @change="bindPickerChange" :value="index" :range="array" class="picker">
-			   
-			
-			<view class="select-box flex row row_between">
-				<view class="select-title">
-					供求选择
-				</view>
-				<view class="select-end flex row">
-					 <view class="uni-input" v-if="index == ''">请选择</view>
-					 <view class="uni-input" v-else="">{{array[index]}}</view>
-					 <view class="iconfont icon-xiala icon"></view>
-
-				</view>
-			</view>
-			</picker>
-		</view>
-   <!--  -->
    		<!-- 选择 -->
    		<view class="select">
    			<view class="select-box flex row">
    				<view class="select-title">
-   					标题
+   					所在园区
    				</view>
-				<input type="text" placeholder="请输入标题" class="select-end select-input" placeholder-style="text-align: right">
+				<input type="text" placeholder="请输入所在园区" class="select-end select-input" placeholder-style="text-align: right">
 
+   			</view>
+   		</view>
+   <!--  -->
+   	<!-- 选择 -->
+   		<view class="select">
+   			<view class="select-box flex row">
+   				<view class="select-title">
+   					上门地址
+   				</view>
+   				<input type="text" placeholder="请输入上门地址" class="select-end select-input" placeholder-style="text-align: right">
+   
+   			</view>
+   		</view>
+   <!--  -->
+   	<!-- 选择 -->
+   		<view class="select">
+   			<view class="select-box flex row">
+   				<view class="select-title">
+   					联系电话
+   				</view>
+   				<input type="text" placeholder="请输入联系电话" class="select-end select-input" placeholder-style="text-align: right">
+   
    			</view>
    		</view>
    <!--  -->
@@ -35,50 +38,17 @@
    		<view class="textarea-select flex col">
    			<view class="textarea-select-box flex row row_between">
    				<view class="textarea-select-title">
-   					简介
+				服务内容
    				</view>
    				<view class="textarea-select-end">
-   					请输入简介
+   					请输入服务内容
    				</view>
    			</view>
 			<textarea class="textarea-select-content"></textarea>
    		</view>
    <!--  -->
-   <!-- 选择 -->
-   		<view class="select">
-   			<view class="select-box flex row row_between">
-   				<view class="select-title">
-   					添加图片
-   				</view>
-   			</view>
-			<view class="select-pic">
-						<view class="uni-list list-pd">
-						<view class="uni-list-cell cell-pd">
-							<view class="uni-uploader">
-								<view class="uni-uploader-head">
-									<view class="uni-uploader-title">点击可预览选好的图片</view>
-									<view class="uni-uploader-info">{{imageList.length}}/9</view>
-								</view>
-								<view class="uni-uploader-body">
-									<view class="uni-uploader__files">
-										<block v-for="(image,index) in imageList" :key="index">
-											<view class="uni-uploader__file">
-												<image class="uni-uploader__img" :src="image" :data-src="image" @tap="previewImage"></image>
-											</view>
-										</block>
-										<view class="uni-uploader__input-box">
-											<view class="uni-uploader__input" @tap="chooseImage"></view>
-										</view>
-									</view>
-								</view>
-							</view>
-						</view>
-					</view>
-				
-			</view>
-   		</view>
-   <!--  -->
-   <button type="primary" class="btn">确定发布</button>
+ 
+   <button type="primary" class="btn">确定</button>
 	</view>
 </template>
 

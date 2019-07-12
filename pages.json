@@ -1,5 +1,111 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+						{
+						    "path" : "pages/minePage/minePublish/minePublish",
+						    "style" : {
+									"navigationBarTitleText": "我的发布"
+							}
+						},
+						{
+						    "path" : "pages/mine/mine",
+						    "style" : {
+									"navigationBarTitleText": "我的"
+							}
+						},
+						 {
+						    "path" : "pages/infoPage/infoDetail/infoDetail",
+						    "style" : {
+								"navigationBarTitleText": "入驻详情"
+							}
+						},
+							{
+							"path": "pages/info/info",
+							"style": {
+								"navigationBarTitleText": "供求信息"
+							}
+						},
+							 {
+						    "path" : "pages/compony/componyEnterDetail/componyEnterDetail",
+						    "style" : {
+								"navigationBarTitleText": "我要入驻"
+							}
+						},
+							{
+				"path": "pages/index/index",
+				"style": {
+					"navigationBarTitleText": "首页"
+				}
+			},
+			
+					{
+				"path": "pages/compony/compony",
+				"style": {
+					"navigationBarTitleText": "入驻企业"
+				}
+			},
+			{
+			    "path" : "pages/serverPage/serverEnter/serverEnter",
+			    "style" : {
+					"navigationBarTitleText": "我要入驻"
+				}
+			},
+			{
+			    "path" : "pages/serverPage/lawServerDetail/lawServerDetail",
+			    "style" : {
+					"navigationBarTitleText": "法律服务"
+				}
+			},
+			{
+			    "path" : "pages/serverPage/lawServer/lawServer",
+			    "style" : {
+					"navigationBarTitleText": "法律服务"
+				}
+			},
+				{
+				"path": "pages/server/server",
+				"style": {
+					"navigationBarTitleText": "园区服务"
+				}
+			},
+			{
+			    "path" : "pages/pageChildren/activity/activity",
+			    "style" : {
+						"navigationBarTitleText": "活动详情"
+				}
+			},
+				{
+			 	    "path" : "pages/pageChildren/sublet/sublet",
+			 	    "style" : {
+						"navigationBarTitleText": "转租公告"
+					}
+			 	},
+
+			 {
+			     "path" : "pages/pageChildren/applyFor/applyFor",
+			     "style" : {
+					  "navigationBarTitleText": "维修申请"
+				 }
+			 },
+			 {
+			    "path" : "pages/pageChildren/advice/advice",
+			    "style" : {
+					  "navigationBarTitleText": "物业建议"
+				}
+			},
+			{
+	    "path" : "pages/pageChildren/rentRoom/rentRoom",
+	    "style" : {
+					  "navigationBarTitleText": "租会议室"
+				 }
+			},
+	
+
+		 {
+		     "path" : "pages/pageChildren/guide/guide",
+		     "style" : {
+				 "navigationBarTitleText": "入园指南"
+			 }
+		 },
 		 {
 		    "path" : "pages/pageChildren/parkProfile/parkProfile",
 		    "style" : {
@@ -11,39 +117,19 @@
 		    "style" : {
 				"navigationBarTitleText": "发布"
 			}
-		},
-		{
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "首页"
-			}
-		},
-		{
-			"path": "pages/server/server",
-			"style": {
-				"navigationBarTitleText": "园区服务"
-			}
-		},
-		{
-			"path": "pages/compony/compony",
-			"style": {
-				"navigationBarTitleText": "入驻企业"
-			}
-		},
-		{
-			"path": "pages/info/info",
-			"style": {
-				"navigationBarTitleText": "供求信息"
-			}
 		}
         ,{
-            "path" : "pages/mine/mine",
-            "style" : {
-					"navigationBarTitleText": "我的"
-			}
+            "path" : "pages/minePage/mineCollect /mineCollect ",
+            "style" : {}
         }
-        
-       
+        ,{
+            "path" : "pages/minePage/mineActive/mineActive",
+            "style" : {}
+        }
+        ,{
+            "path" : "pages/minePage/joinCompony/joinCompony",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
