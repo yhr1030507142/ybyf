@@ -1,0 +1,93 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		 {
+		    "path" : "pages/pageChildren/parkProfile/parkProfile",
+		    "style" : {
+				"navigationBarTitleText": "园区简介"
+			}
+		},
+		{
+		    "path" : "pages/postMessage/postMessage",
+		    "style" : {
+				"navigationBarTitleText": "发布"
+			}
+		},
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "pages/server/server",
+			"style": {
+				"navigationBarTitleText": "园区服务"
+			}
+		},
+		{
+			"path": "pages/compony/compony",
+			"style": {
+				"navigationBarTitleText": "入驻企业"
+			}
+		},
+		{
+			"path": "pages/info/info",
+			"style": {
+				"navigationBarTitleText": "供求信息"
+			}
+		}
+        ,{
+            "path" : "pages/mine/mine",
+            "style" : {
+					"navigationBarTitleText": "我的"
+			}
+        }
+        
+       
+    ],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8"
+	},
+	"tabBar" : {
+	    "color" : "#666666",
+	    "selectedColor" : "#1758EA",
+	    "borderStyle" : "black",
+	    "backgroundColor" : "#ffffff",
+	    "list" : [
+	        {
+	            "pagePath" : "pages/index/index",
+	            "iconPath" : "static/img/shouye1.png",
+	            "selectedIconPath" :"static/img/shouye.png",
+	            "text" : "首页"
+	        },
+	        {
+	          "pagePath" : "pages/server/server",
+	          "iconPath" : "static/img/fuwu1.png",
+	          "selectedIconPath" :"static/img/fuwu.png",
+	          "text" : "园区服务"
+	        },
+	        {
+	           "pagePath" : "pages/compony/compony",
+	           "iconPath" : "static/img/qiye1.png",
+	           "selectedIconPath" :"static/img/qiye.png",
+	           "text" : "入驻企业"
+	        },
+			  {
+			   "pagePath" : "pages/info/info",
+			   "iconPath" : "static/img/xinxi1.png",
+			   "selectedIconPath" :"static/img/xinxi.png",
+			   "text" : "供求信息" 
+			},
+	        {
+	           "pagePath" : "pages/mine/mine",
+	           "iconPath" : "static/img/mine1.png",
+	           "selectedIconPath" :"static/img/mine.png",
+	           "text" : "我的"
+	        }
+	    ]
+	}
+}
+ 

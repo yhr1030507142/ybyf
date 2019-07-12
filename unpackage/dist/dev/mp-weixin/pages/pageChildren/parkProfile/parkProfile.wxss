@@ -1,0 +1,10 @@
+
+.uni-bg-red{
+	background: red;
+	height: 100%;
+}
+.uni-bg-red .img{
+	width: 100%;
+	height: 100%;
+}
+
