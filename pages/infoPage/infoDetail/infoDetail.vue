@@ -1,19 +1,33 @@
 <template>
 	<view>
+		
 		<view class="compony-detail">
 			<!--  -->
 			<view class="compony-detail-pic">
-				<image src="../../../static/img/5b45cb4b08550.jpg" mode="" class="img"></image>
+				<!-- 轮播 -->
+				<view class="uni-padding-wrap">
+				    <view class="page-section swiper">
+				        <view class="page-section-spacing">
+				            <swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration" indicator-color='rgba(255, 255, 255, .3)' indicator-active-color='#1758EA'>
+				                <swiper-item v-for="(v,i) in shrink" :key="i">
+				                    <view class="swiper-item uni-bg-red">
+										<image :src="v" mode="" class="img"></image>
+									</view>
+				                </swiper-item>
+				            </swiper>
+				        </view>
+				    </view>
+				</view>
+				<!--  -->
 			</view>
+			
 			<view class="compony-detail-info">
 				<view class="compony-detail-info-header flex row">
-					<view class="logo"><image src="../../../static/logo.png" mode="" class="logo-img"></image></view>
-					<view class="compony-name">广州xxxx科技有限公司</view>
+					<view class="compony-name">{{supplyList.name}}</view>
 				</view>
 				<view class="compony-detail-info-address flex row row_between">
 							<view class="address flex row">
-								<view class="iconfont icon-zhifeiji"></view>
-								<view class="">	广州</view>
+								<view class="">{{supplyList.create_time}}</view>
 							</view>
 							
 							
@@ -27,7 +41,7 @@
 					<view class="compony-detail-info-cotent-header">
 						
 					</view>
-					<rich-text class="compony-detail-info-cotent-text" :nodes="word"></rich-text>
+					<rich-text class="compony-detail-info-cotent-text" :nodes="supplyList.sketch"></rich-text>
 					
 				</view>
 			</view>
@@ -41,14 +55,14 @@
 		 
 		<view class="bottom_btn flex row">
 			<view class="bottom_btn_left flex row">
-				<view class="bottom_btn_left_block flex col">
+				<button class="bottom_btn_left_block flex col" open-type="share">
 					<view class="iconfont icon-zhuanfa icon"></view>
 					<view class="">
 						转发
 					</view>
-				</view>
-				<view class="bottom_btn_left_block flex col">
-						<view class="iconfont icon-shoucang icon"></view>
+				</button>
+				<view class="bottom_btn_left_block flex col" @tap="collect">
+					<view class="iconfont icon" :class="collection==1?'icon-shoucang':'icon-shoucang2 color1'"></view>
 					<view class="">
 						收藏
 					</view>
@@ -87,8 +101,30 @@
 	export default {
 		data() {
 			return {
-				word:"商家诉求大多相同、市场上的选择却如万花筒一般，美团服务市场上百家优质服务商入驻，共同为商家提供全品类服务。解决品牌、连锁、单店等各类商家经营真实需求。同时，美团服务市场也诚邀各垂直领域优质服务商入驻，合作共赢等你来站！"
+				background: ['red', 'blue', 'pink'],
+				indicatorDots: true,
+				indicator1:false,
+				autoplay: true,
+				interval: 2000,//间隔
+				duration: 500,//
+				mark:"",
+				id:"",
+				supplyList:[],
+				collection:1,
+				shrink:[],
 			}
+		},
+		onLoad:function(option){
+			var _self = this
+			_self.mark = option.mark
+			_self.id = option.id
+			
+			console.log(_self.mark+"/"+_self.id)
+			_self.getInfo()
+		},
+		onShow:function(){
+				var _self = this
+			
 		},
 		methods: {
 				apply:function(){
@@ -99,7 +135,100 @@
 			},
 			hidePopup1:function(){
 				this.showPopupMiddleImg1 = false
-			}
+			},
+			getInfo:function(){
+				var _self = this
+				uni.request({
+					url:_self.$api+"dockingManager/declareQuery",
+					data:{id:_self.id,mark:_self.mark,optionId:uni.getStorageSync("openId")},
+					method:"GET",
+					success:function(res){
+						console.log(res)
+						_self.shrink = res.data[0].shrink.split(',')
+						console.log(_self.shrink)
+						_self.supplyList = res.data[0]
+						if(res.data[0].state === undefined || res.data[0].state===null){
+							_self.collection =1
+						}else{
+							_self.collection =2
+						}
+					}
+				})
+			},
+			/**
+			 * 收藏
+			 */
+				collect:function(){
+				var _self = this
+				if(_self.collection == 1){
+					uni.request({
+						url:_self.$api+"dockingManager/activityHideAdd",
+						data:{id:_self.id,mark:0,optionId:uni.getStorageSync("openId")},
+						success:function(res){
+							if(res.data==1){
+								console.log("收藏成功")
+								_self.collection = 2
+							}
+							else{
+								uni.showToast({
+									title:"收藏失败",
+									icon:"none"
+								})
+							} 
+						}
+					})
+				}else{
+						uni.request({
+						url:_self.$api+"dockingManager/activityHideDelete",
+						data:{id:_self.id,optionId:uni.getStorageSync("openId")},
+						success:function(res){
+								if(res.data==1){
+								console.log("取消收藏成功")
+								_self.collection = 1
+							}
+							else{
+								uni.showToast({
+									title:"取消收藏失败",
+									icon:"none"
+								})
+							}						
+						},
+						})
+				}
+			},
+			/**
+			 * 转发
+			 */
+			onShareAppMessage: function (options) {
+					var _self = this
+					if (options.from === 'button') {
+					  // 来自页面内转发按钮
+					  console.log(options.target)
+					}
+					return {
+					  //## 此为转发页面所显示的标题
+					  //title: '好友代付', 
+					  //## 此为转发页面的描述性文字
+					  desc: _self.supplyList.name, 
+					  //## 此为转发给微信好友或微信群后，对方点击后进入的页面链接，可以根据自己的需求添加参数
+					  path:  'pages/infoPage/infoDetail/infoDetail?id='+_self.id, 
+					  //## 转发操作成功后的回调函数，用于对发起者的提示语句或其他逻辑处理
+					  success: function(res) {
+						  uni.request({
+						  url:_self.$api+"dockingManager/activityHideAdd",
+						  data:{id:_self.id,mark:1,optionId:uni.getStorageSync("openId")},
+						  success:function(res){
+							  console.log(res)
+							  	console.log("转发成功")
+						  },
+						  })  
+					  },
+					  //## 转发操作失败/取消 后的回调处理，一般是个提示语句即可
+					  fail: function() {
+						  console.log("error")
+					  }
+					}
+			},
 		},
 		 components: {uniPopup},
 	}
@@ -110,6 +239,15 @@
 		color: #333333;
 			background: #e8e7e7;
 	}
+	.color1{
+		color: #f4ea2a;
+	}
+	.uni-padding-wrap{
+		width: 100% !important;
+	}
+.uni-bg-red{
+	height: 100%;
+}
 .compony-detail{
 	background: #ffffff;
 	width: 90%;
@@ -235,7 +373,22 @@
 		font-size: 28upx;
 		color: #666666;
 		justify-content: center;
+		button::after {
+				border: none;
+				border-radius:0;
+				color: #333333;
+		}
+		.button-hover{
+			border: 0;
+			background:#ffffff;
+			color:rgba(0, 0, 0, 1);
+			color: #333333;
+		}
 		.bottom_btn_left_block{
+			color: #333333;
+			padding: 0;
+			font-size: 28upx;
+			line-height: 42upx;
 			flex: 1;
 			height: 100%;
 			justify-content: center;

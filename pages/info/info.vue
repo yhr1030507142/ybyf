@@ -15,28 +15,54 @@
 			</view>
 			
 				<!-- 需求资源 -->
-			<view class="index-notice flex col">
-				<view class="index-notice-content flex row" v-for="(v,i) in 3">
+			<view class="index-notice flex col" v-show="active==1">
+				<view class="index-notice-content flex row" v-for="(v,i) in supplyList" :key="i" @tap="lookDetail(v.Id,0)">
 						<view class="index-notice-content-img flex">
-							<image src="../../static/img/yhr.jpg" mode="" class="img"></image>
+							<image :src="v.shrink | getPic" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
-									共享按摩椅转租信息
+									{{v.name}}
 								</view>
 								<view class="index-notice-content-right-text">
-									提升酒店硬件配置，营造良好用户体验酒
-									店硬件配置，营造良好用户体验!
+									{{v.sketch}}
 								</view>
 								<view class="index-notice-content-right-date flex row">
 										<view class="flex row position-icon">
 										
-										<view class="">2019年04月08日</view>
+										<view class="">{{v.create_time}}</view>
 									</view>
 										<view class="flex row">
 										<view class="iconfont icon-zhifeiji"></view>
 										<view class="">互联网</view>
+									</view> 
+								</view>
+						</view>
+				</view>
+			</view>  
+			<!--  -->
+				<!-- 需求资源 -->
+			<view class="index-notice flex col" v-show="active==2">
+				<view class="index-notice-content flex row" v-for="(v,i) in supplyList2" :key="i" @tap="lookDetail(v.Id,1)">
+						<view class="index-notice-content-img flex">
+							<image :src="v.shrink" mode="" class="img"></image>
+						</view>
+						<view class="index-notice-content-right flex col">
+								<view class="index-notice-content-right-title">
+									{{v.name}}
+								</view>
+								<view class="index-notice-content-right-text">
+									{{v.sketch}}
+								</view>
+								<view class="index-notice-content-right-date flex row">
+										<view class="flex row position-icon">
+										
+										<view class="">{{v.create_time}}</view>
 									</view>
+										<view class="flex row">
+										<view class="iconfont icon-zhifeiji"></view>
+										<view class="">互联网</view>
+									</view> 
 								</view>
 						</view>
 				</view>
@@ -51,12 +77,55 @@
 		data() {
 			return {
 				active:1,
-				activeClass:"info-header-btn-active"
+				activeClass:"info-header-btn-active",
+				supplyList:[],
+				supplyList2:[],
+				shrink:"",
 			}
+		},
+		onLoad:function(){
+			var _self = this
+			_self.getInfo()
+			_self.getInfo1()
 		},
 		methods: {
 			changeActive:function(i){
 				this.active=i
+			},
+			getInfo:function(){
+				var _self = this
+				uni.request({
+					url:_self.$api+"dockingManager/declareQuery",
+					data:{id:"0",mark:0,optionId:uni.getStorageSync("openId")},
+					method:"GET",
+					success:function(res){
+						_self.supplyList = res.data
+						_self.shrink = res.data
+						console.log(res.data) 
+					} 
+				})
+			},
+			getInfo1:function(){
+				var _self = this
+				uni.request({
+					url:_self.$api+"dockingManager/declareQuery",
+					data:{id:"0",mark:1,optionId:uni.getStorageSync("openId")},
+					method:"GET",
+					success:function(res){
+						_self.supplyList2 = res.data
+						console.log(res.data)
+					}
+				})
+			},
+			lookDetail:function(id,mark){
+				uni.navigateTo({
+					url:"../infoPage/infoDetail/infoDetail?id="+id+"&mark="+mark
+				})
+			}
+		},
+		filters:{
+			getPic:function(res){
+				return res.split(',')[0]
 			}
 		}
 	}
@@ -99,6 +168,7 @@ page{
 	background: #ffffff;
 	width: 90%;
 	margin: 30upx auto;
+	min-height: 1000upx;
 	.index-notice-header{
 		width: 90%;
 		margin: 0 auto;

@@ -7,7 +7,7 @@
    				<view class="select-title">
    					所在园区
    				</view>
-				<input type="text" placeholder="请输入所在园区" class="select-end select-input" placeholder-style="text-align: right">
+				<input type="text" placeholder="请输入所在园区" class="select-end select-input" placeholder-style="text-align: right" v-model="name">
 
    			</view>
    		</view>
@@ -18,7 +18,7 @@
    				<view class="select-title">
    					上门地址
    				</view>
-   				<input type="text" placeholder="请输入上门地址" class="select-end select-input" placeholder-style="text-align: right">
+   				<input type="text" placeholder="请输入上门地址" class="select-end select-input" placeholder-style="text-align: right" v-model="address">
    
    			</view>
    		</view>
@@ -29,7 +29,7 @@
    				<view class="select-title">
    					联系电话
    				</view>
-   				<input type="text" placeholder="请输入联系电话" class="select-end select-input" placeholder-style="text-align: right">
+   				<input type="text" placeholder="请输入联系电话" class="select-end select-input" placeholder-style="text-align: right" v-model="phone">
    
    			</view>
    		</view>
@@ -44,11 +44,11 @@
    					请输入服务内容
    				</view>
    			</view>
-			<textarea class="textarea-select-content"></textarea>
+			<textarea class="textarea-select-content" v-model="sketch"></textarea>
    		</view>
    <!--  -->
  
-   <button type="primary" class="btn">确定</button>
+   <button type="primary" class="btn" @tap="addApply">确定</button>
 	</view>
 </template>
 
@@ -61,6 +61,10 @@
                 index: "",
 				selectValue:"", 
 				imageList:[],
+				sketch:"",
+				name:"",
+				address:"",
+				phone:"",
 			}
 		},
 		methods: {
@@ -107,6 +111,51 @@
 						})
 					})
 				},
+			addApply:function(){
+				var _self = this
+				uni.request({
+					url:_self.$api+"dockingManager/repairAdd",
+					dataType:"json",
+					data:{name:_self.name,address:_self.address,phone:_self.phone,sketch:_self.sketch,optionId:uni.getStorageSync("openId")},
+					 header:{
+						  // "Content-Type":"application/json"
+						   //这里修改json为text   json的话请求会返回400（bad request）
+						   "Content-Type": "application/text"
+						 },   
+					method:"GET",
+					success:function(res){
+						console.log(res.data)
+						if(res.data ==1){ 
+							uni.showToast({
+								title:"申请成功",
+								success:function(){
+									setTimeout(function(){
+										uni.navigateTo({
+											url:"../index/index"
+										})
+									},1000)
+								}
+							})
+							return false 
+						}else if(res.data ==99){
+							uni.showToast({
+								title:"您尚未登录，请登录后重试",
+								icon:"none"
+							})
+							return false
+						}
+						else{
+							uni.showToast({
+								title:"申请失败",
+								icon:"none"
+							})
+							return false
+						}
+					}
+					
+				})
+			
+			},
 		},
 		 components: {uniCollapse,uniCollapseItem}
 	}
@@ -127,6 +176,7 @@ page{
 		margin: 30upx auto;
 		min-height: 100upx;
 		background: #ffffff;
+		color:#000000;
 		.picker{
 			height: 100%;
 		}
@@ -150,6 +200,7 @@ page{
 				.select-input{
 					margin-left: 20upx;
 					flex: 1;
+					color: #000000;
 				}
 		}
 		.select-pic{
@@ -180,6 +231,7 @@ page{
 			min-height: 300upx;
 			width: 90%;
 			margin: 0 auto; 
+			font-size: 24upx;
 		}
 	}
 }

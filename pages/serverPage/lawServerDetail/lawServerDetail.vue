@@ -3,16 +3,16 @@
 		<!-- 图片 -->
 		<view class="park-box flex col">
 				<view class="park-box-pic">
-					<image src="../../../static/img/5b45cb4b08550.jpg" mode="" class="img"></image>
+					<image  :src="List.primary" mode="" class="img"></image>
 				</view>
 				<view class="park-box-content flex col">
 					<view class="park-box-content-header">
-						广东XXXX律师是无sdasda
+						{{List.name}}
 					</view>
 					<view class="park-date">
-						活动开始时间：2019年04月16日 10:00
+						活动开始时间：{{List.createTime}}
 					</view>
-					<rich-text class="park-box-content-middle" :nodes="word">
+					<rich-text class="park-box-content-middle" :nodes="List.content">
 					</rich-text>
 				</view>
 		</view>
@@ -27,7 +27,7 @@
 					</view> 
 				</view>
 				<view class="bottom_btn_left_block flex col">
-						<view class="iconfont icon-shoucang icon"></view>
+					<view class="iconfont icon" :class="collection==1?'icon-shoucang':'icon-shoucang2 color1'"></view>
 					<view class="">
 						收藏
 					</view>
@@ -67,10 +67,15 @@
 			word:"<p>商家诉求大多相同、市场上的选择却如万花筒一般，美团服务市场上百家优质服务商入驻，共同为商家提供全品类服务。解决品牌、连锁、单店等各类商家经营真实需求。同时，美团服务市场也诚邀各垂直领域优质服务商入驻，合作共赢等你来站！</p><p>商家诉求大多相同、市场上的选择却如万花筒一般，美团服务市场上百家优质服务商入驻，共同为商家提供全品类服务。解决品牌、连锁、单店等各类商家经营真实需求。同时，美团服务市场也诚邀各垂直领域优质服务商入驻，合作共赢等你来站！</p>",
 			showPopupMiddleImg:false,
 			showPopupMiddleImg1:false,
+			List:[],
+			id:"",
+			collection:1,
 			}
 		},
-		onLoad:function(){ 
+		onLoad:function(option){ 
 			var _self = this
+			_self.id = option.id
+			_self.getInfo()
 		},
 		methods: {
 			apply:function(){
@@ -81,7 +86,19 @@
 			},
 			hidePopup1:function(){
 				this.showPopupMiddleImg1 = false
-			}
+			},
+			getInfo:function(){
+				var _self = this
+				uni.request({ 
+					url:_self.$api+"dockingManager/totalQuery",
+					data:{id:_self.id,pull:3},
+					method:"GET",
+					success:function(res){
+						_self.List = res.data[0]
+						console.log(res.data)
+					}
+				})
+			},
 		},
 		 components: {uniPopup},
 		
@@ -91,6 +108,9 @@
 <style lang="scss"> 
 	page{
 		background: #e8e7e7;
+	}
+	.color1{
+		color: #f4ea2a;
 	}
 .park-box{
 	width: 90%;
@@ -130,6 +150,7 @@
 			font-size: 28upx;
 			line-height: 50upx;
 			color: #333333;
+			min-height: 600upx;
 		}
 	}
 }

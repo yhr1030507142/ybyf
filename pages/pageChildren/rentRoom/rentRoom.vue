@@ -42,7 +42,7 @@
 						</view>
 						<view class="select-end flex row">
 							 <view class="uni-input">{{date}}</view>
-							 <view class="iconfont icon-xiala icon"></view>
+							 <view class="iconfont icon-xiala1 icon"></view>
 						</view>
 					</view>
 					</picker>
@@ -57,7 +57,7 @@
 						</view>
 						<view class="select-end flex row">
 							 <view class="uni-input">{{time}}</view>
-							 <view class="iconfont icon-xiala icon"></view>
+							 <view class="iconfont icon-xiala1 icon"></view>
 						</view>
 					</view>
 					</picker>
@@ -74,7 +74,7 @@
 				<view class="select-end flex row">
 					 <view class="uni-input" v-if="index == ''">请选择</view>
 					 <view class="uni-input" v-else="">{{array[index]}}</view>
-					 <view class="iconfont icon-xiala icon"></view>
+					 <view class="iconfont icon-xiala1 icon"></view>
 
 				</view>
 			</view>
@@ -305,11 +305,11 @@ page{
 					color: #999999;
 					align-items: center;
 					.icon{
-						font-size: 50upx;
+						font-size: 12upx; 
 					}
 				}
 				.select-input{
-					margin-left: 20upx;
+					margin-left: 20upx; 
 					flex: 1;
 				}
 		}

@@ -6,47 +6,46 @@
 					<view class="compony-header-left-word">
 						分类
 					</view>
-					<view class="iconfont icon-xiala icon"></view>
+					<view class="iconfont icon-xiala1 icon"></view>
 				</view>
 				<view class="compony-header-right flex">
 					 <input type="text" class="search" v-model="SearchInput" placeholder="请输入搜索关键字"  placeholder-style="font-size:24upx;">
-					<view class="icon" @tap="searchContent()">
+					<view class="icon" @tap="searchInfo">
 						<image src="../../static/img/search.png" mode="" class="img"></image> 
 					</view>
 				</view>
-			</view>
+			</view> 
 			
 			<!--  -->
 				<!-- 活动公告 -->
 			<view class="index-notice flex col">
 				<view class="index-notice-header flex row row_between">
 					<view class="index-notice-header-tilte">
-						活动公告
+						
 					</view>
 					<view class="index-notice-header-more">
-						查看更多>
+					<!-- 	查看更多> -->
 					</view>
 				</view>
-				<view class="index-notice-content flex row" v-for="(v,i) in 10">
+				<view class="index-notice-content flex row" v-for="(v,i) in comPonyList" :key="i" @tap="gotoDetail(v.id)">
 						<view class="index-notice-content-img flex">
-							<image src="../../static/img/yhr.jpg" mode="" class="img"></image>
+							<image :src="v.shrink" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
-									共享按摩椅转租信息
+									{{v.name}}
 								</view> 
 								<view class="index-notice-content-right-text">
-									提升酒店硬件配置，营造良好用户体验酒
-									店硬件配置，营造良好用户体验!
+									{{v.sketch}}
 								</view>
 								<view class="index-notice-content-right-date flex row">
 									<view class="flex row position-icon">
 										<view class="iconfont icon-zhifeiji"></view>
-										<view class="">互联网</view>
+										<view class="">{{v.branch_name}}</view> 
 									</view>
 										<view class="flex row">
-										<view class="iconfont icon-zhifeiji"></view>
-										<view class="">互联网</view>
+										<view class="iconfont icon-dingwei1"></view>
+										<view class="">{{v.address}}</view>
 									</view>
 								</view>
 						</view>
@@ -63,11 +62,56 @@
 	export default {
 		data() {
 			return {
-				
+				comPonyList:[],
+				SearchInput:"",
 			}
 		},
+		onLoad:function(){
+			var _self = this
+			_self.getInfo()
+		},  
 		methods: {
-			
+			//http://java.gzbigbang.cn/ybyfManager/dockingManager/cardLower
+			getInfo:function(){
+				var _self = this
+				uni.request({
+					url:_self.$api+"dockingManager/stationedQuery",
+					data:{id:"0"},
+					method:"GET",
+					success:function(res){
+						console.log(res)
+						_self.comPonyList = res.data.slice(0,10)
+						console.log(res.data)
+					}
+				}) 
+			}, 
+			searchInfo:function(){
+				var _self = this
+				uni.request({
+					url:_self.$api+"dockingManager/stationedQuery",
+					data:{id:0,name:_self.SearchInput},
+					method:"GET",
+					success:function(res){
+						console.log(res)
+						_self.comPonyList = res.data.slice(0,10)
+					}
+				}) 
+			},
+			gotoDetail:function(id){
+				uni.navigateTo({
+					url:"../componyEnterDetail/componyEnterDetail?id="+id
+				})
+			},
+		},
+		watch:{
+			SearchInput:function(newData){
+				var _self = this
+				if(newData == ""){
+					_self.getInfo()
+				}else{
+					_self.searchInfo()
+				}
+			}
 		}
 	}
 </script>
@@ -91,7 +135,8 @@ page{
 			justify-content: center;
 			align-items: center;
 			.icon{
-				font-size: 56upx;
+				font-size: 10upx;
+				z-index: 999;
 			}
 		}
 		.compony-header-right{
@@ -101,11 +146,12 @@ page{
 			background: #ffffff;
 			font-size: 24upx;
 			.search{
-				width: 90%;
+				width: 70%;
 				border-radius: 2px;
 				border: 1upx solid #dddddd;
 				height: 70upx;
 				padding-left: 10%;
+				border-right: none;
 			}
 			.compony-header-left-word{
 				margin-left: 20upx; 
@@ -125,7 +171,7 @@ page{
 	}
 	.index-notice{
 		background: #ffffff;
-		
+		min-height: 1000upx ;
 		margin: 30upx auto;
 		.index-notice-header{
 			width: 90%;
@@ -149,8 +195,8 @@ page{
 			.index-notice-content-img{
 				width: 30%;
 				.img{
-					width: 150upx;
-					height:150upx;
+					width: 160upx;
+					height:160upx;
 				}
 			}
 			.index-notice-content-right{
@@ -159,16 +205,19 @@ page{
 				margin-left: 20upx;
 				flex: 1;
 				font-size: 28upx;
+				height: 160upx;
 				.index-notice-content-right-title{
 					font-size: 32upx;
 					color: #000000;
 					font-weight: 600;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
 				}
 				.index-notice-content-right-text{
 					font-size: 28upx;
 					color: #999999;
 					margin-top: 10upx;
-					height:80upx;
 					width: 100%;
 					overflow: hidden;
 					word-break: break-all;/*允许在单词内换行*/

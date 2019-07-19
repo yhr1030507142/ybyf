@@ -1,35 +1,20 @@
 <template>
 	<view>
 		<!-- 图片 -->
-		<view class="park-box flex col">
+		<view class="park-box flex col" v-for="(v,i) in list" :key="i">
 				<view class="park-box-pic">
-					<image src="../../../static/img/5b45cb4b08550.jpg" mode="" class="img"></image>
+					<image :src="v.primary" mode="" class="img"></image>
 				</view>
 				<view class="park-box-content flex col">
 					<view class="park-box-content-header">
-						入园指南
+						{{v.name}}
 					</view>
-					<view class="park-box-content-middle">
-						商家诉求大多相同、市场上的选择却如万花筒一般，美团服务市场上百家优质服务商入驻，共同为商家提供全品类服务。解决品牌、连锁、单店等各类商家经营真实需求。同时，美团服务市场也诚邀各垂直领域优质服务商入驻，合作共赢等你来站！
-					</view>
+					<rich-text class="park-box-content-middle" :nodes="v.content">
+					</rich-text>
 				</view>
 		</view>
 		<!--  -->
-		<!-- 图片 -->
-		<view class="park-box flex col">
-				<view class="park-box-pic">
-					<image src="../../../static/img/5b45cb4b08550.jpg" mode="" class="img"></image>
-				</view>
-				<view class="park-box-content flex col">
-					<view class="park-box-content-header">
-						入园流程
-					</view>
-					<view class="park-box-content-middle">
-						商家诉求大多相同、市场上的选择却如万花筒一般，美团服务市场上百家优质服务商入驻，共同为商家提供全品类服务。解决品牌、连锁、单店等各类商家经营真实需求。同时，美团服务市场也诚邀各垂直领域优质服务商入驻，合作共赢等你来站！
-					</view>
-				</view>
-		</view>
-		<!--  -->
+	
 		 <view class="park-box-select">
 			<view class="park-box-select-box flex row">
 				<view class="park-box-select-title">
@@ -64,7 +49,7 @@
 		<!--  -->
 		<!--  -->
 		 <view class="park-box-select">
-			 <button type="primary">入园申请</button>
+			 <button type="primary" class="btn">入园申请</button>
 		 </view>
 			 <!--  -->
 	</view>
@@ -74,14 +59,28 @@
 	export default {
 		data() {
 			return {
-
+				list:[],
 			}
 		},
 		onLoad:function(){ 
 			var _self = this
+			_self.getInfo()
 		},
 		methods: {
-			
+			getInfo:function(){
+				var _self = this
+				uni.request({
+					url:_self.$api+"dockingManager/totalQuery",
+					data:{id:"0",pull:2},
+					method:"GET",
+					success:function(res){
+						console.log(res)
+						var data = res.data
+						_self.list = res.data
+					}
+					
+				})
+			},
 			}
 		
 	}
@@ -90,6 +89,9 @@
 <style lang="scss">
 	page{
 		background: #e8e7e7;
+	}
+	.btn{
+		background: #1758EA !important;
 	}
 .park-box{
 	width: 90%;

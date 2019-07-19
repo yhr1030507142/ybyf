@@ -1,21 +1,67 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+					  {
+					    "path" : "pages/load/load",
+					    "style" : {
+							"navigationBarTitleText": "园邦优服"
+						}
+					},
 						{
-						    "path" : "pages/minePage/minePublish/minePublish",
-						    "style" : {
-									"navigationBarTitleText": "我的发布"
-							}
-						},
-						{
+					      "path" : "pages/login/login",
+					      "style" : {
+					  		"navigationBarTitleText": "授权"
+					  	}
+					  },
+					  {
+						"path": "pages/index/index",
+						"style": {
+							"navigationBarTitleText": "首页" 
+						}
+					},  
+				
+						
+							{
 						    "path" : "pages/mine/mine",
 						    "style" : {
 									"navigationBarTitleText": "我的"
 							}
 						},
+						{
+						"path": "pages/server/server",
+						"style": {
+							"navigationBarTitleText": "园区服务"
+						}
+					},      
+					  
+					{
+					    "path" : "pages/minePage/auditManager/auditManager",
+					    "style" : {
+							"navigationBarTitleText": "审核内容"
+						}
+					},
+					{
+					    "path" : "pages/minePage/auditContent/auditContent",
+					    "style" : {
+								"navigationBarTitleText": "审核内容"
+						}
+					}, 
+					{
+					    "path" : "pages/minePage/componyAuthentication/componyAuthentication",
+					    "style" : {
+							"navigationBarTitleText": "企业认证"
+						}
+					},
+						{
+						    "path" : "pages/minePage/minePublish/minePublish",
+						    "style" : { 
+									"navigationBarTitleText": "我的发布"
+							}
+						},
+					
 						 {
 						    "path" : "pages/infoPage/infoDetail/infoDetail",
 						    "style" : {
-								"navigationBarTitleText": "入驻详情"
+								"navigationBarTitleText": "供求信息详情"
 							}
 						},
 							{
@@ -25,18 +71,11 @@
 							}
 						},
 							 {
-						    "path" : "pages/compony/componyEnterDetail/componyEnterDetail",
+						    "path" : "pages/componyEnterDetail/componyEnterDetail",
 						    "style" : {
-								"navigationBarTitleText": "我要入驻"
+								"navigationBarTitleText": "入驻详情"
 							}
 						},
-							{
-				"path": "pages/index/index",
-				"style": {
-					"navigationBarTitleText": "首页"
-				}
-			},
-			
 					{
 				"path": "pages/compony/compony",
 				"style": {
@@ -61,12 +100,7 @@
 					"navigationBarTitleText": "法律服务"
 				}
 			},
-				{
-				"path": "pages/server/server",
-				"style": {
-					"navigationBarTitleText": "园区服务"
-				}
-			},
+			
 			{
 			    "path" : "pages/pageChildren/activity/activity",
 			    "style" : {
@@ -119,16 +153,192 @@
 			}
 		}
         ,{
-            "path" : "pages/minePage/mineCollect /mineCollect ",
-            "style" : {}
+            "path" : "pages/minePage/mineCollect/mineCollect",
+            "style" : {
+					"navigationBarTitleText": "我的收藏"
+			}
         }
         ,{
             "path" : "pages/minePage/mineActive/mineActive",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "我的活动"
+			}
         }
         ,{
             "path" : "pages/minePage/joinCompony/joinCompony",
+            "style" : {
+				"navigationBarTitleText": "加入企业"
+			}
+        }
+
+        ,{
+            "path" : "pages/pageChildren/activeMore/activeMore",
             "style" : {}
+        }
+        ,{
+            "path" : "pages/pageChildren/parkDetail/parkDetail",
+            "style" : {
+				"navigationBarTitleText": "园区动态详情"
+			}
+        }  
+        ,{
+            "path" : "pages/pageChildren/headerMore/headerMore",
+            "style" : {
+				"navigationBarTitleText": "园区头条"
+			}
+        }
+        ,{
+            "path" : "pages/pageChildren/headerDetail/headerDetail",
+            "style" : {
+				"navigationBarTitleText": "园区头条详情"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/office/office",
+            "style" : {
+				"navigationBarTitleText": "办公用品"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/officeDetail/officeDetail",
+            "style" : {
+				"navigationBarTitleText": "办公用品详情"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/intellectual/intellectual",
+            "style" : {
+				"navigationBarTitleText": "知识产权"
+			}
+        }  
+        ,{
+            "path" : "pages/serverPage/intellectualDetail/intellectualDetail",
+            "style" : {
+				"navigationBarTitleText": "知识产权详情"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/tax/tax",
+            "style" : {
+				"navigationBarTitleText": "税务服务"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/taxDetail/taxDetail",
+            "style" : {
+				"navigationBarTitleText": "税务服务详情"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/human/human",
+            "style" : {
+				"navigationBarTitleText": "人力资源"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/humanDetail/humanDetail",
+            "style" : {
+				"navigationBarTitleText": "人力资源详情"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/brand/brand",
+            "style" : {
+				"navigationBarTitleText": "品牌设计"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/brandDetail/brandDetail",
+            "style" : {
+					"navigationBarTitleText": "品牌设计详情"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/goodMoney/goodMoney",
+            "style" : {
+					"navigationBarTitleText": "高薪申请"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/goodMoneyDetail/goodMoneyDetail",
+            "style" : {
+				"navigationBarTitleText": "高薪申请详情"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/clean/clean",
+            "style" : {
+				"navigationBarTitleText": "家政清洁"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/cleanDetail/cleanDetail",
+            "style" : {
+				"navigationBarTitleText": "家政清洁详情"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/logistics/logistics",
+            "style" : {
+				"navigationBarTitleText": "快递物流"
+			}
+        }
+        ,{
+            "path" : "pages/serverPage/logisticsDetail/logisticsDetail",
+            "style" : {
+				"navigationBarTitleText": "快递物流详情"
+			}
+        }
+        ,{
+            "path" : "pages/pageChildren/parkAdvice/parkAdvice",
+            "style" : {
+				  "navigationBarTitleText": "园区公告详情"
+			}
+        }
+        ,{
+            "path" : "pages/pageChildren/parkAdviceMore/parkAdviceMore",
+            "style" : {
+				"navigationBarTitleText": "园区公告"
+			}
+        }
+        ,{
+            "path" : "pages/pageChildren/rentDetail/rentDetail",
+            "style" : {
+				"navigationBarTitleText": "转租公告详情"
+				
+			}
+        }
+        ,{
+            "path" : "pages/pageChildren/rentMore/rentMore",
+            "style" : {
+				"navigationBarTitleText": "转租公告"
+			}
+        }
+        ,{
+            "path" : "pages/pageChildren/product/product",
+            "style" : {
+				"navigationBarTitleText": "产品服务"
+			}
+        }
+        ,{
+            "path" : "pages/pageChildren/productDetail/productDetail",
+            "style" : {
+				"navigationBarTitleText": "产品服务详情"
+			}
+        }
+       
+        ,{
+            "path" : "pages/minePage/repairLog/repairLog",
+            "style" : {
+				"navigationBarTitleText": "报修记录"
+			}
+        }
+      
+        ,{
+            "path" : "pages/minePage/repairLogDetail/repairLogDetail",
+            "style" : {
+				"navigationBarTitleText": "报修详情"
+			}
         }
     ],
 	"globalStyle": {

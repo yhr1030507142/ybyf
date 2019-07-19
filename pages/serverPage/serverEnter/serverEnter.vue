@@ -1,35 +1,16 @@
 <template>
 	<view>
 		<!-- 图片 -->
-		<view class="park-box flex col">
+		<view class="park-box flex col" v-for="(v,i) in List" :key="i">
 				<view class="park-box-pic">
-					<image src="../../../static/img/5b45cb4b08550.jpg" mode="" class="img"></image>
+					<image :src="v.primary" mode="" class="img"></image>
 				</view>
 				<view class="park-box-content flex col">
-					<view class="park-box-content-header">
-						入园指南
-					</view>
-					<view class="park-box-content-middle">
-						商家诉求大多相同、市场上的选择却如万花筒一般，美团服务市场上百家优质服务商入驻，共同为商家提供全品类服务。解决品牌、连锁、单店等各类商家经营真实需求。同时，美团服务市场也诚邀各垂直领域优质服务商入驻，合作共赢等你来站！
-					</view>
+					<rich-text class="park-box-content-middle" :nodes="v.content">
+					</rich-text>
 				</view>
 		</view>
 		<!--  -->
-		<!-- 图片 -->
-		<view class="park-box flex col">
-				<view class="park-box-pic">
-					<image src="../../../static/img/5b45cb4b08550.jpg" mode="" class="img"></image>
-				</view>
-				<view class="park-box-content flex col">
-					<view class="park-box-content-header">
-						入园流程
-					</view>
-					<view class="park-box-content-middle">
-						商家诉求大多相同、市场上的选择却如万花筒一般，美团服务市场上百家优质服务商入驻，共同为商家提供全品类服务。解决品牌、连锁、单店等各类商家经营真实需求。同时，美团服务市场也诚邀各垂直领域优质服务商入驻，合作共赢等你来站！
-					</view>
-				</view>
-		</view>
-	<!--  -->
 		 <view class="park-box-select">
 			  <picker @change="bindPickerChange" :value="index" :range="array" class="picker">
 			<view class="park-box-select-box flex row row_between">
@@ -38,8 +19,8 @@
 				</view>
 				<view class="park-box-select-end flex row">
 					 <view class="uni-input" v-if="index == ''">请选择</view>
-					 <view class="uni-input" v-else="">{{array[index]}}</view>
-					 <view class="iconfont icon-xiala icon"></view>
+					 <view class="uni-input uni-input1" v-else="">{{array[index]}}</view>
+					 <view class="iconfont icon-xiala1 icon"></view>
 				</view>
 		
 			</view>
@@ -52,7 +33,7 @@
 				<view class="park-box-select-title">
 					联系人
 				</view>
-				<input type="text" placeholder="请输入联系人" class="park-box-select-end park-box-select-input" placeholder-style="text-align: right">
+				<input type="text" placeholder="请输入联系人" v-model="name" class="park-box-select-end park-box-select-input" placeholder-style="text-align: right">
 		
 			</view>
 		</view>
@@ -63,7 +44,7 @@
 				<view class="park-box-select-title">
 					联系电话
 				</view>
-				<input type="text" placeholder="请输入联系电话" class="park-box-select-end park-box-select-input" placeholder-style="text-align: right">
+				<input type="text" placeholder="请输入联系电话" v-model="phone" class="park-box-select-end park-box-select-input" placeholder-style="text-align: right">
 		
 			</view>
 		</view>
@@ -71,7 +52,7 @@
 		
 		<!--  -->
 		 <view class="park-box-select">
-			 <button type="primary" class="btn">立即咨询</button>
+			 <button type="primary" class="btn" @tap="addInfo">立即咨询</button>
 		 </view>
 			 <!--  -->
 	</view>
@@ -81,18 +62,81 @@
 	export default {
 		data() {
 			return {
-				array: ['中国', '美国', '巴西', '日本'],
+				array: ['法律服务', '办公用品', '知识产权', '税务服务','品牌设计','税务服务','高薪申报','人力资源','家政清理','快递物流'],
                 index: "",
+				List:[],
 			}
 		},
 		onLoad:function(){ 
 			var _self = this
+			_self.getInfo()
 		},
 		methods: {
 			bindPickerChange: function(e) {
 			console.log('picker发送选择改变，携带值为', e.target.value)
 			this.index = e.target.value
 			},
+			getInfo:function(){
+				var _self = this
+				uni.request({ 
+					url:_self.$api+"dockingManager/totalQuery",
+					data:{pull:16,id:0},
+					method:"GET",
+					success:function(res){
+						_self.List = res.data
+						console.log(res.data)
+					}
+				})
+			},
+			addInfo:function(){
+				var _self = this
+				var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
+				if(_self.name == "" || _self.name==null){
+					uni.showToast({
+						title:"请输入联系人",
+						icon:"none"
+					})
+					return false
+				}else if(!myreg.test(_self.phone)) {
+					uni.showToast({
+						title:"联系电话格式不正确",
+						icon:"none"
+					})
+					return false
+				}else if(_self.index==""){
+					uni.showToast({ 
+						title:"请选择入驻类型",
+						icon:"none"
+					})
+					return false
+				}
+				console.log(_self.array[_self.index])
+				uni.request({ 
+					url:_self.$api+"dockingManager/haltAdd",
+					data:{name:_self.name,state:_self.array[_self.index],phone :_self.phone,optionId:uni.getStorageSync("openId")},
+					method:"GET",
+					success:function(res){
+						if(res.data == 1){
+							uni.showToast({
+								title:"提交成功",
+								success:function(){
+									setTimeout(function(){
+										uni.switchTab({
+											url:"../../../pages/index/index"
+										})
+									},1000)
+								}
+							})
+						}else{
+							uni.showToast({
+								title:"提交失败",
+								icon:"none",
+								})
+							return false
+						}	
+					}
+				})
+			  }
 			}
 		
 	}
@@ -101,6 +145,9 @@
 <style lang="scss">
 	page{
 		background: #e8e7e7;
+	}
+	.uni-input1{
+		color: #000000;
 	}
 .park-box{
 	width: 90%;
@@ -132,6 +179,7 @@
 			margin: 0 auto;
 			font-size: 28upx;
 			line-height: 50upx;
+			min-height: 200upx;
 		}
 	}
 }
@@ -154,12 +202,13 @@
 					color: #999999;
 					align-items: center;
 					.icon{
-						font-size: 50upx;
+						font-size: 12upx;
 					}
 				}
 				.park-box-select-input{
 					margin-left: 20upx;
 					flex: 1;
+					color: #000000;
 				}
 		}
 }

@@ -3,20 +3,19 @@
 		<view class="box">
 			<!-- 活动公告 -->
 			<view class="index-notice flex col">
-				<view class="index-notice-content flex row " v-for="(v,i) in 10">
+				<view class="index-notice-content flex row " v-for="(v,i) in List" :key="i" @tap="goActiveDetail(v.Id)">
 						<view class="index-notice-content-img flex">
-							<image src="../../../static/img/yhr.jpg" mode="" class="img"></image>
+							<image :src="v.shrink" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
-									共享按摩椅转租信息
+									{{v.name}}
 								</view> 
 								<view class="index-notice-content-right-text">
-									提升酒店硬件配置，营造良好用户体验酒
-									店硬件配置，营造良好用户体验!
+									{{v.sketch}}
 								</view>
 								<view class="index-notice-content-right-date">
-									2019年04月08日
+									{{v.create_time}}
 								</view>
 						</view>
 				</view>
@@ -30,11 +29,34 @@
 	export default {
 		data() {
 			return {
-				
+				List:[]
 			}
 		},
+		onLoad:function(){
+			var _self = this
+			 _self.getInfo()
+		},
 		methods: {
-			
+			getInfo:function(){
+				var _self = this
+				 uni.request({
+				 	url:_self.$api+"dockingManager/activityReportQuery",
+					data:{id:0,optionId:uni.getStorageSync("openId")},
+					success:function(res){
+						console.log(res.data)
+						_self.List = res.data 
+					} 
+				 })
+			},
+				/**
+			 * 活动详情
+			 */
+			goActiveDetail:function(id){
+				var _self = this
+				uni.navigateTo({
+					url:"../../pageChildren/activity/activity?id="+id
+				})
+			}
 		}
 	}
 </script>
@@ -50,6 +72,7 @@
 		background: #ffffff;
 		padding-top: 30upx;
 		margin: 30upx auto;
+		min-height: 1200upx;
 		.index-notice-header{
 			width: 90%;
 			margin: 0 auto;
@@ -70,24 +93,35 @@
 			margin: 0 auto;
 			padding-bottom: 30upx;
 			.index-notice-content-img{
+				width: 30%;
 				.img{
-					width: 150upx;
-					height:150upx;
+					width: 160upx;
+					height:160upx;
 				}
 			}
 			.index-notice-content-right{
 				margin-left: 20upx;
 				flex: 1;
 				font-size: 28upx;
+				   height: 160upx;
 				.index-notice-content-right-title{
 					font-size: 32upx;
 					color: #000000;
 					font-weight: 600;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
 				}
 				.index-notice-content-right-text{
 					font-size: 28upx;
 					color: #999999;
 					margin-top: 10upx;
+					 text-overflow: ellipsis;
+					white-space: wrap;
+					 display:-webkit-box; 
+					-webkit-line-clamp:2;
+					-webkit-box-orient:vertical;
+					 overflow: hidden;
 				}
 				.index-notice-content-right-date{
 					margin-top: 10upx;

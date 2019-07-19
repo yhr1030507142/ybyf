@@ -3,17 +3,17 @@
 		<!-- 选择 -->
 		<view class="select">
 			
-			 <picker @change="bindPickerChange" :value="index" :range="array" class="picker">
+			 <picker @change="bindPickerChange" :value="index" :range="array" class="picker" >
 			   
 			
 			<view class="select-box flex row row_between">
 				<view class="select-title">
-					供求选择
+					<text class="red">*</text>企业
 				</view>
 				<view class="select-end flex row">
-					 <view class="uni-input" v-if="index == ''">请选择</view>
-					 <view class="uni-input" v-else="">{{array[index]}}</view>
-					 <view class="iconfont icon-xiala icon"></view>
+					 <view class="uni-input" v-if="index == ''">请选择企业</view>
+					 <view class="uni-input uni-input1" v-else="">{{array[index]}}</view>
+					 <view class="iconfont icon-xiala1 icon"></view>
 
 				</view>
 			</view>
@@ -24,40 +24,39 @@
    		<view class="select">
    			<view class="select-box flex row">
    				<view class="select-title">
-   					标题
+   						<text class="red">*</text>姓名
    				</view>
-				<input type="text" placeholder="请输入标题" class="select-end select-input" placeholder-style="text-align: right">
+				<input type="text" placeholder="请输入您的名称" v-model="name" class="select-end select-input" placeholder-style="text-align: right">
 
    			</view>
    		</view>
    <!--  -->
       		<!-- 选择 -->
-   		<view class="textarea-select flex col">
-   			<view class="textarea-select-box flex row row_between">
-   				<view class="textarea-select-title">
-   					简介
-   				</view>
-   				<view class="textarea-select-end">
-   					请输入简介
-   				</view>
-   			</view>
-			<textarea class="textarea-select-content"></textarea>
-   		</view>
-   <!--  -->
+      			<view class="select">
+      				<view class="select-box flex row">
+      					<view class="select-title">
+      							<text class="red">*</text>手机号码
+      					</view>
+      					<input type="text" placeholder="请输入您的手机号码" v-model="tel" class="select-end select-input" placeholder-style="text-align: right">
+      	
+      				</view>
+      			</view>
+      	<!--  -->
    <!-- 选择 -->
    		<view class="select">
    			<view class="select-box flex row row_between">
    				<view class="select-title">
-   					添加图片
+   					<text class="red">*</text>上传图片
    				</view>
+				<view class="select-title" style="font-size: 24upx;color: #999999;">图片大小不得超过5M，格式为jpg,png</view>
+
    			</view>
 			<view class="select-pic">
 						<view class="uni-list list-pd">
 						<view class="uni-list-cell cell-pd">
 							<view class="uni-uploader">
 								<view class="uni-uploader-head">
-									<view class="uni-uploader-title">点击可预览选好的图片</view>
-									<view class="uni-uploader-info">{{imageList.length}}/9</view>
+									<!-- <view class="uni-uploader-info">{{imageList.length}}/9</view> -->
 								</view>
 								<view class="uni-uploader-body">
 									<view class="uni-uploader__files">
@@ -78,25 +77,39 @@
 			</view>
    		</view>
    <!--  -->
-   <button type="primary" class="btn">确定发布</button>
+   <button type="primary" class="btn" @tap="addInfo">加入</button>
 	</view>
 </template>
 
 <script>
 	import {uniCollapse,uniCollapseItem} from "@dcloudio/uni-ui"
 	export default {
+	
 		data() {
 			return {
-				array: ['中国', '美国', '巴西', '日本'],
+				array: [],
+				array1:[],
                 index: "",
 				selectValue:"", 
 				imageList:[],
+				Id:"",
+				pathArr:[],
+				listPath:[],
+				name:"",
+				tel:"",
+				
 			}
+		},
+		onLoad:function(){
+			var _self = this
+			_self.getComPonyInfo()
 		},
 		methods: {
 			bindPickerChange: function(e) {
             console.log('picker发送选择改变，携带值为', e.target.value)
             this.index = e.target.value
+			this.Id = this.array1[this.index]
+			console.log(this.Id)
 			},
 			previewImage: function(e) {
 				var current = e.target.dataset.src
@@ -106,6 +119,7 @@
 				})
 			},
 			chooseImage: async function() {
+				var _self = this
 					if (this.imageList.length === 9) {
 						let isContinue = await this.isFullImg();
 						console.log("是否继续?", isContinue);
@@ -113,12 +127,29 @@
 							return;
 						}
 					}
-					uni.chooseImage({
-						success: (res) => {
-							this.imageList = this.imageList.concat(res.tempFilePaths);
-						}
-					})
-				},
+			uni.chooseImage({
+					success: (res) => {
+						console.log(res)
+						console.log(JSON.stringify(res.tempFilePaths));
+						var tempFilePaths = res.tempFilePaths;
+						this.imageList = this.imageList.concat(res.tempFilePaths);
+						uni.uploadFile({
+							url: _self.$api+'dockingManager/upload', //仅为示例，非真实的接口地址
+							//url: "http://www.tp5.com/index", //仅为示例，非真实的接口地址
+							filePath: tempFilePaths[0],
+							name: 'file', 
+							formData: {
+								'user': 'test'
+							}, 
+							success: (uploadFileRes) => {
+								// _self.pathArr = _self.pathArr.concat(JSON.parse(uploadFileRes.data))
+								// console.log(_self.pathArr)
+								console.log(uploadFileRes);
+							}
+						}); 
+					}
+				})
+			},
 				isFullImg: function() {
 					return new Promise((res) => {
 						uni.showModal({
@@ -137,6 +168,85 @@
 						})
 					})
 				},
+			getComPonyInfo:function(){
+				var _self = this
+				uni.request({
+					url:_self.$api+"dockingManager/cardLower",
+					success:function(res){
+						var list = []
+						var list1 = []
+						
+						for(var i =0;i<res.data.length;i++){
+							 list[i]  = res.data[i].trade
+							 list1[i] = res.data[i].id
+						}
+						_self.array = list
+						_self.array1 = list1
+						console.log(res)
+						console.log(list)
+						
+					}
+				})
+			},
+			addInfo:function(){
+				var _self = this
+				if(_self.compony_name == ""){
+					uni.showToast({
+						title:"企业名称不能为空",
+						icon:"none"
+					})
+					return false
+				}else if(_self.name == ""){
+					uni.showToast({
+						title:"法人姓名不能为空",
+						icon:"none"
+					})
+					return false
+				}
+				else if(_self.compony_num == ""){
+					uni.showToast({
+						title:"企业注册号不能为空",
+						icon:"none"
+					})
+					return false
+				}
+				for(var i =0;i<_self.pathArr.length;i++){
+					_self.listPath.push({testName1:_self.pathArr[i]})
+					console.log(_self.listPath)
+				}
+				console.log(_self.Id)
+				_self.listPath.push({name:_self.name,phone:_self.tel,optionId:uni.getStorageSync("openId"),store:1,upperId:_self.Id})
+					uni.request({
+					url:_self.$api+"dockingManager/cardAdd",
+					data:JSON.stringify(_self.listPath),
+					method:"POST",
+					success:function(res){
+						console.log(res)
+						if(res.data == 1){
+							uni.showToast({
+								title:"提交成功",
+								duration:2000,
+								success:function(){
+								uni.setStorageSync("componyOwner",5)   
+										setTimeout(function(){
+										uni.switchTab({
+											url:"../../../pages/mine/mine"
+										})
+									},1000) 
+								}
+							})
+							return false
+						}
+						else if(res.data == 99){
+							uni.showToast({
+								title:"您尚未进行登录，请登录后重试",
+								icon:"none"
+							})
+							return false
+						}
+					}
+					})
+			},
 		},
 		 components: {uniCollapse,uniCollapseItem}
 	}
@@ -146,8 +256,14 @@
 page{
 	background: #e8e7e7;
 }
+.uni-input1{
+	color: #000000;
+}
 .btn{
 	background: #1758EA !important;
+}
+.red{
+	color: red;
 }
 .box{
 	width: 90%;
@@ -174,13 +290,14 @@ page{
 					color: #999999;
 					align-items: center;
 					.icon{
-						font-size: 50upx;
+						font-size: 12upx;
 					}
 				}
 				.select-input{
 					margin-left: 20upx;
 					flex: 1;
-				}
+					color: #000000;
+				} 
 		}
 		.select-pic{
 			width: 90%;

@@ -12,8 +12,8 @@
 				</view>
 				<view class="select-end flex row">
 					 <view class="uni-input" v-if="index == ''">请选择</view>
-					 <view class="uni-input" v-else="">{{array[index]}}</view>
-					 <view class="iconfont icon-xiala icon"></view>
+					 <view class="uni-input uni-input1" v-else="">{{array[index]}}</view>
+					 <view class="iconfont icon-xiala1 icon"></view>
 
 				</view>
 			</view>
@@ -26,7 +26,7 @@
    				<view class="select-title">
    					标题
    				</view>
-				<input type="text" placeholder="请输入标题" class="select-end select-input" placeholder-style="text-align: right">
+				<input type="text" placeholder="请输入标题" v-model="title" class="select-end select-input" placeholder-style="text-align: right">
 
    			</view>
    		</view>
@@ -41,7 +41,7 @@
    					请输入简介
    				</view>
    			</view>
-			<textarea class="textarea-select-content"></textarea>
+			<textarea class="textarea-select-content" v-model="textarea"></textarea>
    		</view>
    <!--  -->
    <!-- 选择 -->
@@ -78,7 +78,7 @@
 			</view>
    		</view>
    <!--  -->
-   <button type="primary" class="btn">确定发布</button>
+   <button type="primary" class="btn" @tap="addInfo">确定发布</button>
 	</view>
 </template>
 
@@ -87,16 +87,24 @@
 	export default {
 		data() {
 			return {
-				array: ['中国', '美国', '巴西', '日本'],
+				array: ["供应信息","需求信息"],
+				array1:[0,1],
                 index: "",
 				selectValue:"", 
 				imageList:[],
+				title:"",
+				textarea:"",
+				pathArr:[],
+				listPath:[],
 			}
+		},
+		onLoad:function(){
+			var _self = this
 		},
 		methods: {
 			bindPickerChange: function(e) {
-            console.log('picker发送选择改变，携带值为', e.target.value)
-            this.index = e.target.value
+				console.log('picker发送选择改变，携带值为', e.target.value)
+				this.index = e.target.value 
 			},
 			previewImage: function(e) {
 				var current = e.target.dataset.src
@@ -106,6 +114,7 @@
 				})
 			},
 			chooseImage: async function() {
+				var _self = this
 					if (this.imageList.length === 9) {
 						let isContinue = await this.isFullImg();
 						console.log("是否继续?", isContinue);
@@ -115,7 +124,24 @@
 					}
 					uni.chooseImage({
 						success: (res) => {
+							console.log(res)
+							console.log(JSON.stringify(res.tempFilePaths));
+							var tempFilePaths = res.tempFilePaths;
 							this.imageList = this.imageList.concat(res.tempFilePaths);
+							uni.uploadFile({
+								url: _self.$api+'dockingManager/upload', //仅为示例，非真实的接口地址
+								//url: "http://www.tp5.com/index", //仅为示例，非真实的接口地址
+								filePath: tempFilePaths[0],
+								name: 'file', 
+								formData: {
+									'user': 'test'
+								},
+								success: (uploadFileRes) => {
+									_self.pathArr = _self.pathArr.concat(JSON.parse(uploadFileRes.data))
+									console.log(_self.pathArr)
+									console.log(uploadFileRes);
+								}
+							}); 
 						}
 					})
 				},
@@ -137,6 +163,83 @@
 						})
 					})
 				},
+			addInfo:function(){
+				var _self = this
+				if(_self.index == ""){
+					uni.showToast({
+						title:"请选择供求",
+						icon:"none"
+					})
+					return false
+				}else if(_self.title == ""){
+					uni.showToast({
+						title:"请输入标题",
+						icon:"none"
+					})
+					return false
+				}
+				else if(_self.textarea == ""){
+					uni.showToast({
+						title:"请输入简介",
+						icon:"none"
+					})
+					return false
+				}else if(_self.pathArr.length === 0){
+					uni.showToast({
+						title:"请上照片",
+						icon:"none"
+					})
+					return false
+				}
+					for(var i =0;i<_self.pathArr.length;i++){
+						_self.listPath.push({testName1:_self.pathArr[i]})
+						console.log(_self.listPath)
+					}
+					_self.listPath.push({mark:_self.index,name:_self.title,sketch:_self.textarea,optionId:uni.getStorageSync("openId")})
+					console.log(JSON.stringify(_self.listPath))
+				uni.request({
+					url:_self.$api+"dockingManager/declareAdd",
+					data:JSON.stringify(_self.listPath),
+					method:"POST",
+					success:function(res){
+						if(res.data ==98){
+							uni.showToast({
+								title:"您尚未认证"
+							})
+							return false
+						}else if(res.data ==99){
+								uni.showToast({
+								title:"您尚未登录"
+						})
+							return false
+						}else if(res.data ==0){
+								uni.showToast({
+								title:"发布失败"
+						})
+							return false
+						}else if(res.data ==1){
+								uni.showToast({
+								title:"发布成功",
+								success:function(){
+									setTimeout(function(){
+										uni.switchTab({
+											url:"../index/index"
+										})
+									},1000)
+								}
+							})
+							return false
+						}else{
+							uni.showToast({
+								title:"系统异常"
+							})
+							return false
+						}
+						console.log(res)
+					} 
+					
+				})
+			}
 		},
 		 components: {uniCollapse,uniCollapseItem}
 	}
@@ -148,6 +251,9 @@ page{
 }
 .btn{
 	background: #1758EA !important;
+}
+.uni-input1{
+	color: #000000;
 }
 .box{
 	width: 90%;
@@ -174,12 +280,13 @@ page{
 					color: #999999;
 					align-items: center;
 					.icon{
-						font-size: 50upx;
+						font-size: 12upx;
 					}
 				}
 				.select-input{
 					margin-left: 20upx;
 					flex: 1;
+					color: #000000;
 				}
 		}
 		.select-pic{

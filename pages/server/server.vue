@@ -10,20 +10,20 @@
  		<!-- 中间导航 -->
  		<view class="index-content flex row_between">
  			<view class="index-content-left">
- 				<view class="index-content-left-introfuce flex col">
- 							<view class="iconfont icon-qiyejianjie icon"></view>
+ 				<view class="index-content-left-introfuce flex col" @tap="goTO('lawServer')">
+ 							<view class="iconfont icon-falv icon"></view>
  							<view class="index-content-left-introfuce-word">法律服务</view>
  							
  				</view>
- 				<view class="index-content-left-info flex row row_between">
- 					<view class="flex col index-content-left-info-left"> 
+ 				<view class="index-content-left-info flex row row_between"> 
+ 					<view class="flex col index-content-left-info-left" @tap="goTO('intellectual')"> 
  							<view class="iconfont icon-jiaoyijilu icon"></view>
  							<view class="index-content-left-info-word">
  								知识产权
  							</view>
  					</view>
- 					<view class="flex col index-content-left-info-right">
- 						<view class="iconfont icon-qiyeguanli icon">
+ 					<view class="flex col index-content-left-info-right" @tap="goTO('tax')">
+ 						<view class="iconfont icon-shuiwuchufa icon">
  							
  						</view>
  						<view>
@@ -31,8 +31,8 @@
  						</view>
  					</view>
  				</view>
- 				<view class="index-content-left-rent flex col">
- 					<view class="iconfont icon-huiyishi icon">
+ 				<view class="index-content-left-rent flex col" @tap="goTO('human')">
+ 					<view class="iconfont icon-renliziyuanzhutifenxi icon">
  						
  					</view>
  					<view>
@@ -41,33 +41,33 @@
  				</view>
  			</view>
  			<view class="index-content-right">
- 					<view class="index-content-right-oriented flex row">
- 							<view class="iconfont icon-fangxiang icon"></view>
+ 					<view class="index-content-right-oriented flex row" @tap="goTO('office')">
+ 							<view class="iconfont icon-bangongyongpin icon"></view>
  							<view class="index-content-right-oriented-word">办公用品</view>	
  					</view>
- 					<view class="index-content-right-server flex col">
- 						<view class="iconfont icon-fuwu icon"></view>
+ 					<view class="index-content-right-server flex col" @tap="goTO('brand')">
+ 						<view class="iconfont icon-pinpai icon"></view>
  						<view class="">
  							品牌设计
  						</view>
  					</view>
  					
- 					<view class="index-content-right-head flex col">
- 						<view class="iconfont icon-liebiaofenlei icon"></view>
+ 					<view class="index-content-right-head flex col" @tap="goTO('goodMoney')">
+ 						<view class="iconfont icon-xiangmushenbao icon"></view>
  						<view class="">
- 							高新申请
+ 							高薪申请
  						</view>
  					</view>
  						
- 						<view class="index-content-right-wuye flex row row_between">
+ 						<view class="index-content-right-wuye flex row row_between" @tap="goTO('clean')">
  						<view class="flex col index-content-right-wuye-left">
- 								<view class="iconfont icon-weixiujilu icon"></view>
+ 								<view class="iconfont icon-swticonjiazheng icon"></view>
  								<view class="index-content-left-info-word">
  									家政清理
  								</view>
  						</view>
- 						<view class="flex col index-content-right-wuye-right">
- 							<view class="iconfont icon-shenqing icon">
+ 						<view class="flex col index-content-right-wuye-right" @tap="goTO('logistics')">
+ 							<view class="iconfont icon-wuliu icon">
  								
  							</view>
  							<view>
@@ -78,11 +78,11 @@
  			</view>
  		</view>
  	<!-- 我要入驻 -->
-	<view class="server-box-pic">
-			<image src="../../static/img/5b45cb4b08550.jpg" mode="" class="img"></image>
+	<view class="server-box-pic" @tap="goTO('serverEnter')">
+			<image src="../../static/img/rzfw.jpg" mode="" class="img"></image>
 	</view>
 	<!--  -->
- 	
+ 	 
  
  	
  
@@ -119,7 +119,7 @@
  			getBanner:function(){
  				var _self = this
  				uni.request({
- 					url:_self.$api+"ybyfManager/dockingManager/pictureQuery",
+ 					url:_self.$api+"dockingManager/pictureQuery",
  					success:function(res){
  						console.log(res)
  						_self.bannerList = res.data
@@ -133,6 +133,11 @@
  			},
 			searchContent:function(){
 				
+			},
+			goTO:function(content){
+				uni.navigateTo({
+					url:"../serverPage/"+content+"/"+content
+				})
 			}
  		}
  	}

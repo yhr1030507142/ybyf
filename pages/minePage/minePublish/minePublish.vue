@@ -3,26 +3,25 @@
 		<view class="box">
 			<!-- 活动公告 -->
 			<view class="index-notice flex col">
-				<view class="index-notice-content flex row " v-for="(v,i) in 10">
+				<view class="index-notice-content flex row " v-for="(v,i) in List" :key="i" @tap="goDetail(v.Id,v.mark)">
 						<view class="index-notice-content-img flex">
-							<image src="../../../static/img/yhr.jpg" mode="" class="img"></image>
+							<image :src="v.shrink | getPic" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
-									共享按摩椅转租信息
+									{{v.name}}
 								</view> 
 								<view class="index-notice-content-right-text">
-									提升酒店硬件配置，营造良好用户体验酒
-									店硬件配置，营造良好用户体验!
+								{{v.sketch}}
 								</view>
 								<view class="index-notice-content-right-date">
-									2019年04月08日
+									{{v.create_time}}
 								</view>
 						</view>
 				</view>
 			</view>
 			<!--  -->
-		</view>
+		</view> 
 	</view>
 </template>
 
@@ -30,11 +29,37 @@
 	export default {
 		data() {
 			return {
-				
+				List:[],
 			}
 		},
+		onLoad:function(){
+			var _self = this
+			_self.getInfo()
+		},
 		methods: {
-			
+			getInfo:function(){
+				var _self = this
+				uni.request({
+					url:_self.$api+"dockingManager/releaseQuery",
+					data:{id:"0",optionId :uni.getStorageSync("openId")},
+					method:"GET",
+					success:function(res){
+						_self.List = res.data
+						console.log(res.data)
+					}
+				})
+			},
+			goDetail:function(id,mark){
+				var _self = this
+				uni.navigateTo({
+					url:"../../infoPage/infoDetail/infoDetail?id="+id+"&mark="+mark
+				})
+			}
+		},
+			filters:{
+			getPic:function(res){
+				return res.split(',')[0]
+			}
 		}
 	}
 </script>
@@ -50,6 +75,7 @@
 		background: #ffffff;
 		padding-top: 30upx;
 		margin: 30upx auto;
+		min-height: 1200upx;
 		.index-notice-header{
 			width: 90%;
 			margin: 0 auto;

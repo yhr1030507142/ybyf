@@ -8,7 +8,7 @@
    					请填写您的建议
    				</view>
    			</view>
-			<textarea class="textarea-select"></textarea>
+			<textarea class="textarea-select" v-model="sketch"></textarea>
 			<view class="select-pic">
 						<view class="uni-list list-pd">
 						<view class="uni-list-cell cell-pd">
@@ -36,7 +36,7 @@
 			</view>
    		</view>
    <!--  -->
-   <button type="primary" class="btn">确定发布</button>
+   <button type="primary" class="btn" @tap="addAdvice()">确定发布</button>
 	</view>
 </template>
 
@@ -49,6 +49,9 @@
                 index: "",
 				selectValue:"", 
 				imageList:[],
+				sketch:"",
+				pathArr:[],
+				listPath:[],
 			}
 		},
 		methods: {
@@ -64,6 +67,7 @@
 				})
 			},
 			chooseImage: async function() {
+				var _self = this
 					if (this.imageList.length === 9) {
 						let isContinue = await this.isFullImg();
 						console.log("是否继续?", isContinue);
@@ -73,7 +77,24 @@
 					}
 					uni.chooseImage({
 						success: (res) => {
+							console.log(res)
+							console.log(JSON.stringify(res.tempFilePaths));
+							var tempFilePaths = res.tempFilePaths;
 							this.imageList = this.imageList.concat(res.tempFilePaths);
+							uni.uploadFile({
+								url: _self.$api+'dockingManager/upload', //仅为示例，非真实的接口地址
+								//url: "http://www.tp5.com/index", //仅为示例，非真实的接口地址
+								filePath: tempFilePaths[0],
+								name: 'file', 
+								formData: {
+									'user': 'test'
+								},
+								success: (uploadFileRes) => {
+									_self.pathArr = _self.pathArr.concat(JSON.parse(uploadFileRes.data))
+									console.log(_self.pathArr)
+									console.log(uploadFileRes);
+								}
+							}); 
 						}
 					})
 				},
@@ -95,6 +116,62 @@
 						})
 					})
 				},
+			addAdvice:function(){
+				var _self = this
+				if(_self.sketch == ""){
+					uni.showToast({
+						title:"请填写您的建议",
+						icon:"none"
+					})
+					return false
+				}
+				for(var i =0;i<_self.pathArr.length;i++){
+					_self.listPath.push({testName1:_self.pathArr[i]})
+					console.log(_self.listPath)
+				}
+				_self.listPath.push({sketch:_self.sketch,optionId:uni.getStorageSync("openId")})
+				var _self = this
+				uni.request({
+					url:_self.$api+"dockingManager/proposalAdd",
+					data:JSON.stringify(_self.listPath),
+					method:"POST",
+					success:function(res){
+						if(res.data ==99){
+								uni.showToast({
+								title:"您尚未登录",
+								icon:"none"
+						})
+							return false
+						}else if(res.data ==0){
+								uni.showToast({
+								title:"发布失败",
+								icon:"none"
+						})
+							return false
+						}else if(res.data ==1){
+								uni.showToast({
+								title:"提交成功",
+								duration:2000,
+								success:function(){
+									setTimeout(function () {
+										  //要延时执行的代码
+										 uni.switchTab({
+										 	url:"../../index/index"
+										 })
+										}, 1000) //延迟时间
+								}
+							})
+							return false
+						}else{
+							uni.showToast({
+								title:"系统异常"
+							})
+							return false
+						}
+					}
+					
+				})
+			}
 		},
 		 components: {uniCollapse,uniCollapseItem}
 	}
