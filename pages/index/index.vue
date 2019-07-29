@@ -8,7 +8,7 @@
             <view class="page-section swiper">
                 <view class="page-section-spacing">
                     <swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration" indicator-color='rgba(255, 255, 255, .3)' indicator-active-color='#1758EA'>
-                        <swiper-item v-for="(v,i) in bannerList" :key="i">
+                        <swiper-item v-for="(v,i) in bannerList" :key="i" @tap="gotoBanner(v.id)">
                             <view class="swiper-item uni-bg-red">
 								<image :src="v.primary" mode="" class="img"></image>
 							</view>
@@ -125,7 +125,7 @@
 					查看更多>
 				</view>
 			</view>
-			<view class="index-notice-content flex row" v-for="(v,i) in parkAdviceList" :key="i" @tap="gotoAdvicePark(v.id)">
+			<view class="index-notice-content flex row" v-for="(v,i) in parkAdviceList" :key="i" @tap="gotoAdvicePark(v.Id)">
 					<view class="index-notice-content-img flex">
 						<image :src="v.shrink" mode="" class="img"></image>
 					</view>
@@ -137,7 +137,7 @@
 								{{v.sketch}}
 							</view>
 							<view class="index-notice-content-right-date">
-								{{v.createTime}}
+								{{v.create_time}}
 							</view>
 					</view>
 			</view>
@@ -152,7 +152,7 @@
 						查看更多>
 					</view>
 				</view>
-				<view class="index-notice-content flex row" v-for="(v,i) in rentList" :key="i" @tap="gotoRent(v.id)">
+				<view class="index-notice-content flex row" v-for="(v,i) in rentList" :key="i" @tap="gotoRent(v.Id)">
 						<view class="index-notice-content-img flex">
 							<image :src="v.shrink" mode="" class="img"></image>
 						</view>
@@ -164,7 +164,7 @@
 									{{v.sketch}}
 								</view>
 								<view class="index-notice-content-right-date">
-									{{v.createTime}}
+									{{v.create_time}}
 								</view>
 						</view>
 				</view>
@@ -177,14 +177,14 @@
 			</view>
 			<view class="index-dynamic-content">
 				 <swiper class="swiper swiper1" :indicator-dots="indicator1" :autoplay="autoplay" :interval="interval" :duration="duration" next-margin="100upx" previous-margin="100upx">
-				    <swiper-item v-for="(v,i) in parkList" :key="i" @tap="gotoPark(v.id)">
+				    <swiper-item v-for="(v,i) in parkList" :key="i" @tap="gotoPark(v.Id)">
 				        <view class="swiper-item lunbo1 flex col">
 							<image :src="v.shrink" mode="" class="img1"></image>
 							<view class="lunbo1-title">
 								{{v.name}}
 							</view>
 							<view class="lunbo1-date">
-								{{v.createTime}}
+								{{v.create_time}}
 							</view>
 						</view>
 				    </swiper-item>
@@ -202,7 +202,7 @@
 				查看更多>
 			</view>
 		</view>
-		<view class="index-notice-content flex row"  v-for="(v,i) in headlineList" :key="i" @tap="gotoHeadLine(v.id)">
+		<view class="index-notice-content flex row"  v-for="(v,i) in headlineList" :key="i" @tap="gotoHeadLine(v.Id)">
 				<view class="index-notice-content-img flex">
 					<image :src="v.shrink" mode="" class="img"></image>
 				</view>
@@ -214,7 +214,7 @@
 							{{v.sketch}}
 						</view>
 						<view class="index-notice-content-right-date">
-							{{v.createTime}}
+							{{v.create_time}}
 						</view>
 				</view>
 		</view>
@@ -316,7 +316,7 @@
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/activityTubeQuery",
-					data:{id:"0",optionId:uni.getStorageSync("openId")},
+					data:{id:"0",optionId:uni.getStorageSync("openId"),branch:0},
 					method:"GET",
 					success:function(res){ 
 						console.log(res)
@@ -350,7 +350,7 @@
 				var _self = this 
 				uni.request({
 					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:6},
+					data:{id:"0",pull:6,optionId:uni.getStorageSync("openId"),branch:0},
 					method:"GET",
 					success:function(res){
 						_self.parkList = res.data.slice(0,5)
@@ -374,14 +374,14 @@
 				var _self = this 
 				uni.request({
 					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:5},
+					data:{id:"0",pull:5,optionId:uni.getStorageSync("openId"),branch:0},
 					method:"GET",
 					success:function(res){
 						_self.parkAdviceList = res.data.slice(0,2)
 						console.log(res.data)
 					}
 				})
-			}, 
+			},    
 			/**
 			 * @param {Object} content 
 			 * 园区公告详情
@@ -406,10 +406,10 @@
 				var _self = this 
 				uni.request({
 					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:19},
+					data:{id:"0",pull:19,optionId:uni.getStorageSync("openId"),branch:0},
 					method:"GET",
 					success:function(res){
-						_self.rentList = res.data.slice(0,2)
+						_self.rentList = res.data.slice(0,2) 
 						console.log(res.data)
 					}
 				})
@@ -439,7 +439,7 @@
 					var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:4},
+					data:{id:"0",pull:4,optionId:uni.getStorageSync("openId"),branch:0},
 					method:"GET",
 					success:function(res){
 						console.log(res)
@@ -462,7 +462,6 @@
 			gotoHeadLine:function(id){
 				uni.navigateTo({ 
 					url:"../pageChildren/headerDetail/headerDetail?id="+id
-
 				})
 			},
 			goTo:function(content){
@@ -485,23 +484,29 @@
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/pictureQuery",
+					data:{id:0},
 					success:function(res){
 						console.log(res)
 						_self.bannerList = res.data
-					}
-				})
-			},
+					} 
+				}) 
+			}, 
 			gotoPostMessage:function(){
 				uni.navigateTo({
 					url:"../postMessage/postMessage"
 				})
-			}
+			},
+			gotoBanner:function(id){ 
+				uni.navigateTo({ 
+					url:"../pageChildren/bannerDetail/bannerDetail?id="+id
+				})
+			},
 		}
 	}
 </script>
 
 <style lang="scss">
-$height :800upx;
+$height :650upx;
 page{
 	background: #e8e7e7;
 }
@@ -541,7 +546,7 @@ page{
 		
 		.index-content-left-introfuce{
 			width: 100%;
-			height: 350upx;
+			height: 230upx;
 			background:#2867F4;
 			color: #ffffff;
 			font-size: 28upx;
@@ -584,7 +589,7 @@ page{
 			justify-content: center;
 			align-items: center;
 			background: #5A7ED0;
-			height: 250upx;
+			height: 230upx;
 			color: #ffffff;
 			font-size: 28upx;
 			.icon{
@@ -609,7 +614,7 @@ page{
 		}
 		.index-content-right-server{
 			margin-top: 10upx;
-			height: 300upx;
+			height: 160upx;
 			font-size: 28upx;
 			background: #5282ED;
 			color: #ffffff;
@@ -762,9 +767,13 @@ page{
 			justify-content: center;
 			font-size: 28upx;
 			.lunbo1-title{
+				width: 90%;
 				margin-top: 50upx;
 				font-size: 36upx;
 				font-weight: 600;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
 			}
 			.lunbo1-date{
 				font-size: 24upx;

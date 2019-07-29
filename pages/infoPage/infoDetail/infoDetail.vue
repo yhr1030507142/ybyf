@@ -29,13 +29,10 @@
 							<view class="address flex row">
 								<view class="">{{supplyList.create_time}}</view>
 							</view>
-							
-							
 								<view class="address flex row">
 								<view class="iconfont icon-zhifeiji"></view>
 								<view class="">主营：服务/产品</view>
 							</view>
-				
 				</view>
 				<view class="compony-detail-info-cotent flex col">
 					<view class="compony-detail-info-cotent-header">
@@ -112,13 +109,21 @@
 				supplyList:[],
 				collection:1,
 				shrink:[],
+				phone:"",
+				branch:0,
 			}
 		},
 		onLoad:function(option){
 			var _self = this
+			console.log(option)
 			_self.mark = option.mark
 			_self.id = option.id
-			
+			if(option.branch==undefined){
+				_self.branch = 0
+			}else{
+				_self.branch = option.branch
+
+			}
 			console.log(_self.mark+"/"+_self.id)
 			_self.getInfo()
 		},
@@ -127,8 +132,11 @@
 			
 		},
 		methods: {
-				apply:function(){
-				this.showPopupMiddleImg1 = true
+			apply:function(){
+				var _self = this
+				 uni.makePhoneCall({
+					phoneNumber: _self.phone //仅为示例
+				 });
 			},
 			hidePopup:function(){
 				this.showPopupMiddleImg = false
@@ -138,13 +146,15 @@
 			},
 			getInfo:function(){
 				var _self = this
-				uni.request({
+				uni.request({ 
 					url:_self.$api+"dockingManager/declareQuery",
-					data:{id:_self.id,mark:_self.mark,optionId:uni.getStorageSync("openId")},
+					data:{id:_self.id,mark:_self.mark,optionId:uni.getStorageSync("openId"),branch:_self.branch},
 					method:"GET",
 					success:function(res){
 						console.log(res)
 						_self.shrink = res.data[0].shrink.split(',')
+						_self.phone = res.data[0].phone
+						
 						console.log(_self.shrink)
 						_self.supplyList = res.data[0]
 						if(res.data[0].state === undefined || res.data[0].state===null){
@@ -162,7 +172,7 @@
 				var _self = this
 				if(_self.collection == 1){
 					uni.request({
-						url:_self.$api+"dockingManager/activityHideAdd",
+						url:_self.$api+"dockingManager/hideAdd",
 						data:{id:_self.id,mark:0,optionId:uni.getStorageSync("openId")},
 						success:function(res){
 							if(res.data==1){
@@ -179,7 +189,7 @@
 					})
 				}else{
 						uni.request({
-						url:_self.$api+"dockingManager/activityHideDelete",
+						url:_self.$api+"dockingManager/hideDelete",
 						data:{id:_self.id,optionId:uni.getStorageSync("openId")},
 						success:function(res){
 								if(res.data==1){
@@ -198,8 +208,8 @@
 			},
 			/**
 			 * 转发
-			 */
-			onShareAppMessage: function (options) {
+			 */  
+			onShareAppMessage: function (options) { 
 					var _self = this
 					if (options.from === 'button') {
 					  // 来自页面内转发按钮
@@ -244,6 +254,7 @@
 	}
 	.uni-padding-wrap{
 		width: 100% !important;
+		height: 150upx;
 	}
 .uni-bg-red{
 	height: 100%;

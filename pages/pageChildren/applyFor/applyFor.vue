@@ -7,7 +7,7 @@
    				<view class="select-title">
    					所在园区
    				</view>
-				<input type="text" placeholder="请输入所在园区" class="select-end select-input" placeholder-style="text-align: right" v-model="name">
+				<input type="text" placeholder="请输入所在园区" style="text-align: right;" class="select-end select-input" placeholder-style="text-align: right" v-model="name">
 
    			</view>
    		</view>
@@ -18,7 +18,7 @@
    				<view class="select-title">
    					上门地址
    				</view>
-   				<input type="text" placeholder="请输入上门地址" class="select-end select-input" placeholder-style="text-align: right" v-model="address">
+   				<input type="text" placeholder="请输入上门地址" style="text-align: right;" class="select-end select-input" placeholder-style="text-align: right" v-model="address">
    
    			</view>
    		</view>
@@ -29,7 +29,7 @@
    				<view class="select-title">
    					联系电话
    				</view>
-   				<input type="text" placeholder="请输入联系电话" class="select-end select-input" placeholder-style="text-align: right" v-model="phone">
+   				<input type="number" placeholder="请输入联系电话" style="text-align: right;" class="select-end select-input" placeholder-style="text-align: right" v-model="phone" maxlength="11">
    
    			</view>
    		</view>
@@ -113,13 +113,37 @@
 				},
 			addApply:function(){
 				var _self = this
+				var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
+				if(_self.name == ""){
+						uni.showToast({
+						title:"请输入所在园区",
+						icon:"none"
+					})
+					return false
+				}else if(_self.address==""){
+						uni.showToast({
+						title:"请输入上门地址",
+						icon:"none"
+					})
+					return false
+				}else if(!myreg.test(_self.phone)){
+						uni.showToast({
+						title:"联系电话格式不正确",
+						icon:"none"
+					})
+					return false
+				}else if(_self.sketch==""){
+						uni.showToast({
+						title:"请输入服务内容",
+						icon:"none"
+					})
+					return false
+				}
 				uni.request({
 					url:_self.$api+"dockingManager/repairAdd",
 					dataType:"json",
 					data:{name:_self.name,address:_self.address,phone:_self.phone,sketch:_self.sketch,optionId:uni.getStorageSync("openId")},
 					 header:{
-						  // "Content-Type":"application/json"
-						   //这里修改json为text   json的话请求会返回400（bad request）
 						   "Content-Type": "application/text"
 						 },   
 					method:"GET",
@@ -127,11 +151,11 @@
 						console.log(res.data)
 						if(res.data ==1){ 
 							uni.showToast({
-								title:"申请成功",
+								title:"申请成功", 
 								success:function(){
 									setTimeout(function(){
-										uni.navigateTo({
-											url:"../index/index"
+										uni.switchTab({
+											url:"../../../pages/index/index"
 										})
 									},1000)
 								}

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<view class="law-pic" v-for="(v,i) in List" :key="i" @tap="goDetail(v.id)">
+		<view class="law-pic" v-for="(v,i) in List" :key="i" @tap="goDetail(v.Id)">
 			<image  :src="v.primary" mode="" class="img"></image>
 			<view class="modal">{{v.name}}</view>
 		</view>
@@ -28,7 +28,7 @@
 				var _self = this
 				uni.request({ 
 					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:3},
+					data:{id:"0",pull:3,optionId:uni.getStorageSync("openId"),branch:0},
 					method:"GET",
 					success:function(res){
 						_self.List = res.data

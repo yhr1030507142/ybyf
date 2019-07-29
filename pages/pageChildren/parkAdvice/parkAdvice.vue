@@ -10,7 +10,7 @@
 						{{details.name}}
 					</view>
 					<view class="park-date">
-						发布时间:{{details.createTime}} 
+						发布时间:{{details.create_time}} 
 					</view> 
 					<rich-text class="park-box-content-middle" :nodes="details.content">
 					</rich-text>
@@ -79,7 +79,7 @@
 				var _self = this
 				uni.request({ 
 					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:_self.id,pull:5},
+					data:{id:_self.id,pull:5,optionId:uni.getStorageSync("openId"),branch:0},
 					method:"GET",
 					success:function(res){
 						console.log(res)

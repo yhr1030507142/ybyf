@@ -10,7 +10,7 @@
 						{{List.name}}
 					</view>
 					<view class="park-date">
-						活动开始时间：{{List.createTime}}
+						活动开始时间：{{List.create_time}}
 					</view>
 					<rich-text class="park-box-content-middle" :nodes="List.content">
 					</rich-text>
@@ -20,13 +20,13 @@
 		 
 		<view class="bottom_btn flex row">
 			<view class="bottom_btn_left flex row">
-				<view class="bottom_btn_left_block flex col">
+				<button class="bottom_btn_left_block flex col" open-type="share">
 					<view class="iconfont icon-zhuanfa icon"></view>
 					<view class="">
 						转发
 					</view> 
-				</view>
-				<view class="bottom_btn_left_block flex col">
+				</button>
+				<view class="bottom_btn_left_block flex col" @tap="collect">
 					<view class="iconfont icon" :class="collection==1?'icon-shoucang':'icon-shoucang2 color1'"></view>
 					<view class="">
 						收藏
@@ -34,8 +34,8 @@
 				</view>	
 				
 			</view>
-		    <view class="bottom_btn_right" @tap="apply()">
-				我要报名
+		    <view class="bottom_btn_right" @tap="toContact()">
+				直接联系
 			</view>
 			
 		</view>
@@ -91,14 +91,78 @@
 				var _self = this
 				uni.request({ 
 					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:_self.id,pull:3},
+					data:{id:_self.id,pull:3,optionId:uni.getStorageSync("openId"),branch:0},
 					method:"GET",
 					success:function(res){
 						_self.List = res.data[0]
 						console.log(res.data)
+						if(res.data[0].state === undefined || res.data[0].state===null){
+							_self.collection = 1
+						}else{
+							_self.collection = 2
+						}
 					}
 				})
 			},
+			collect:function(){
+				var _self = this
+				if(this.collection == 1){ 
+					uni.request({
+						url:_self.$api+"dockingManager/totalHideAdd",
+						data:{id:_self.id,mark:0,optionId:uni.getStorageSync("openId")},
+						success:function(res){
+							console.log(res)
+							if(res.data==1){
+								console.log("收藏成功")
+								_self.collection = 2 
+							}
+							else{
+								uni.showToast({
+									title:"收藏失败",
+									icon:"none"
+								})
+							} 
+						}
+					})
+				}else{
+						uni.request({
+						url:_self.$api+"dockingManager/totalHideDelete",
+						data:{id:_self.id,optionId:uni.getStorageSync("openId")},
+						success:function(res){
+								if(res.data==1){
+								console.log("取消收藏成功")
+								_self.collection = 1
+							}
+							else{
+								uni.showToast({
+									title:"取消收藏失败",
+									icon:"none"
+								})
+							}						
+						},
+						})
+				}
+			},
+			/**
+			 * 直接联系
+			 */
+			toContact:function(){
+				var _self = this
+				 uni.makePhoneCall({
+					phoneNumber: _self.List.phone //仅为示例
+					});
+				// uni.showModal({
+				// 	title: '联系人电话',
+				// 	content: '13008838897',
+				// 	success: function (res) {
+				// 		if (res.confirm) {
+				// 			
+				// 		} else if (res.cancel) {
+				// 			console.log('用户点击取消');
+				// 		}
+				// 	}
+				// });
+			}
 		},
 		 components: {uniPopup},
 		
@@ -191,7 +255,22 @@
 		font-size: 28upx;
 		color: #666666;
 		justify-content: center;
+		button::after {
+				border: none;
+				border-radius:0;
+				color: #333333;
+		}
+		.button-hover{
+			border: 0;
+			background:#ffffff;
+			color:rgba(0, 0, 0, 1);
+			color: #333333;
+		}
 		.bottom_btn_left_block{
+			color: #333333;
+			padding: 0;
+			font-size: 28upx;
+			line-height: 42upx;
 			flex: 1;
 			height: 100%;
 			justify-content: center;

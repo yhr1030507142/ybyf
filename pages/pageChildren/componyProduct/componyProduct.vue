@@ -10,7 +10,7 @@
 					<view class="index-notice-header-more">
 					</view>
 				</view>
-				<view class="index-notice-content flex row" v-for="(v,i) in headlineList" :key="i" @tap="goto(v.Id)">
+				<view class="index-notice-content flex row" v-for="(v,i) in serverList" :key="i" @tap="goto(v.Id)">
 						<view class="index-notice-content-img flex">
 							<image :src="v.shrink" mode="" class="img"></image>
 						</view>
@@ -36,30 +36,33 @@
 	export default {
 		data() {
 			return {
-			headlineList:[],
+			serverList:[],
+			id:"",
 			}
 		},
-		onLoad:function(){
-			
+		onLoad:function(option){
 			var _self = this
+			console.log(option)
+			_self.id = option.id
+			
 			_self.getInfo()
 		},
 		methods: {
 			getInfo:function(){
-				var _self = this
-				uni.request({
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:14,optionId:uni.getStorageSync("openId"),branch:0},
-					method:"GET",
-					success:function(res){
-						console.log(res)
-						_self.headlineList = res.data
-					}
-				})
+			var _self = this
+			uni.request({
+				url:_self.$api+"dockingManager/totalQuery",
+				data:{pull:18,id:0,optionId:uni.getStorageSync("openId"),branch:_self.id},
+				method:"GET",
+				success:function(res){
+					_self.serverList = res.data
+					console.log(res.data)
+				}
+			})
 			},
 			goto:function(id){
 				uni.navigateTo({
-					url:"../logisticsDetail/logisticsDetail?id="+id
+					url:"../productDetail/productDetail?id="+id
 				})
 			},
 		}

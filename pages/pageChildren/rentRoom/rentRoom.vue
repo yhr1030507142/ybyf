@@ -6,7 +6,7 @@
 						<view class="select-title">
 							会议室地点
 						</view>
-						<input type="text" placeholder="请输入标题" v-model="room_address" class="select-end select-input" placeholder-style="text-align: right">
+						<input type="text" placeholder="请输入标题" style="text-align: right;" v-model="room_address" class="select-end select-input" placeholder-style="text-align: right">
 		
 					</view>
 				</view>
@@ -17,7 +17,7 @@
 						<view class="select-title">
 							联系人
 						</view>
-						<input type="text" placeholder="请输入标题"  v-model="room_linkman" class="select-end select-input" placeholder-style="text-align: right">
+						<input type="text" placeholder="请输入标题"  style="text-align: right;" v-model="room_linkman" class="select-end select-input" placeholder-style="text-align: right">
 		
 					</view>
 				</view>
@@ -28,7 +28,7 @@
 						<view class="select-title">
 							联系电话
 						</view>
-						<input type="text" placeholder="请输入标题" v-model="room_tel" class="select-end select-input" placeholder-style="text-align: right">
+						<input type="number" maxlength="11" style="text-align: right;" placeholder="请输入标题" v-model="room_tel" class="select-end select-input" placeholder-style="text-align: right">
 		
 					</view>
 				</view>
@@ -106,7 +106,7 @@
    				<view class="select-title">
    					备注
    				</view>
-				<input type="text" placeholder="请输入备注" class="select-end select-input" placeholder-style="text-align: right">
+				<input type="text" placeholder="请输入备注" style="text-align: right;" class="select-end select-input" placeholder-style="text-align: right">
 
    			</view>
    		</view>
@@ -123,7 +123,7 @@
             format: true
 			})
 			return {
-				array: ['中国', '美国', '巴西', '日本'],
+				array: ['20以下', '50', '100', '100以上'],
                 index: "",
 				selectValue:"", 
 				imageList:[],
@@ -136,41 +136,41 @@
 				labelName:'',
 				labelDataList:'',
 				 labelList: [{
-				    name: '可爱',
+				    name: '投影仪',
 				    value: '0',
 				    checked: false
 				  },
 				    {
-				      name: '性感',
+				      name: '幕布',
 				      value: '1',
 				      checked: false
 				    },
 				    {
-				      name: '温柔',
+				      name: '电脑',
 				      value: '2',
 				      checked: false
 				    },
 				    {
-				      name: '体贴',
+				      name: '麦克风',
 				      value: '3',
 				      checked: false
 				    },
 				    {
-				      name: '漂亮',
+				      name: '音响',
 				      value: '4',
 				      checked: false
 				    },{
-				    name: '可爱',
+				    name: '白板',
 				    value: '0',
 				    checked: false
 				  },
 				    {
-				      name: '性感',
+				      name: '灯光',
 				      value: '1',
 				      checked: false
 				    },
 				    {
-				      name: '温柔',
+				      name: '摄像机',
 				      value: '2',
 				      checked: false
 				    }

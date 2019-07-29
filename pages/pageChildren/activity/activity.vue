@@ -35,24 +35,25 @@
 				
 			</view>
 		    <view class="bottom_btn_right" @tap="apply()">
-				我要报名
+				<text v-show="report==1">我要报名</text>
+				<text v-show="report==0">取消报名</text>
 			</view>
 			
 		</view>
 			 <!--  -->
 						<uni-popup :show="showPopupMiddleImg" type="middle" mode="insert" @hidePopup="hidePopup">
 							<view class="uni-center center-box modal-pic-box flex col">
-								<image  src="../../../static/logo.png" class="modal-pic"></image>
+								<image  src="../../../static/img/yes.png" class="modal-pic"></image>
 								恭喜你,报名成功
 							</view>
-						</uni-popup>
+						</uni-popup> 
 						
 						 <uni-popup :show="showPopupMiddleImg1" type="middle" mode="insert" @hidePopup="hidePopup1">
 							<view class="uni-center center-box modal-pic-box flex col">
-								<image  src="../../../static/logo.png" class="modal-pic"></image>
+								<image  src="../../../static/img/no.png" class="modal-pic"></image>
 								<view>{{errorMessage}}</view>
 								<view class="authentication" @tap="goAudit()">
-									去认证企业用户
+									去认证企业用户  
 								</view>
 							</view>
 						</uni-popup>
@@ -74,7 +75,7 @@
 			id:"",
 			collection:1,
 			report:"",
-			errorMessage:""
+			errorMessage:"",
 			}
 		},
 		onLoad:function(option){ 
@@ -89,38 +90,56 @@
 					url:_self.$api+"dockingManager/activityReport",
 					data:{id:_self.id,optionId:uni.getStorageSync("openId"),report:_self.report},
 					success:function(res){
-						if(res.data ==2){
-							_self.errorMessage = "您尚未进行认证"
-							_self.showPopupMiddleImg1 = true
-							return false
+						if(_self.report==1){
+							if(res.data ==2){
+								_self.errorMessage = "您尚未进行认证"
+								_self.showPopupMiddleImg1 = true
+								return false
+							}
+							else if(res.data ==1){
+								_self.errorMessage = "恭喜你,报名成功"
+								_self.showPopupMiddleImg = true
+								_self.report  = 0
+								return false
+							}
+							else if(res.data == 6){
+								uni.showToast({
+									title:"活动已暂停",
+									icon:"none"
+								})
+								return false
+							}
+							else if(res.data == 7){
+								uni.showToast({
+									title:"活动已结束",
+									icon:"none"
+								})
+								return false
+							}
+							else if(res.data == 8){
+								uni.showToast({
+									title:"活动未开始",
+									icon:"none"
+								})
+								return false
+							}
+						}else if(_self.report===0){
+							if(res.data == 0){
+								uni.showToast({
+									title:"取消报名失败",
+									icon:"none"
+								})
+								return false
+							}else{
+									uni.showToast({
+									title:"取消报名成功",
+									icon:"none"
+								})
+								_self.report = 1
+								return false
+							}
 						}
-						else if(res.data ==1){
-							_self.errorMessage = "恭喜你,报名成功"
-							_self.showPopupMiddleImg = true
-							
-							return false
-						}
-						else if(res.data == 6){
-							uni.showToast({
-								title:"活动已暂停",
-								icon:"none"
-							})
-							return false
-						}
-						else if(res.data == 7){
-							uni.showToast({
-								title:"活动已结束",
-								icon:"none"
-							})
-							return false
-						}
-						else if(res.data == 8){
-							uni.showToast({
-								title:"活动未开始",
-								icon:"none"
-							})
-							return false
-						}
+						
 						console.log(res.data)
 					}
 				})
@@ -138,6 +157,7 @@
 					url:_self.$api+"dockingManager/activityTubeQuery",
 					data:{id:_self.id,optionId:uni.getStorageSync("openId")},
 					success:function(res){
+						console.log(res)
 						_self.details = res.data[0]
 						if(res.data[0].reply === undefined || res.data[0].reply===null){
 							_self.report =1
@@ -149,8 +169,8 @@
 						}else{
 							_self.collection = 2
 							
-						}
-						console.log(res)
+						} 
+						console.log(_self.report)
 					}
 				})
 			},
@@ -279,12 +299,16 @@
 			margin: 30upx auto;
 		}
 		.park-box-content-middle{
+			font-size: 18upx;
 			width: 90%;
 			margin: 20upx auto;
 			font-size: 28upx;
 			line-height: 50upx;
 			color: #333333;
 			min-height: 500upx;
+			.rich-img{
+				width: 100%;
+			}
 		}
 	}
 }
@@ -362,7 +386,7 @@
 }
 .modal-pic-box{
 	width: 500upx;
-	height: 450upx;
+	height: 350upx;
 	background: #ffffff;
 	align-items: center;
 	border-radius: 10upx;
@@ -391,4 +415,5 @@
 		border-bottom-right-radius: 10upx;
 	}
 }
+
 </style>

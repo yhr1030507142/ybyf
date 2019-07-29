@@ -26,8 +26,19 @@
    				<view class="select-title">
    					标题
    				</view>
-				<input type="text" placeholder="请输入标题" v-model="title" class="select-end select-input" placeholder-style="text-align: right">
+				<input type="text" placeholder="请输入标题" style="text-align: right;" v-model="title" class="select-end select-input" placeholder-style="text-align: right">
 
+   			</view>
+   		</view>
+   <!--  -->
+   <!-- 选择 -->
+   		<view class="select">
+   			<view class="select-box flex row">
+   				<view class="select-title">
+   					联系方式
+   				</view>
+   				<input type="number" placeholder="请输入联系方式" style="text-align: right;" v-model="phone" class="select-end select-input" placeholder-style="text-align: right" maxlength="11">
+   
    			</view>
    		</view>
    <!--  -->
@@ -69,6 +80,7 @@
 										<view class="uni-uploader__input-box">
 											<view class="uni-uploader__input" @tap="chooseImage"></view>
 										</view>
+										<progress :percent="percent" active stroke-width="3" backgroundColor="#999" @activeend="showOrHide" v-show="showBox"/>
 									</view>
 								</view>
 							</view>
@@ -96,6 +108,10 @@
 				textarea:"",
 				pathArr:[],
 				listPath:[],
+				phone:"",
+				percent:0,
+				showBox:false,
+				state:false,
 			}
 		},
 		onLoad:function(){
@@ -128,7 +144,7 @@
 							console.log(JSON.stringify(res.tempFilePaths));
 							var tempFilePaths = res.tempFilePaths;
 							this.imageList = this.imageList.concat(res.tempFilePaths);
-							uni.uploadFile({
+							const uploadTask = uni.uploadFile({
 								url: _self.$api+'dockingManager/upload', //仅为示例，非真实的接口地址
 								//url: "http://www.tp5.com/index", //仅为示例，非真实的接口地址
 								filePath: tempFilePaths[0],
@@ -138,11 +154,15 @@
 								},
 								success: (uploadFileRes) => {
 									_self.pathArr = _self.pathArr.concat(JSON.parse(uploadFileRes.data))
-									console.log(_self.pathArr)
-									console.log(uploadFileRes);
+									_self.state = true
 								}
 							}); 
-						}
+							 uploadTask.onProgressUpdate((res) => {
+								_self.showBox = true
+								_self.percent = res.progress
+								console.log(res.progress) 
+							});    
+						} 
 					})
 				},
 				isFullImg: function() {
@@ -163,8 +183,12 @@
 						})
 					})
 				},
+			showOrHide:function(){
+					this.showBox = false
+				},
 			addInfo:function(){
 				var _self = this
+				var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
 				if(_self.index == ""){
 					uni.showToast({
 						title:"请选择供求",
@@ -178,15 +202,44 @@
 					})
 					return false
 				}
+				// else if(_self.percent != 100 && _self.imageList.length>0){
+				// 
+				// 	uni.showToast({
+				// 		title:"图片正在上传，请稍后提交",
+				// 		icon:"none"
+				// 	})
+				// 	return false
+				// }
+				else if(_self.state == false && _self.imageList.length>0){ 
+					uni.showToast({
+						title:"图片正在上传，请稍后提交1",
+						icon:"none"  
+					})
+					return false
+				}
 				else if(_self.textarea == ""){
 					uni.showToast({
 						title:"请输入简介",
 						icon:"none"
 					})
 					return false
-				}else if(_self.pathArr.length === 0){
+				}
+				// else if(_self.pathArr.length === 0){
+				// 	uni.showToast({
+				// 		title:"请上照片",
+				// 		icon:"none"
+				// 	})
+				// 	return false
+				// }
+				else if(_self.phone == ""){
 					uni.showToast({
-						title:"请上照片",
+						title:"请输入联系方式",
+						icon:"none"
+					})
+					return false
+				}else if(!myreg.test(_self.phone)){
+						uni.showToast({
+						title:"联系电话格式不正确",
 						icon:"none"
 					})
 					return false
@@ -195,7 +248,7 @@
 						_self.listPath.push({testName1:_self.pathArr[i]})
 						console.log(_self.listPath)
 					}
-					_self.listPath.push({mark:_self.index,name:_self.title,sketch:_self.textarea,optionId:uni.getStorageSync("openId")})
+					_self.listPath.push({phone:_self.phone,mark:_self.index,name:_self.title,sketch:_self.textarea,optionId:uni.getStorageSync("openId")})
 					console.log(JSON.stringify(_self.listPath))
 				uni.request({
 					url:_self.$api+"dockingManager/declareAdd",

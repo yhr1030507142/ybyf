@@ -35,7 +35,7 @@
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:1},
+					data:{id:"0",pull:1,optionId:uni.getStorageSync("openId"),branch:0},
 					method:"GET",
 					success:function(res){
 						console.log(res)
@@ -43,7 +43,7 @@
 						console.log(res.data)
 					}
 				})
-			},
+			},       
 			
 			}
 		

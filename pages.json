@@ -1,6 +1,7 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-					  {
+					
+					 {
 					    "path" : "pages/load/load",
 					    "style" : {
 							"navigationBarTitleText": "园邦优服"
@@ -18,12 +19,18 @@
 							"navigationBarTitleText": "首页" 
 						}
 					},  
-				
+					 {
+						"path" : "pages/server1/server1",
+						"style" : {
+								"navigationBarTitleText": "园区服务"
+								}
+					},
 						
 							{
 						    "path" : "pages/mine/mine",
 						    "style" : {
-									"navigationBarTitleText": "我的"
+									"navigationBarTitleText": "我的",
+									"enablePullDownRefresh": true
 							}
 						},
 						{
@@ -36,7 +43,8 @@
 					{
 					    "path" : "pages/minePage/auditManager/auditManager",
 					    "style" : {
-							"navigationBarTitleText": "审核内容"
+							"navigationBarTitleText": "审核内容",
+							"enablePullDownRefresh": true
 						}
 					},
 					{
@@ -173,7 +181,9 @@
 
         ,{
             "path" : "pages/pageChildren/activeMore/activeMore",
-            "style" : {}
+            "style" : {
+				"navigationBarTitleText": "活动公告"
+			}
         }
         ,{
             "path" : "pages/pageChildren/parkDetail/parkDetail",
@@ -340,6 +350,37 @@
 				"navigationBarTitleText": "报修详情"
 			}
         }
+        
+        ,{
+            "path" : "pages/pageChildren/bannerDetail/bannerDetail",
+            "style" : {
+				"navigationBarTitleText": "详情"
+			}
+        }
+        ,{
+            "path" : "pages/pageChildren/componyInfo/componyInfo",
+            "style" : {
+				"navigationBarTitleText": "需求资源"
+			}
+        }
+        ,{
+            "path" : "pages/pageChildren/componyProduct/componyProduct",
+            "style" : {
+				"navigationBarTitleText": "产品服务"
+			}
+        }
+        ,{
+            "path" : "pages/pageChildren/componyInfo1/componyInfo1",
+            "style" : {
+				"navigationBarTitleText": "供应资源"
+			}
+        }
+        ,{
+            "path" : "pages/minePage/myCompony/myCompony",
+            "style" : {
+				"navigationBarTitleText": "我的企业"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -359,12 +400,18 @@
 	            "selectedIconPath" :"static/img/shouye.png",
 	            "text" : "首页"
 	        },
-	        {
-	          "pagePath" : "pages/server/server",
-	          "iconPath" : "static/img/fuwu1.png",
-	          "selectedIconPath" :"static/img/fuwu.png",
-	          "text" : "园区服务"
-	        },
+			{
+			    "pagePath" : "pages/server1/server1",
+			     "iconPath" : "static/img/fuwu1.png",
+			    "selectedIconPath" :"static/img/fuwu.png",
+				"text" : "园区服务"
+			},
+	        // {
+	        //   "pagePath" : "pages/server/server",
+	        //   "iconPath" : "static/img/fuwu1.png",
+	        //   "selectedIconPath" :"static/img/fuwu.png",
+	        //   "text" : "园区服务"
+	        // },
 	        {
 	           "pagePath" : "pages/compony/compony",
 	           "iconPath" : "static/img/qiye1.png",
@@ -383,6 +430,7 @@
 	           "selectedIconPath" :"static/img/mine.png",
 	           "text" : "我的"
 	        }
+			
 	    ]
 	}
 }

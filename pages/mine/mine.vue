@@ -21,12 +21,12 @@
 				</view>
 				<view class="mine-header-btn mine-header-btn1"  v-if="componyOwner==5">
 					<text class="iconfont icon-jiarubanji icon"></text>
-					您正在认证加入企业...  
+					您正在认证加入企业...    
  				</view>
 				<view class="mine-header-btn" @tap="goto('joinCompony')" v-if="componyOwner==3">
 					<text class="iconfont icon-jiarubanji icon"></text>
 					加入企业 
-				</view>
+				</view>  
 
 			</view>
 		</view> 
@@ -77,6 +77,12 @@
 					<view class="mine-content-text-server-bottom">我的审核</view>		
 				</view>
 				
+				<view class="mine-content-text-server flex col">
+					<view class="mine-content-text-server-top color6"  @tap="goto('myCompony')">
+						<view class="iconfont icon-shenhe icon"></view>
+					</view>
+					<view class="mine-content-text-server-bottom">我的企业</view>		
+				</view>
 			</view>
 		</view>
 	</view>
@@ -95,18 +101,33 @@
 		},
 		onLoad:function(){
 			var _self = this
-			console.log(uni.getStorageSync("componyOwner"))
 			_self.componyOwner = uni.getStorageSync("componyOwner")
 			_self.name = uni.getStorageSync("name")
 			_self.pic = uni.getStorageSync("pic")
 			_self.trade = uni.getStorageSync("trade")
+			uni.startPullDownRefresh();
 		},
+		onPullDownRefresh:function() {
+			var _self = this
+        _self.getMyInfo()
+		_self.componyOwner = uni.getStorageSync("componyOwner")
+		_self.name = uni.getStorageSync("name")
+		_self.pic = uni.getStorageSync("pic")
+		_self.trade = uni.getStorageSync("trade")
+    },
 		onShow:function(){
 			var _self = this  
 			_self.componyOwner = uni.getStorageSync("componyOwner")
 		}, 
 		methods: {
 			goto:function(content){
+				if(content == "myCompony"){
+					uni.showToast({
+						title:"暂未开放",
+						icon:"none"
+					})
+					return false     
+				}
 				uni.navigateTo({
 					url:"../minePage/"+content+"/"+content
 				})
@@ -128,6 +149,42 @@
 						icon:"none"
 					})
 				}
+			},
+			getMyInfo:function(){
+				var _self = this
+				 uni.request({
+				 	url:_self.$api+"dockingManager/cardIdQuery",
+					data:{optionId:uni.getStorageSync("openId")}, 
+					success:function(res){ 
+						console.log(res)
+						
+						 if(res.data == ""){ 
+							uni.setStorageSync("trade","")
+							uni.setStorageSync("componyOwner","3") 
+						}else{
+							if(res.data[0].state ==1  &&res.data[0].mark==0){
+									uni.setStorageSync("componyOwner","1")
+									uni.setStorageSync("trade",res.data[0].trade)  
+							}else if(res.data[0].state ==1  &&res.data[0].mark==1){
+								uni.setStorageSync("componyOwner","2")
+								uni.setStorageSync("trade",res.data[0].upper_name)  
+							}else if(res.data[0].state ==0  &&res.data[0].mark==0){
+								//正在认证企业审核
+								uni.setStorageSync("trade","")
+								uni.setStorageSync("componyOwner","4")
+							}else if(res.data[0].state ==0  &&res.data[0].mark==1){
+								//正在加入企业审核
+								uni.setStorageSync("trade","")
+								uni.setStorageSync("componyOwner","5")
+							}
+							else{
+								uni.setStorageSync("trade","")
+								uni.setStorageSync("componyOwner","3") 
+							}
+						}
+						 uni.stopPullDownRefresh();
+					}
+				 })
 			},
 		}
 	}

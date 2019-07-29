@@ -22,11 +22,12 @@
 										<block v-for="(image,index) in imageList" :key="index">
 											<view class="uni-uploader__file">
 												<image class="uni-uploader__img" :src="image" :data-src="image" @tap="previewImage"></image>
-											</view>
+											</view>	
 										</block>
 										<view class="uni-uploader__input-box">
 											<view class="uni-uploader__input" @tap="chooseImage"></view>
 										</view>
+										<progress :percent="percent" active stroke-width="3" backgroundColor="#999" @activeend="showOrHide" v-show="showBox"/>
 									</view>
 								</view>
 							</view>
@@ -52,6 +53,9 @@
 				sketch:"",
 				pathArr:[],
 				listPath:[],
+				percent:0,
+				showBox:false,
+				state:false,
 			}
 		},
 		methods: {
@@ -81,7 +85,7 @@
 							console.log(JSON.stringify(res.tempFilePaths));
 							var tempFilePaths = res.tempFilePaths;
 							this.imageList = this.imageList.concat(res.tempFilePaths);
-							uni.uploadFile({
+							const uploadTask = uni.uploadFile({
 								url: _self.$api+'dockingManager/upload', //仅为示例，非真实的接口地址
 								//url: "http://www.tp5.com/index", //仅为示例，非真实的接口地址
 								filePath: tempFilePaths[0],
@@ -91,11 +95,15 @@
 								},
 								success: (uploadFileRes) => {
 									_self.pathArr = _self.pathArr.concat(JSON.parse(uploadFileRes.data))
-									console.log(_self.pathArr)
-									console.log(uploadFileRes);
+									_self.state = true
+
 								}
 							}); 
-						}
+							 uploadTask.onProgressUpdate((res) => {
+								 _self.showBox = true
+								_self.percent = res.progress
+							});
+						}	
 					})
 				},
 				isFullImg: function() {
@@ -116,6 +124,9 @@
 						})
 					})
 				},
+			showOrHide:function(){
+				this.showBox = false
+			},
 			addAdvice:function(){
 				var _self = this
 				if(_self.sketch == ""){
@@ -124,6 +135,20 @@
 						icon:"none"
 					})
 					return false
+				}
+				// if(_self.percent != 100 && _self.imageList.length>0){
+				// 	uni.showToast({
+				// 		title:"图片正在上传，请稍后提交",
+				// 		icon:"none"
+				// 	})
+				// 	return false
+				// }
+				if(_self.state == false && _self.imageList.length>0){ 
+				uni.showToast({
+					title:"图片正在上传，请稍后提交",
+					icon:"none"  
+				})
+				return false
 				}
 				for(var i =0;i<_self.pathArr.length;i++){
 					_self.listPath.push({testName1:_self.pathArr[i]})
@@ -155,9 +180,9 @@
 								success:function(){
 									setTimeout(function () {
 										  //要延时执行的代码
-										 uni.switchTab({
-										 	url:"../../index/index"
-										 })
+										uni.switchTab({
+											url:"../../../pages/index/index"
+										})
 										}, 1000) //延迟时间
 								}
 							})

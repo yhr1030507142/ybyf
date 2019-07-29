@@ -41,7 +41,6 @@
 				_self.getLogin()
 				uni.setStorageSync("name",JSON.parse(res.detail.rawData).nickName)
 				uni.setStorageSync("pic",JSON.parse(res.detail.rawData).avatarUrl)
-				
 			}
 			uni.switchTab({
 				url:"../index/index"
@@ -59,11 +58,12 @@
 					uni.setStorageSync("trade","")
 					uni.setStorageSync("componyOwner","3") 
 				}else{
-					uni.setStorageSync("trade",res.data[0].upper_name)  
 					if(res.data[0].state ==1  &&res.data[0].mark==0){
 							uni.setStorageSync("componyOwner","1")
+							uni.setStorageSync("trade",res.data[0].trade)  
 					}else if(res.data[0].state ==1  &&res.data[0].mark==1){
 						uni.setStorageSync("componyOwner","2")
+						uni.setStorageSync("trade",res.data[0].upper_name)  
 					}else if(res.data[0].state ==0  &&res.data[0].mark==0){
 						//正在认证企业审核
 						uni.setStorageSync("componyOwner","4")

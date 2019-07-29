@@ -5,12 +5,12 @@
 			<view class="index-notice flex col">
 				<view class="index-notice-header flex row row_between">
 					<view class="index-notice-header-tilte">
-						园区头条
+						
 					</view>
 					<view class="index-notice-header-more">
 					</view>
 				</view>
-				<view class="index-notice-content flex row" v-for="(v,i) in headlineList" :key="i" @tap="goto(v.id)">
+				<view class="index-notice-content flex row" v-for="(v,i) in headlineList" :key="i" @tap="goto(v.Id)">
 						<view class="index-notice-content-img flex">
 							<image :src="v.shrink" mode="" class="img"></image>
 						</view>
@@ -22,7 +22,7 @@
 									{{v.sketch}}
 								</view>
 								<view class="index-notice-content-right-date">
-								{{v.createTime}}
+								{{v.create_time}}
 								</view>
 						</view>
 				</view>
@@ -49,7 +49,7 @@
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:4},
+					data:{id:"0",pull:4,optionId:uni.getStorageSync("openId"),branch:0}, 
 					method:"GET",
 					success:function(res){
 						console.log(res)
@@ -80,7 +80,7 @@
 		.index-notice-header{
 			width: 90%;
 			margin: 0 auto;
-			height: 120upx;
+			height: 30upx;
 			align-items: center;
 			.index-notice-header-tilte{
 				font-size: 40upx;

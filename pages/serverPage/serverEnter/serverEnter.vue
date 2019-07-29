@@ -33,7 +33,7 @@
 				<view class="park-box-select-title">
 					联系人
 				</view>
-				<input type="text" placeholder="请输入联系人" v-model="name" class="park-box-select-end park-box-select-input" placeholder-style="text-align: right">
+				<input type="text" placeholder="请输入联系人" style="text-align: right;" v-model="name" class="park-box-select-end park-box-select-input" placeholder-style="text-align: right">
 		
 			</view>
 		</view>
@@ -44,7 +44,7 @@
 				<view class="park-box-select-title">
 					联系电话
 				</view>
-				<input type="text" placeholder="请输入联系电话" v-model="phone" class="park-box-select-end park-box-select-input" placeholder-style="text-align: right">
+				<input type="number" placeholder="请输入联系电话" style="text-align: right;" v-model="phone" class="park-box-select-end park-box-select-input" placeholder-style="text-align: right" maxlength="11">
 		
 			</view>
 		</view>
@@ -62,7 +62,7 @@
 	export default {
 		data() {
 			return {
-				array: ['法律服务', '办公用品', '知识产权', '税务服务','品牌设计','税务服务','高薪申报','人力资源','家政清理','快递物流'],
+				array: ['法律服务', '办公用品', '知识产权', '税务服务','品牌设计','高薪申报','人力资源','家政清理','快递物流'],
                 index: "",
 				List:[],
 			}
@@ -80,7 +80,7 @@
 				var _self = this
 				uni.request({ 
 					url:_self.$api+"dockingManager/totalQuery",
-					data:{pull:16,id:0},
+					data:{pull:16,id:0,optionId:uni.getStorageSync("openId"),branch:0},
 					method:"GET",
 					success:function(res){
 						_self.List = res.data

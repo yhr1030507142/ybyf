@@ -1,12 +1,12 @@
  <template>
      <view>
  		<!-- 搜索 -->
-     <view class="server-input">
+    <!-- <view class="server-input">
 				 <input type="text" class="search" v-model="SearchInput" placeholder="请输入搜索关键字"  placeholder-style="font-size:24upx;">
 				 <view class="icon" @tap="searchContent()">
 				 	<image src="../../static/img/search.png" mode="" class="img"></image> 
 				 </view>
-		 </view>
+		 </view> -->
  		<!-- 中间导航 -->
  		<view class="index-content flex row_between">
  			<view class="index-content-left">
@@ -87,12 +87,12 @@
  	
  
  	<!-- fixed -->
- 	<view class="addInfo flex col" @tap="gotoPostMessage">
+ 	<!-- <view class="addInfo flex col" @tap="gotoPostMessage">
  		<view class="icon-zhifeiji iconfont icon-fix"></view>
  		<view class=""> 
  			发布信息
  		</view>
- 	</view>
+ 	</view> -->
  	<!-- end-fixed -->
  	</view>
  </template>
@@ -134,7 +134,7 @@
 			searchContent:function(){
 				
 			},
-			goTO:function(content){
+			goTO:function(content){ 
 				uni.navigateTo({
 					url:"../serverPage/"+content+"/"+content
 				})

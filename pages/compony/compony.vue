@@ -2,12 +2,16 @@
 	<view>
 		<view class="compony">
 			<view class="compony-header flex row">
+				<picker @change="bindPickerChange" :value="index" :range="array" class="picker  flex row">
 				<view class="compony-header-left flex row">
+					
 					<view class="compony-header-left-word">
-						分类
+						<text v-if="pull==0">全部</text><text v-if="pull!=0">{{array[index]}}</text>
 					</view>
 					<view class="iconfont icon-xiala1 icon"></view>
+					
 				</view>
+				</picker>
 				<view class="compony-header-right flex">
 					 <input type="text" class="search" v-model="SearchInput" placeholder="请输入搜索关键字"  placeholder-style="font-size:24upx;">
 					<view class="icon" @tap="searchInfo">
@@ -24,10 +28,9 @@
 						
 					</view>
 					<view class="index-notice-header-more">
-					<!-- 	查看更多> -->
 					</view>
 				</view>
-				<view class="index-notice-content flex row" v-for="(v,i) in comPonyList" :key="i" @tap="gotoDetail(v.id)">
+				<view class="index-notice-content flex row" v-for="(v,i) in comPonyList" :key="i" @tap="gotoDetail(v.Id)">
 						<view class="index-notice-content-img flex">
 							<image :src="v.shrink" mode="" class="img"></image>
 						</view>
@@ -38,9 +41,9 @@
 								<view class="index-notice-content-right-text">
 									{{v.sketch}}
 								</view>
-								<view class="index-notice-content-right-date flex row">
+								<view class="index-notice-content-right-date flex col">
 									<view class="flex row position-icon">
-										<view class="iconfont icon-zhifeiji"></view>
+										<view class="iconfont icon-chanpinshezhi icon1"></view>
 										<view class="">{{v.branch_name}}</view> 
 									</view>
 										<view class="flex row">
@@ -64,19 +67,32 @@
 			return {
 				comPonyList:[],
 				SearchInput:"",
+				branch:[],
+				array: [],
+				array1:[0,1],
+				index: "",
+				pull:0,
 			}
 		},
 		onLoad:function(){
 			var _self = this
 			_self.getInfo()
+			_self.getBranchQuery()
 		},  
 		methods: {
+			bindPickerChange: function(e) {
+				var _self = this
+				console.log('picker发送选择改变，携带值为', e.target.value)
+				this.index = e.target.value 
+				this.pull = _self.array1[_self.index]
+				_self.getInfo()
+			},
 			//http://java.gzbigbang.cn/ybyfManager/dockingManager/cardLower
 			getInfo:function(){
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/stationedQuery",
-					data:{id:"0"},
+					data:{id:"0",pull:_self.pull,name:_self.SearchInput},
 					method:"GET",
 					success:function(res){
 						console.log(res)
@@ -85,11 +101,36 @@
 					}
 				}) 
 			}, 
+			/**
+			 * 获取分类
+			 */ 
+			getBranchQuery:function(){
+				var _self = this
+				uni.request({
+					url:_self.$api+"dockingManager/branchQuery",
+					data:{},
+					method:"GET",
+					success:function(res){
+						console.log(res)
+						var array=[]
+						var array1=[]
+						res.data.push({name:"全部",id:0})
+						for(var i = 0;i<res.data.length;i++){
+							array[i] =  res.data[i].name
+							array1[i] = res.data[i].id
+						}
+						_self.array = array
+						_self.array1 = array1
+						console.log(_self.array)
+					}
+				}) 
+				
+			},
 			searchInfo:function(){
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/stationedQuery",
-					data:{id:0,name:_self.SearchInput},
+					data:{id:0,name:_self.SearchInput,pull:_self.pull},
 					method:"GET",
 					success:function(res){
 						console.log(res)
@@ -120,24 +161,37 @@
 page{
 	background: #e8e7e7;
 }
+.icon1{
+	font-size: 30upx;
+	margin-right: 4upx;
+}
 .compony{
 	width: 90%;
 	margin: 10upx auto;
 	.compony-header{
 		width: 100%;
 		height: 70upx;
-		.compony-header-left{
+		.picker{
 			width: 20%;
+			height: 70upx;
+			font-size: 24upx;
+			background: #1758EA;
+			color: #ffffff;
+			justify-content: center;
+			 align-items: center;
+		.compony-header-left{
+			width: 100%;
 			height: 100%;
 			font-size: 24upx;
 			background: #1758EA;
 			color: #ffffff;
 			justify-content: center;
-			align-items: center;
+		    align-items: center;
 			.icon{
 				font-size: 10upx;
 				z-index: 999;
 			}
+		  }
 		}
 		.compony-header-right{
 			width:80%;
@@ -176,7 +230,7 @@ page{
 		.index-notice-header{
 			width: 90%;
 			margin: 0 auto;
-			height: 120upx;
+			height: 30upx;
 			align-items: center;
 			.index-notice-header-tilte{
 				font-size: 40upx;
@@ -195,8 +249,8 @@ page{
 			.index-notice-content-img{
 				width: 30%;
 				.img{
-					width: 160upx;
-					height:160upx;
+					width: 210upx;
+					height:210upx;
 				}
 			}
 			.index-notice-content-right{
@@ -205,7 +259,7 @@ page{
 				margin-left: 20upx;
 				flex: 1;
 				font-size: 28upx;
-				height: 160upx;
+				height: 210upx;
 				.index-notice-content-right-title{
 					font-size: 32upx;
 					color: #000000;

@@ -7,22 +7,22 @@
 			</view>
 			<view class="compony-detail-info">
 				<view class="compony-detail-info-header flex row">
-					<view class="logo"><image :src="List.shrink" mode="" class="logo-img"></image></view>
+					<!-- <view class="logo"><image :src="List.shrink" mode="" class="logo-img"></image></view> -->
 					<view class="compony-name">{{List.name}}</view>
 				</view>
 				<view class="compony-detail-info-address flex row row_between">
 							<view class="address flex row">
-								<view class="iconfont icon-zhifeiji"></view>
+								<view class="iconfont icon-dingwei1"></view>
 								<view class="">{{List.address}}</view>
 							</view>
 							
 								<view class="address flex row">
-								<view class="iconfont icon-zhifeiji"></view>
+								<view class="iconfont icon-yduidianhua2"></view>
 								<view class="">{{List.phone}}</view>
 							</view>
 							
 								<view class="address flex row">
-								<view class="iconfont icon-zhifeiji"></view>
+								<view class="iconfont icon-chanpinshezhi"></view>
 								<view class="">主营:{{List.branch}}</view>
 							</view>
 				
@@ -48,7 +48,7 @@
 					查看更多>
 				</view>
 			</view>
-			<view class="index-notice-content flex row" v-for="(v,i) in serverList" :key="i" @tap="goProductDetail(v.id)">
+			<view class="index-notice-content flex row" v-for="(v,i) in serverList" :key="i" @tap="goProductDetail(v.Id)">
 					<view class="index-notice-content-img flex">
 						<image :src="v.shrink" mode="" class="img"></image>
 					</view>
@@ -76,7 +76,7 @@
 					查看更多>
 				</view>
 			</view>
-			<view class="index-notice-content flex row" v-for="(v,i) in supplyList2" :key="i" @tap="goInfoDetail(v.Id,1)">
+			<view class="index-notice-content flex row" v-for="(v,i) in supplyList2" :key="i" @tap="goInfoDetail(v.Id,1,v.branch)">
 					<view class="index-notice-content-img flex">
 						<image :src="v.shrink | getPic" mode="" class="img"></image>
 					</view>
@@ -100,11 +100,11 @@
 				<view class="index-notice-header-tilte">
 					供应资源
 				</view>
-				<view class="index-notice-header-more" @tap="gotoSupplyMore()">
+				<view class="index-notice-header-more" @tap="gotoSupplyMore1()">
 					查看更多>
 				</view>
 			</view>
-			<view class="index-notice-content flex row" v-for="(v,i) in supplyList" :key="i" @tap="goInfoDetail(v.Id,0)">
+			<view class="index-notice-content flex row" v-for="(v,i) in supplyList" :key="i" @tap="goInfoDetail(v.Id,0,v.branch)">
 					<view class="index-notice-content-img flex">
 						<image  :src="v.shrink | getPic" mode="" class="img"></image>
 					</view>
@@ -150,7 +150,7 @@
 				var _self = this
 				 uni.request({
 				 	url:_self.$api+"dockingManager/stationedQuery",
-					data:{id:_self.id},
+					data:{id:_self.id,name:"",pull:0}, 
 					success:function(res){
 						console.log(res.data)
 						_self.List = res.data[0]
@@ -164,10 +164,10 @@
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/declareQuery",
-					data:{id:"0",mark:1,optionId:uni.getStorageSync("openId")},
+					data:{id:"0",mark:1,optionId:uni.getStorageSync("openId"),branch:_self.id},
 					method:"GET",
 					success:function(res){
-						_self.supplyList2 = res.data.slice(0,2)
+						_self.supplyList2 = res.data.slice(0,2) 
 						console.log(res.data)
 					}
 				})
@@ -179,9 +179,9 @@
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/declareQuery",
-					data:{id:"0",mark:0,optionId:uni.getStorageSync("openId")},
+					data:{id:"0",mark:0,optionId:uni.getStorageSync("openId"),branch:_self.id},
 					method:"GET",
-					success:function(res){
+					success:function(res){ 
 						_self.supplyList = res.data.slice(0,2)
 						console.log(res.data)
 					}
@@ -194,7 +194,7 @@
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/totalQuery",
-					data:{pull:18,id:0},
+					data:{pull:18,id:0,optionId:uni.getStorageSync("openId"),branch:_self.id},
 					method:"GET",
 					success:function(res){
 						_self.serverList = res.data.slice(0,2)
@@ -206,8 +206,9 @@
 			 * 更多产品
 			 */
 			goProductMore:function(){
+				var _self = this
 				uni.navigateTo({
-					url:"../pageChildren/product/product"
+					url:"../pageChildren/componyProduct/componyProduct?id="+_self.id
 				})
 			},
 			/**
@@ -222,16 +223,27 @@
 			 * 更多资源
 			 */
 			gotoSupplyMore:function(){
-				uni.switchTab({
-					url:"../info/info"
+				var _self = this
+
+				uni.navigateTo({
+					url:"../pageChildren/componyInfo/componyInfo?id="+_self.id
+				})
+			},
+			/**
+			 * 更多供应
+			 */
+			gotoSupplyMore1:function(){
+				var _self = this
+				uni.navigateTo({
+					url:"../pageChildren/componyInfo1/componyInfo1?id="+_self.id
 				})
 			},
 			/**
 			 * 详情
 			 */
-			goInfoDetail:function(id,mark){
+			goInfoDetail:function(id,mark,branch){
 				uni.navigateTo({
-					url:"../infoPage/infoDetail/infoDetail?id="+id+"&mark="+mark
+					url:"../infoPage/infoDetail/infoDetail?id="+id+"&mark="+mark+"&branch="+branch
 				})
 			}
 		},
@@ -286,8 +298,14 @@
 			margin: 20upx auto;
 			font-size: 28upx;
 			color: #666666;
-			height: 70upx;
+			min-height: 70upx;
 			border-bottom:1px solid #DDDDDD;
+			flex-wrap: wrap;
+			
+			.address{
+				margin-right: 20upx;
+				padding-bottom: 20upx;
+			}
 		}
 		.compony-detail-info-cotent{
 			width: 90%;

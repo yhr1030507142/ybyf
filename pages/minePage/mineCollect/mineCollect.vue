@@ -21,9 +21,9 @@
 				</view> 
 			</view>
 			<!--  -->
-						<!-- 活动公告 -->
-			<view class="index-notice flex col" v-show="List1Len>0">
-				<view class="index-notice-content flex row " v-for="(v,i) in List1" :key="i" @tap="goActiveDetail(v.id)">
+						<!-- 法律服务 -->
+			<view class="index-notice flex col" v-show="ListLen1>0">
+				<view class="index-notice-content flex row " v-for="(v,i) in List1" :key="i" @tap="goLawerDetail(v.Id)">
 						<view class="index-notice-content-img flex">
 							<image :src="v.shrink" mode="" class="img"></image>
 						</view> 
@@ -70,7 +70,7 @@
 		data() {
 			return {
 				List:[],
-				List1:[],
+				List1:[], 
 				List2:[],
 				ListLen:0,
 				ListLen1:0,
@@ -78,6 +78,12 @@
 			}
 		},
 		onLoad:function(){
+			var _self = this
+			_self.getInfo()
+			_self.getInfo1()
+			_self.getInfo2()
+		},
+		onShow:function(){
 			var _self = this
 			_self.getInfo()
 			_self.getInfo1()
@@ -113,8 +119,7 @@
 						console.log(res)
 						console.log("222")
 						_self.List1 = res.data
-						_self.List1Len = _self.List1.length
-						
+						_self.ListLen1 = _self.List1.length
 					}
 				 })
 			},
@@ -153,6 +158,15 @@
 				var _self = this
 				uni.navigateTo({
 					url:"../../pageChildren/activity/activity?id="+id
+				})
+			},
+			/**
+			 * 其他收藏详情
+			 */
+			goLawerDetail:function(id){
+				var _self = this
+				uni.navigateTo({
+					url:"../../serverPage/lawServerDetail/lawServerDetail?id="+id
 				})
 			}
 		}
@@ -197,6 +211,7 @@
 				}
 			}
 			.index-notice-content-right{
+				width: 68%;
 				margin-left: 20upx;
 				flex: 1;
 				font-size: 28upx;

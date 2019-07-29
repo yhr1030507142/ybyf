@@ -17,7 +17,7 @@
 								<view class="index-notice-content-right-date">
 									{{v.create_time}}
 								</view>
-						</view>
+						</view> 
 				</view>
 			</view>
 			<!--  -->
@@ -36,6 +36,10 @@
 			var _self = this
 			 _self.getInfo()
 		},
+		onShow:function(){
+			var _self = this
+			 _self.getInfo()
+		},
 		methods: {
 			getInfo:function(){
 				var _self = this
@@ -44,7 +48,7 @@
 					data:{id:0,optionId:uni.getStorageSync("openId")},
 					success:function(res){
 						console.log(res.data)
-						_self.List = res.data 
+						_self.List = res.data  
 					} 
 				 })
 			},
@@ -104,6 +108,7 @@
 				flex: 1;
 				font-size: 28upx;
 				   height: 160upx;
+				   width: 68%;
 				.index-notice-content-right-title{
 					font-size: 32upx;
 					color: #000000;

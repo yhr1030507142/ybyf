@@ -5,7 +5,8 @@
 			<view class="index-notice flex col">
 				<view class="index-notice-header flex row row_between">
 					<view class="index-notice-header-tilte">
-						活动公告
+						
+						
 					</view>
 					<view class="index-notice-header-more">
 					</view>
@@ -82,7 +83,7 @@
 		.index-notice-header{
 			width: 90%;
 			margin: 0 auto;
-			height: 120upx;
+			height: 30upx;
 			align-items: center;
 			.index-notice-header-tilte{
 				font-size: 40upx;

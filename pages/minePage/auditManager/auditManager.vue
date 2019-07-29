@@ -12,17 +12,17 @@
 			 <view class="head">
 				 <ul class="th flex row row-between">
 				 	<li class="li-10">申请人</li>
-				 	<li class="li-25">手机号码</li>
-					<li class="li-25">申请时间</li>
-				 	<li class="li-25">操作</li>
+				 	<li class="li-30">手机号码</li>
+					<li class="li-30">申请时间</li>
+				 	<li class="li-10">操作</li>
 				 </ul>
 			 </view>
 		 	
 		 	<ul class="tr" v-for="(v,i) in list" :key="i" @tap="goDetail(v.id)">
-		 	<li class="li-25">{{v.name}}</li>
-		 	<li class="li-25">{{v.phone}}</li>
-		 	<li class="li-25">{{v.createTime}}</li>
-		 	<li class="li-25">
+		 	<li class="li-10">{{v.name}}</li>
+		 	<li class="li-30">{{v.phone}}</li>
+		 	<li class="li-30">{{v.createTime | rTime}}</li>
+		 	<li class="li-10">
 			待审核
 			</li>
 		 	</ul> 
@@ -31,11 +31,12 @@
 	 <!-- <uni-pagination total="20"></uni-pagination> -->
 	 <view class="pagination">
 		 <uni-pagination 
-		    
-		     :total="50" 
-		     :current="10"
-			 @change="changePage">
-		 </uni-pagination>
+		     :total="branch" 
+		     :current="currentPage"
+			 @change="changePage"
+			 :pageSize="pageSize"
+			 >
+		 </uni-pagination>  
 	 </view>
 
 	</view>
@@ -54,14 +55,20 @@ import uniPagination from '@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vu
 			total:0,
 			searchList:[],
 			list:[],
+			branch:0,
+			pageSize:10
 			}  
 		},
 		onLoad(option) { 
 			var _self =this
 			_self.getInfo()
 		},
+		onPullDownRefresh:function(){
+			_self.getInfo()
+		},
 		onShow(){
-		
+			var _self =this
+			_self.getInfo()
 		},
 		methods: {
 			change(e){
@@ -71,20 +78,21 @@ import uniPagination from '@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vu
 			changePage(type){
 				//console.log(type.current)
 				this.currentPage = type.current
-				this.searchContent()
+				this.getInfo()
 			},
 			getInfo:function(){
 				var _self =this
 				 uni.request({
 				 	url:_self.$api+"dockingManager/cardQuery",
+					data:{optionId:uni.getStorageSync("openId"),branch:_self.currentPage,live:_self.pageSize,id:0},
 					method:"GET",
-					data:{
-						id:0,
-						optionId:uni.getStorageSync("openId")
-					},
 					success:function(res){
 						console.log(res)
-						_self.list = res.data
+						_self.branch = res.data[0].branch
+						console.log(_self.branch)
+						_self.list = res.data  
+						console.log(_self.list)
+						 uni.stopPullDownRefresh();
 					}
 				 })
 			},
@@ -96,6 +104,15 @@ import uniPagination from '@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vu
 		},
 		watch:{
 			
+		},
+		filters:{
+			rTime:function(data){
+				if(data==null||data==undefined){
+					return data
+				}else{
+					return data.slice(0,11)
+				}
+			}
 		},
 		components:{uniPagination}
 	}
@@ -146,7 +163,7 @@ import uniPagination from '@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vu
 				display: flex;
 				flex-direction: row;
 				align-items: center;
-				justify-content: center;
+				justify-content: flex-start;
 			}
 		}
 	}
@@ -164,8 +181,11 @@ import uniPagination from '@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vu
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
-		justify-content: center;
+		justify-content: flex-start;
 		align-items: center;
+		overflow: hidden;
+		text-align: left;
+		text-overflow: ellipsis;
 	}
 }
 	
@@ -181,13 +201,13 @@ uni-pagination{
 		width: 100%;
 	}
 .li-10{
-	width: 20%;
+	width: 15%;
+}
+.li-30{
+	width: 30%;
 }
 .li-25{
 	width: 25%;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 	.icon{
 		font-size: 56upx;
 	}

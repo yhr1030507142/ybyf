@@ -26,7 +26,7 @@
    				<view class="select-title">
    						<text class="red">*</text>姓名
    				</view>
-				<input type="text" placeholder="请输入您的名称" v-model="name" class="select-end select-input" placeholder-style="text-align: right">
+				<input type="text" placeholder="请输入您的名称" style="text-align: right;" v-model="name" class="select-end select-input" placeholder-style="text-align: right">
 
    			</view>
    		</view>
@@ -37,7 +37,7 @@
       					<view class="select-title">
       							<text class="red">*</text>手机号码
       					</view>
-      					<input type="text" placeholder="请输入您的手机号码" v-model="tel" class="select-end select-input" placeholder-style="text-align: right">
+      					<input type="number" maxlength="11" placeholder="请输入您的手机号码" style="text-align: right;" v-model="tel" class="select-end select-input" placeholder-style="text-align: right">
       	
       				</view>
       			</view>
@@ -46,7 +46,7 @@
    		<view class="select">
    			<view class="select-box flex row row_between">
    				<view class="select-title">
-   					<text class="red">*</text>上传图片
+   					<text class="red">*</text>上传正面照片
    				</view>
 				<view class="select-title" style="font-size: 24upx;color: #999999;">图片大小不得超过5M，格式为jpg,png</view>
 
@@ -68,6 +68,7 @@
 										<view class="uni-uploader__input-box">
 											<view class="uni-uploader__input" @tap="chooseImage"></view>
 										</view>
+										<progress :percent="percent" active stroke-width="3" backgroundColor="#999" @activeend="showOrHide" v-show="showBox"/>
 									</view>
 								</view>
 							</view>
@@ -97,6 +98,9 @@
 				listPath:[],
 				name:"",
 				tel:"",
+				percent:0,
+				showBox:false,
+				state:false
 				
 			}
 		},
@@ -123,7 +127,7 @@
 					if (this.imageList.length === 9) {
 						let isContinue = await this.isFullImg();
 						console.log("是否继续?", isContinue);
-						if (!isContinue) {
+						if (!isContinue) {  
 							return;
 						}
 					}
@@ -133,7 +137,7 @@
 						console.log(JSON.stringify(res.tempFilePaths));
 						var tempFilePaths = res.tempFilePaths;
 						this.imageList = this.imageList.concat(res.tempFilePaths);
-						uni.uploadFile({
+						const uploadTask = uni.uploadFile({
 							url: _self.$api+'dockingManager/upload', //仅为示例，非真实的接口地址
 							//url: "http://www.tp5.com/index", //仅为示例，非真实的接口地址
 							filePath: tempFilePaths[0],
@@ -142,14 +146,25 @@
 								'user': 'test'
 							}, 
 							success: (uploadFileRes) => {
-								// _self.pathArr = _self.pathArr.concat(JSON.parse(uploadFileRes.data))
-								// console.log(_self.pathArr)
+								_self.pathArr = _self.pathArr.concat(JSON.parse(uploadFileRes.data))
+								_self.state = true
+								console.log(_self.pathArr)  
 								console.log(uploadFileRes);
 							}
 						}); 
+						 uploadTask.onProgressUpdate((res) => {
+							_self.showBox = true
+							_self.percent = res.progress
+							// console.log('上传进度' + res.progress);
+							// console.log('已经上传的数据长度' + res.totalBytesSent);
+							// console.log('预期需要上传的数据总长度' + res.totalBytesExpectedToSend);
+						});
 					}
 				})
 			},
+			showOrHide:function(){
+					this.showBox = false
+				},
 				isFullImg: function() {
 					return new Promise((res) => {
 						uni.showModal({
@@ -210,12 +225,27 @@
 					})
 					return false
 				}
+				// else if(_self.percent != 100 && _self.imageList.length>0){
+				// 	uni.showToast({
+				// 		title:"图片正在上传，请稍后提交",
+				// 		icon:"none"
+				// 	})
+				// 	return false
+				// }
+				else if(_self.state == false && _self.imageList.length>0){ 
+					uni.showToast({
+						title:"图片正在上传，请稍后提交",
+						icon:"none"  
+					})
+					return false
+				}
 				for(var i =0;i<_self.pathArr.length;i++){
 					_self.listPath.push({testName1:_self.pathArr[i]})
 					console.log(_self.listPath)
 				}
 				console.log(_self.Id)
 				_self.listPath.push({name:_self.name,phone:_self.tel,optionId:uni.getStorageSync("openId"),store:1,upperId:_self.Id})
+				console.log(_self.listPath)
 					uni.request({
 					url:_self.$api+"dockingManager/cardAdd",
 					data:JSON.stringify(_self.listPath),
@@ -223,7 +253,7 @@
 					success:function(res){
 						console.log(res)
 						if(res.data == 1){
-							uni.showToast({
+							uni.showToast({ 
 								title:"提交成功",
 								duration:2000,
 								success:function(){

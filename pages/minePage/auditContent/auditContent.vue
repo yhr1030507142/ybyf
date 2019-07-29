@@ -23,17 +23,17 @@
       		<!--  -->
 				<!-- 选择 -->
 					<view class="select">
-						<picker mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange">
+						<!-- <picker mode="date" :value="date" :start="startDate" :end="endDate" @change="bindDateChange"> -->
 						<view class="select-box flex row row_between">
 							<view class="select-title">
 								申请时间
 							</view>
 							<view class="select-end flex row"> 
-								 <view class="uni-input">{{list.createTime}}</view>
-								 <view class="iconfont icon-xiala icon"></view>
+								{{list.createTime}} 
+								 <!-- <view class="iconfont icon-xiala icon"></view> -->
 							</view>
 						</view>
-						</picker>
+						<!-- </picker> -->
 					</view>
 			<!--  -->
 	<!-- 选择 -->
@@ -47,7 +47,7 @@
    				</view>
    			</view>
 			<view class="textarea-select-content flex row">
-				<image :src="v" mode="" class="img"  v-for="(v,i) in  pic"  :key="i"></image>
+				<image :src="v" mode="" class="img"  v-for="(v,i) in  pic"  :key="i" @tap="previewImage"></image>
 			</view>
    		</view>
    <!--  -->
@@ -96,7 +96,7 @@
 				var current = e.target.dataset.src
 				uni.previewImage({
 					current: current,
-					urls: this.imageList
+					urls: this.pic
 				})
 			},
 			chooseImage: async function() {
@@ -152,8 +152,10 @@
 					 	url:_self.$api+"dockingManager/cardQuery",
 						method:"GET",
 						data:{
+							optionId:uni.getStorageSync("openId"),
 							id:_self.Id,
-							optionId:uni.getStorageSync("openId")
+							branch:1,
+							live:1
 						},
 						success:function(res){
 							console.log(res)
@@ -161,7 +163,7 @@
 							if(res.data[0].shrink==""){
 								_self.pic= []
 							}else{
-								_self.pic = res.data[0].shrink.split(',')[0]
+								_self.pic = res.data[0].shrink.split(',')
 							}
 						}
 					 })
