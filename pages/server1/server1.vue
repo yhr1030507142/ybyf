@@ -638,6 +638,7 @@ page{
 			margin-left: 20upx;
 			flex: 1;
 			font-size: 28upx;
+			height: 200upx;
 			.index-notice-content-right-title{
 				font-size: 32upx;
 				color: #000000;
@@ -650,12 +651,10 @@ page{
 				font-size: 28upx;
 				color: #999999;
 				margin-top: 10upx;
-				height:110upx;
-				// word-break: break-all;/*允许在单词内换行*/
 				 text-overflow: ellipsis;
 				 white-space: wrap;
 				  display:-webkit-box; 
-				 -webkit-line-clamp:3;
+				 -webkit-line-clamp:2;
 				 -webkit-box-orient:vertical;
 				  overflow: hidden;
 			}

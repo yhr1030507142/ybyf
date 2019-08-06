@@ -78,7 +78,7 @@
 			getPic:function(res){
 				return res.split(',')[0]
 			},
-			getTime:function(res){
+			getTime:function(res){  
 				return res.slice(0,11)
 			}
 		}

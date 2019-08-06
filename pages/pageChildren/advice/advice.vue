@@ -85,24 +85,21 @@
 							console.log(JSON.stringify(res.tempFilePaths));
 							var tempFilePaths = res.tempFilePaths;
 							this.imageList = this.imageList.concat(res.tempFilePaths);
-							const uploadTask = uni.uploadFile({
+							for(var i =0;i<tempFilePaths.length;i++){
+							 uni.uploadFile({
 								url: _self.$api+'dockingManager/upload', //仅为示例，非真实的接口地址
 								//url: "http://www.tp5.com/index", //仅为示例，非真实的接口地址
-								filePath: tempFilePaths[0],
+								filePath: tempFilePaths[i],
 								name: 'file', 
 								formData: {
 									'user': 'test'
 								},
 								success: (uploadFileRes) => {
 									_self.pathArr = _self.pathArr.concat(JSON.parse(uploadFileRes.data))
-									_self.state = true
-
 								}
-							}); 
-							 uploadTask.onProgressUpdate((res) => {
-								 _self.showBox = true
-								_self.percent = res.progress
-							});
+							  }); 
+							}
+							_self.state = true
 						}	
 					})
 				},

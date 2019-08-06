@@ -1,11 +1,11 @@
 <template>
 	<view>
 		<view class="box">
-			<!-- 活动公告 -->
+			<!-- 供求 -->
 			<view class="index-notice flex col" v-show="ListLen>0"> 
-				<view class="index-notice-content flex row " v-for="(v,i) in List" :key="i" @tap="goInfoDetail(v.Id,v.mark)">
+				<view class="index-notice-content flex row " v-for="(v,i) in List" :key="i" @tap="goInfoDetail(v.Id,v.mark,v.trade,v.branch)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink" mode="" class="img"></image>
+							<image :src="v.shrink | getPic" mode="" class="img"></image>
 						</view> 
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
@@ -143,18 +143,24 @@
 				 })
 			},
 			/**
+			 * 企业收藏
+			 * 
+			 */
+			/**
 			 * 供应详情
 			 */
-			goInfoDetail:function(id,mark){
+			goInfoDetail:function(id,mark,trade,branch){
+				console.log('trade')
 				var _self = this
 				uni.navigateTo({
-					url:"../../infoPage/infoDetail/infoDetail?id="+id+"&mark="+mark
+					url:"../../infoPage/infoDetail/infoDetail?id="+id+"&mark="+mark+"&tradeId="+trade+"&branch="+branch
 				})
 			},
 			/**
 			 * 活动详情
 			 */
 			goActiveDetail:function(id){
+				console.log('1231')
 				var _self = this
 				uni.navigateTo({
 					url:"../../pageChildren/activity/activity?id="+id
@@ -169,6 +175,15 @@
 					url:"../../serverPage/lawServerDetail/lawServerDetail?id="+id
 				})
 			}
+		},
+		filters:{
+			getPic:function(res){
+				if(res==="" || res==undefined){
+					return " "
+				}else{
+					return res.split(',')[0]
+				}
+			},
 		}
 	}
 </script>
@@ -206,16 +221,17 @@
 			.index-notice-content-img{
 				width: 30%;
 				.img{
-				width: 160upx;
-				height:160upx;
+				width: 200upx;
+				height:200upx;
 				}
 			}
 			.index-notice-content-right{
-				width: 68%;
+				width: 60%;
 				margin-left: 20upx;
 				flex: 1;
 				font-size: 28upx;
-			    height: 160upx;
+			    height: 200upx;
+				justify-content: space-between;
 				.index-notice-content-right-title{
 					font-size: 32upx;
 					color: #000000;

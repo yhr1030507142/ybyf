@@ -18,6 +18,11 @@
 .col{
 	flex-direction: column;
 }
+ img{
+display: block;
+height: auto;
+max-width: 100%; 
+}
 
 
 

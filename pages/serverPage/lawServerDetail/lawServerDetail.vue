@@ -89,6 +89,11 @@
 			},
 			getInfo:function(){
 				var _self = this
+				 if(!uni.getStorageSync("openId")||uni.getStorageSync("openId")==undefined||uni.getStorageSync("openId")===""){
+					        uni.navigateTo({
+					        	url:"../../load/load"
+					        })
+				}
 				uni.request({ 
 					url:_self.$api+"dockingManager/totalQuery",
 					data:{id:_self.id,pull:3,optionId:uni.getStorageSync("openId"),branch:0},
@@ -151,18 +156,40 @@
 				 uni.makePhoneCall({
 					phoneNumber: _self.List.phone //仅为示例
 					});
-				// uni.showModal({
-				// 	title: '联系人电话',
-				// 	content: '13008838897',
-				// 	success: function (res) {
-				// 		if (res.confirm) {
-				// 			
-				// 		} else if (res.cancel) {
-				// 			console.log('用户点击取消');
-				// 		}
-				// 	}
-				// });
-			}
+			},
+			/**
+			 * 转发
+			 */
+			onShareAppMessage: function (options) {
+					var _self = this
+					if (options.from === 'button') {
+					  // 来自页面内转发按钮
+					  console.log(options.target)
+					}
+					return {
+					  //## 此为转发页面所显示的标题
+					  //title: '好友代付', 
+					  //## 此为转发页面的描述性文字
+					  desc: _self.List.name, 
+					  //## 此为转发给微信好友或微信群后，对方点击后进入的页面链接，可以根据自己的需求添加参数
+					  path:  'pages/serverPage/lawServerDetail/lawServerDetail?id='+_self.id, 
+					  //## 转发操作成功后的回调函数，用于对发起者的提示语句或其他逻辑处理
+					  success: function(res) {
+						  uni.request({
+						  url:_self.$api+"dockingManager/activityHideAdd",
+						  data:{id:_self.id,mark:1,optionId:uni.getStorageSync("openId")},
+						  success:function(res){
+							  console.log(res)
+							  	console.log("转发成功")
+						  },
+						  }) 
+					  },
+					  //## 转发操作失败/取消 后的回调处理，一般是个提示语句即可
+					  fail: function() {
+						  console.log("error")
+					  }
+					}
+			},
 		},
 		 components: {uniPopup},
 		
@@ -215,6 +242,7 @@
 			line-height: 50upx;
 			color: #333333;
 			min-height: 600upx;
+			padding-bottom: 100upx;
 		}
 	}
 }

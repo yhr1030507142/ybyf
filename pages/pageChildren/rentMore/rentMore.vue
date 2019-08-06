@@ -98,16 +98,17 @@
 			.index-notice-content-img{
 				width: 30%;
 				.img{
-					width: 160upx;
-					height:160upx;
+					width: 200upx;
+					height:200upx;
 				} 
 			}
 			.index-notice-content-right{
+				justify-content: space-between;
 				width: 60%;
 				margin-left: 20upx;
 				flex: 1;
 				font-size: 28upx;
-				height: 160upx;
+				height: 200upx;
 				.index-notice-content-right-title{
 					font-size: 32upx;
 					color: #000000;

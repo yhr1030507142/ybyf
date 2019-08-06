@@ -10,7 +10,7 @@
 					<view class="index-notice-header-more">
 					</view>
 				</view>
-				<view class="index-notice-content flex row" v-for="(v,i) in serverList" :key="i" @tap="goto(v.Id)">
+				<view class="index-notice-content flex row" v-for="(v,i) in serverList" :key="i" @tap="goto(v.Id,v.branch)">
 						<view class="index-notice-content-img flex">
 							<image :src="v.shrink" mode="" class="img"></image>
 						</view>
@@ -43,7 +43,7 @@
 		onLoad:function(option){
 			var _self = this
 			console.log(option)
-			_self.id = option.id
+			_self.id = option.branch
 			
 			_self.getInfo()
 		},
@@ -60,9 +60,9 @@
 				}
 			})
 			},
-			goto:function(id){
+			goto:function(id,branch){
 				uni.navigateTo({
-					url:"../productDetail/productDetail?id="+id
+					url:"../productDetail/productDetail?id="+id+"&branch="+branch
 				})
 			},
 		}

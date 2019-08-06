@@ -99,8 +99,8 @@
 			.index-notice-content-img{
 				width: 30%;
 				.img{
-					width: 150upx;
-					height:150upx;
+					width: 200upx;
+					height:200upx;
 				}
 			}
 			.index-notice-content-right{
@@ -108,6 +108,8 @@
 				margin-left: 20upx;
 				flex: 1;
 				font-size: 28upx;
+				height: 200upx;
+				justify-content: space-between;
 				.index-notice-content-right-title{
 					font-size: 32upx;
 					color: #000000;
@@ -123,7 +125,7 @@
 					 text-overflow: ellipsis;
 					white-space: wrap;
 					 display:-webkit-box; 
-					-webkit-line-clamp:3;
+					-webkit-line-clamp:2;
 					-webkit-box-orient:vertical;
 					 overflow: hidden;
 				}

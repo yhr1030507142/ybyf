@@ -111,7 +111,7 @@
 				shrink:[],
 				phone:"",
 				branch:0,
-				tradeId:0,
+				tradeId:"",
 			}
 		},
 		onLoad:function(option){
@@ -119,17 +119,7 @@
 			console.log(option)
 			_self.mark = option.mark
 			_self.id = option.id
-			if(option.branch==undefined){
-				_self.branch = 0
-			}else{
-				_self.branch = option.branch
-			}
-			if(option.tradeId == undefined){
-				_self.tradeId = 0
-			}else{
-				_self.tradeId = option.tradeId
-			}
-			console.log(_self.mark+"/"+_self.id)
+			_self.tradeId = option.tradeId
 			_self.getInfo()
 		},
 		onShow:function(){
@@ -151,20 +141,19 @@
 			},
 			getInfo:function(){
 				var _self = this
-				if(!uni.getStorageSync("openId")||uni.getStorageSync("openId")==undefined||uni.getStorageSync("openId")===""){
+				 if(!uni.getStorageSync("openId")||uni.getStorageSync("openId")==undefined||uni.getStorageSync("openId")===""){
 					        uni.navigateTo({
 					        	url:"../../load/load"
 					        })
 				}
 				uni.request({ 
 					url:_self.$api+"dockingManager/declareNewQuery",
-					data:{id:_self.id,mark:_self.mark,optionId:uni.getStorageSync("openId"),branch:_self.branch,trade:_self.tradeId},
+					data:{id:_self.id,mark:_self.mark,optionId:uni.getStorageSync("openId"),branch:0,trade:_self.tradeId},
 					method:"GET",
 					success:function(res){
 						console.log(res)
 						_self.shrink = res.data[0].shrink.split(',')
 						_self.phone = res.data[0].phone
-						
 						console.log(_self.shrink)
 						_self.supplyList = res.data[0]
 						if(res.data[0].state === undefined || res.data[0].state===null){
@@ -173,7 +162,7 @@
 							_self.collection =2
 						}
 					}
-				})   
+				})
 			},
 			/**
 			 * 收藏
@@ -231,7 +220,7 @@
 					  //## 此为转发页面的描述性文字
 					  desc: _self.supplyList.name, 
 					  //## 此为转发给微信好友或微信群后，对方点击后进入的页面链接，可以根据自己的需求添加参数
-					  path:  'pages/infoPage/infoDetail/infoDetail?id='+_self.id, 
+					  path:  'pages/minePage/myComponyNeedDetail/myComponyNeedDetail?id='+_self.id+"&tradeId="+_self.tradeId+"&mark="+mark, 
 					  //## 转发操作成功后的回调函数，用于对发起者的提示语句或其他逻辑处理
 					  success: function(res) {
 						  uni.request({

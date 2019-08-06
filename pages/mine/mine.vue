@@ -78,8 +78,8 @@
 				</view>
 				
 				<view class="mine-content-text-server flex col">
-					<view class="mine-content-text-server-top color6"  @tap="goto('myCompony')">
-						<view class="iconfont icon-shenhe icon"></view>
+					<view class="mine-content-text-server-top color7"  @tap="goto('myCompony')">
+						<view class="iconfont icon-wodeqiye icon"></view>
 					</view>
 					<view class="mine-content-text-server-bottom">我的企业</view>		
 				</view>
@@ -96,6 +96,7 @@
 				name:"",
 				pic:"",
 				trade:"",
+				componyId:"",
 
 			}
 		},
@@ -105,6 +106,7 @@
 			_self.name = uni.getStorageSync("name")
 			_self.pic = uni.getStorageSync("pic")
 			_self.trade = uni.getStorageSync("trade")
+			_self.componyId = uni.getStorageSync("componyId") 
 			uni.startPullDownRefresh();
 		},
 		onPullDownRefresh:function() {
@@ -114,6 +116,7 @@
 		_self.name = uni.getStorageSync("name")
 		_self.pic = uni.getStorageSync("pic")
 		_self.trade = uni.getStorageSync("trade")
+		_self.componyId = uni.getStorageSync("componyId") 
     },
 		onShow:function(){
 			var _self = this  
@@ -121,12 +124,20 @@
 		}, 
 		methods: {
 			goto:function(content){
+				var _self = this
 				if(content == "myCompony"){
-					uni.showToast({
-						title:"暂未开放",
-						icon:"none"
-					})
-					return false     
+					if(uni.getStorageSync("componyOwner")==1 || uni.getStorageSync("componyOwner")==2){
+						_self.componyId = uni.getStorageSync("componyId")
+							uni.navigateTo({
+								url:"../minePage/"+content+"/"+content+"?componyId="+_self.componyId
+							})
+					}else{
+						uni.showToast({
+							title:"您尚未加入企业",
+							icon:"none"
+						})
+						return false     
+					}
 				}
 				uni.navigateTo({
 					url:"../minePage/"+content+"/"+content
@@ -157,29 +168,34 @@
 					data:{optionId:uni.getStorageSync("openId")}, 
 					success:function(res){ 
 						console.log(res)
-						
 						 if(res.data == ""){ 
 							uni.setStorageSync("trade","")
 							uni.setStorageSync("componyOwner","3") 
+							uni.setStorageSync("componyId","0")
+							uni.setStorageSync("tube","0")
 						}else{
+							uni.setStorageSync("tube",res.data[0].tube)
 							if(res.data[0].state ==1  &&res.data[0].mark==0){
 									uni.setStorageSync("componyOwner","1")
 									uni.setStorageSync("trade",res.data[0].trade)  
+									uni.setStorageSync("componyId",res.data[0].Id)
+									// uni.setStorageSync("tradeId",res.data[0].trade_id) 
 							}else if(res.data[0].state ==1  &&res.data[0].mark==1){
 								uni.setStorageSync("componyOwner","2")
 								uni.setStorageSync("trade",res.data[0].upper_name)  
+								uni.setStorageSync("componyId",res.data[0].Id)
 							}else if(res.data[0].state ==0  &&res.data[0].mark==0){
 								//正在认证企业审核
-								uni.setStorageSync("trade","")
-								uni.setStorageSync("componyOwner","4")
-							}else if(res.data[0].state ==0  &&res.data[0].mark==1){
+								uni.setStorageSync("componyOwner","4") 
+									uni.setStorageSync("componyId",res.data[0].Id)
+							}else if(res.data[0].state ==0  &&res.data[0].mark==1){ 
 								//正在加入企业审核
-								uni.setStorageSync("trade","")
 								uni.setStorageSync("componyOwner","5")
+									uni.setStorageSync("componyId",res.data[0].Id) 
 							}
 							else{
-								uni.setStorageSync("trade","")
-								uni.setStorageSync("componyOwner","3") 
+								uni.setStorageSync("componyOwner","3")
+								uni.setStorageSync("componyId","0")
 							}
 						}
 						 uni.stopPullDownRefresh();
@@ -298,6 +314,9 @@
 	background: #1758EA;
 }
 .color6{
+	background: #5282ED;
+}
+.color7{
 	background: #5282ED;
 }
 </style>

@@ -32,10 +32,10 @@
 										
 										<view class="">{{v.create_time | getTime}}</view>
 									  </view>
-										<view class="flex row">
-										<view class="iconfont icon-chanpinshezhi icon1"></view>
-										<view class="kind_name">互联网</view>
-									</view> 
+										<!-- <view class="flex row">
+										<view class="iconfont icon-chanpinshezhi icon1"></view> 
+										<view class="kind_name">{{v.branch_name}}</view>
+									</view> -->
 								</view>
 						</view>
 				</view>
@@ -59,10 +59,10 @@
 										
 										<view class="">{{v.create_time | getTime}}</view> 
 									</view>
-										<view class="flex row">
+										<!-- <view class="flex row">
 										<view class="iconfont icon-zhifeiji"></view>
 										<view class="">互联网互联网互联网互联网</view>
-									</view> 
+									</view> -->
 								</view>
 						</view>
 				</view>
@@ -104,7 +104,7 @@
 						console.log(res.data) 
 					} 
 				})
-			},
+			}, 
 			getInfo1:function(){
 				var _self = this
 				uni.request({
@@ -199,16 +199,17 @@ page{
 		.index-notice-content-img{
 			width: 30%;
 			.img{
-				width: 155upx;
-				height: 155upx;
+				width: 200upx;
+				height: 200upx;
 			}
 		}
 		.index-notice-content-right{
-			width: 68%;
+			width: 60%;
 			margin-left: 20upx;
 			flex: 1;
 			font-size: 28upx;
 			justify-content: space-between;
+			height: 200upx;
 			.index-notice-content-right-title{
 				font-size: 32upx;
 				color: #000000;

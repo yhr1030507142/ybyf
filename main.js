@@ -5,11 +5,11 @@ import './static/style/iconfont.css'
 import  "@dcloudio/uni-ui"
 Vue.config.productionTip = false
 Vue.prototype.$api = 'https://ybyf.gzbigbang.net/ybyfManager/' 
-//Vue.prototype.$api = 'http://192.168.0.101:8080/'     
+//Vue.prototype.$api = 'http://192.168.0.106:8080/'       
 App.mpType = 'app'
- 
+   
 const app = new Vue({ 
-    ...App
+    ...App 
 })  
-app.$mount()        
-     
+app.$mount()         
+          

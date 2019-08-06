@@ -55,7 +55,7 @@
 							<view class="iconfont icon-fangxiang icon"></view>
 							<view class="index-content-right-oriented-word">入园导向</view>	
 					</view>
-					<view class="index-content-right-server flex col" @tap="goToSwich('server')">
+					<view class="index-content-right-server flex col" @tap="goToSwich('server1')">
 						<view class="iconfont icon-fuwu icon"></view>
 						<view class="">
 							园区服务
@@ -157,7 +157,7 @@
 							<image :src="v.shrink" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
-								<view class="index-notice-content-right-title">
+								<view class="index-notice-content-right-title"> 
 									{{v.name}}
 								</view> 
 								<view class="index-notice-content-right-text">
@@ -254,11 +254,23 @@
 		onLoad:function(){ 
 			var _self = this
 			_self.getBanner()
-			_self.getPark()
-			_self.getHeadlineList()
-			_self.getAdvice() 
-			_self.getParkAdvice()
-			_self.getRentList()
+			// _self.getPark()
+			// _self.getHeadlineList()
+			// _self.getAdvice() 
+			// _self.getParkAdvice()
+			// _self.getRentList() 
+			setTimeout(function(){
+				_self.getPark()
+				_self.getHeadlineList() 
+				_self.getAdvice()  
+				_self.getParkAdvice()
+				_self.getRentList() 
+			},1000)
+		},
+		onShow:function(){
+			
+			
+			
 		},
 		methods: {
 			/**
@@ -280,7 +292,7 @@
 								_self.openId=res.data[0].openid
 								uni.setStorageSync("openId",res.data[0].openid)
 							}  
-						}) 
+						})  
 					}
 				})
 			},
@@ -354,7 +366,7 @@
 					method:"GET",
 					success:function(res){
 						_self.parkList = res.data.slice(0,5)
-						console.log(res.data)
+						// console.log(res.data)
 					}
 				})
 			},
@@ -699,6 +711,7 @@ page{
 			margin-left: 20upx;
 			flex: 1;
 			font-size: 28upx;
+			height: 200upx;
 			.index-notice-content-right-title{
 				font-size: 32upx;
 				color: #000000;
@@ -711,17 +724,16 @@ page{
 				font-size: 28upx;
 				color: #999999;
 				margin-top: 10upx;
-				height:110upx;
 				// word-break: break-all;/*允许在单词内换行*/
 				 text-overflow: ellipsis;
 				 white-space: wrap;
 				  display:-webkit-box; 
-				 -webkit-line-clamp:3;
+				 -webkit-line-clamp:2;
 				 -webkit-box-orient:vertical;
 				  overflow: hidden;
 			}
 			.index-notice-content-right-date{
-				margin-top: 10upx;
+				margin-top: 10upx; 
 				font-size: 24upx;
 				color: #999999;
 			}

@@ -5,24 +5,23 @@
 			<view class="index-notice flex col">
 				<view class="index-notice-header flex row row_between">
 					<view class="index-notice-header-tilte">
-						
 					</view>
 					<view class="index-notice-header-more">
 					</view>
 				</view>
-				<view class="index-notice-content flex row" v-for="(v,i) in headlineList" :key="i" @tap="goto(v.Id,v.branch)">
+				<view class="index-notice-content flex row" v-for="(v,i) in shrink" :key="i" @tap="goto(v.Id,v.branch)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink" mode="" class="img"></image>
+							<image :src="v.shrink | getPic" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
-									{{v.name}}
+									{{v.name}} 
 								</view> 
 								<view class="index-notice-content-right-text">
 									{{v.sketch}}
 								</view>
 								<view class="index-notice-content-right-date">
-								{{v.create_time}}
+									{{v.create_time | getTime}}
 								</view>
 						</view>
 				</view>
@@ -36,32 +35,43 @@
 	export default {
 		data() {
 			return {
-			headlineList:[],
-			}
+				shrink:[],
+				tradeId:"",
+			} 
 		},
-		onLoad:function(){
-			
+		onLoad:function(option){
 			var _self = this
+			_self.tradeId = option.tradeId
 			_self.getInfo()
 		},
 		methods: {
 			getInfo:function(){
 				var _self = this
 				uni.request({
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:18,optionId:uni.getStorageSync("openId")},
+					url:_self.$api+"dockingManager/totalNewQuery",
+					data:{pull:18,id:0,optionId:uni.getStorageSync("openId"),branch:0,trade:_self.tradeId},
 					method:"GET",
 					success:function(res){
 						console.log(res)
-						_self.headlineList = res.data
+						var data = res.data 
+						_self.shrink = res.data 
 					}
 				})
 			},
-			goto:function(id,branch){
+			goto:function(id){
+				var _self = this
 				uni.navigateTo({
-					url:"../productDetail/productDetail?id="+id+"&branch="+branch
+					url:"../myComponyProductDetail/myComponyProductDetail?id="+id+"&tradeId="+_self.tradeId
 				})
 			},
+		},
+		filters:{
+				getPic:function(res){
+				return res.split(',')[0]
+			},
+			getTime:function(res){
+				return res.slice(0,11)
+			}
 		}
 	}
 </script>
@@ -75,7 +85,7 @@
 	margin: 30upx auto;
 	.index-notice{
 		background: #ffffff;
-		min-height:1000rpx;
+		
 		margin: 30upx auto;
 		.index-notice-header{
 			width: 90%;
@@ -99,17 +109,16 @@
 			.index-notice-content-img{
 				width: 30%;
 				.img{
-					width: 200upx;
-					height:200upx;
-				}
+					width: 160upx;
+					height:160upx;
+				} 
 			}
 			.index-notice-content-right{
 				width: 60%;
 				margin-left: 20upx;
 				flex: 1;
 				font-size: 28upx;
-				height: 200upx;
-				justify-content: space-between;
+				height: 160upx;
 				.index-notice-content-right-title{
 					font-size: 32upx;
 					color: #000000;

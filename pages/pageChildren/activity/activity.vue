@@ -12,7 +12,7 @@
 					<view class="park-date">
 						活动开始时间:{{details.open_time}}
 					</view>
-					<rich-text class="park-box-content-middle" :nodes="details.content">
+					<rich-text class="park-box-content-middle" :nodes='nodeContent'>
 					</rich-text>
 				</view>
 		</view>
@@ -76,6 +76,7 @@
 			collection:1,
 			report:"",
 			errorMessage:"",
+			nodeContent:"",
 			}
 		},
 		onLoad:function(option){ 
@@ -152,6 +153,11 @@
 			},
 			getInfo:function(){
 				var _self = this
+				 if(!uni.getStorageSync("openId")||uni.getStorageSync("openId")==undefined||uni.getStorageSync("openId")===""){
+												  uni.navigateTo({
+												  	url:"../../load/load"
+												  })
+				}
 				console.log(_self.id)
 				uni.request({
 					url:_self.$api+"dockingManager/activityTubeQuery",
@@ -159,6 +165,7 @@
 					success:function(res){
 						console.log(res)
 						_self.details = res.data[0]
+						_self.nodeContent = res.data[0].content.replace(/<img/gi, '<img style="max-width:100%;height:auto;display:block" ');
 						if(res.data[0].reply === undefined || res.data[0].reply===null){
 							_self.report =1
 						}else{
@@ -252,6 +259,12 @@
 				},
 		},
 		 components: {uniPopup},
+		 filters:{
+			 spliceData:function(newData){
+				
+				  return newData.replace(/\<img/gi,   '<img class="rich-img" ' );
+			 }
+		 }
 		
 	}
 </script>
@@ -259,7 +272,7 @@
 <style lang="scss"> 
 	page{
 		background: #e8e7e7;
-	}
+	} 
 .color{
 	color: yellow;
 }
@@ -301,6 +314,7 @@
 		.park-box-content-middle{
 			font-size: 18upx;
 			width: 90%;
+			overflow-x: hidden;
 			margin: 20upx auto;
 			font-size: 28upx;
 			line-height: 50upx;

@@ -21,9 +21,9 @@
 										
 										<view class="">{{v.create_time | getTime}}</view>
 									  </view>
-										<view class="flex row">
+									<!-- 	<view class="flex row">
 										<view class="iconfont icon-chanpinshezhi icon1"></view>
-										<view class="kind_name">互联网</view>
+										<view class="kind_name">互联网</view> -->
 									</view> 
 								</view>
 						</view>

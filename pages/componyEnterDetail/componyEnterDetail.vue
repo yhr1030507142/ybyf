@@ -23,7 +23,7 @@
 							
 								<view class="address flex row">
 								<view class="iconfont icon-chanpinshezhi"></view>
-								<view class="">主营:{{List.branch}}</view>
+								<view class="">主营:{{List.branch_name}}</view>
 							</view>
 				
 				</view>
@@ -48,7 +48,7 @@
 					查看更多>
 				</view>
 			</view>
-			<view class="index-notice-content flex row" v-for="(v,i) in serverList" :key="i" @tap="goProductDetail(v.Id)">
+			<view class="index-notice-content flex row" v-for="(v,i) in serverList" :key="i" @tap="goProductDetail(v.Id,v.branch)">
 					<view class="index-notice-content-img flex">
 						<image :src="v.shrink" mode="" class="img"></image>
 					</view>
@@ -120,7 +120,13 @@
 							</view> -->
 					</view>
 			</view>
+			
 		</view>  
+		<!--  -->
+		 <view class="park-box-select">
+			 <button type="primary" class="btn" @tap="apply">立即咨询</button>
+		 </view>
+			 <!--  -->
 	</view>
 </template>
 
@@ -152,15 +158,25 @@
 				 	url:_self.$api+"dockingManager/stationedQuery",
 					data:{id:_self.id,name:"",pull:0}, 
 					success:function(res){
+						console.log(res)
 						console.log(res.data)
 						_self.List = res.data[0]
 					}
 				 })
 			},
 			/**
+			 * 立即咨询
+			 */
+			apply:function(){
+				var _self = this
+				 uni.makePhoneCall({
+					phoneNumber: _self.List.phone //仅为示例
+				 });
+			},
+			/**
 			 * 需求资源
 			 */
-			getNeedInfo:function(){
+			getNeedInfo:function(){ 
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/declareQuery",
@@ -208,15 +224,15 @@
 			goProductMore:function(){
 				var _self = this
 				uni.navigateTo({
-					url:"../pageChildren/componyProduct/componyProduct?id="+_self.id
+					url:"../pageChildren/componyProduct/componyProduct?branch="+_self.id
 				})
 			},
 			/**
 			 * 产品详情
 			 */
-			goProductDetail:function(id){
+			goProductDetail:function(id,branch){
 				uni.navigateTo({
-					url:"../pageChildren/productDetail/productDetail?id="+id
+					url:"../pageChildren/productDetail/productDetail?id="+id+"&branch="+branch
 				})
 			},
 			/**
@@ -259,6 +275,10 @@
 	page{
 		color: #333333;
 			background: #e8e7e7;
+	}
+	.btn{
+		border-radius: 5upx;
+		background: #1758EA !important;
 	}
 .compony-detail{
 	background: #ffffff;
@@ -386,5 +406,8 @@
 			}
 		}
 	}
+}
+.park-box-select{
+	padding-bottom: 30upx; 
 }
 </style>

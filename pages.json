@@ -381,6 +381,45 @@
 				"navigationBarTitleText": "我的企业"
 			}
         }
+       
+        ,{
+            "path" : "pages/minePage/myComponyNeed/myComponyNeed",
+            "style" : {
+					"navigationBarTitleText": "我的企业需求资源" 
+			}
+        }
+        ,{
+            "path" : "pages/minePage/myComponyApply/myComponyApply",
+            "style" : {
+				"navigationBarTitleText": "我的企业供应资源" 
+			}
+        }
+        ,{
+            "path" : "pages/minePage/myComponyProduct/myComponyProduct",
+            "style" : {
+				"navigationBarTitleText": "我的企业产品服务" 
+			} 
+        }
+        ,{ 
+            "path" : "pages/minePage/myComponyNeedDetail/myComponyNeedDetail",
+            "style" : {
+				"navigationBarTitleText": "我的企业供求详情" 
+
+			}
+        }
+        ,{
+            "path" : "pages/minePage/myComponyProductDetail/myComponyProductDetail",
+            "style" : {
+				"navigationBarTitleText": "我的企业产品服务详情" 
+			} 
+        }
+        ,{
+            "path" : "pages/minePage/myFriends/myFriends",
+            "style" : {
+				"navigationBarTitleText": "我的同事",
+				"enablePullDownRefresh": true
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",

@@ -136,29 +136,31 @@
 						console.log(res)
 						console.log(JSON.stringify(res.tempFilePaths));
 						var tempFilePaths = res.tempFilePaths;
+						//console.log(JSON.stringify(res.tempFilePaths));
 						this.imageList = this.imageList.concat(res.tempFilePaths);
-						const uploadTask = uni.uploadFile({
+						console.log(this.imageList)
+						console.log(tempFilePaths)
+						for(var i =0;i<tempFilePaths.length;i++){
+						uni.uploadFile({
 							url: _self.$api+'dockingManager/upload', //仅为示例，非真实的接口地址
 							//url: "http://www.tp5.com/index", //仅为示例，非真实的接口地址
-							filePath: tempFilePaths[0],
+							filePath: tempFilePaths[i],
 							name: 'file', 
 							formData: {
 								'user': 'test'
 							}, 
 							success: (uploadFileRes) => {
-								_self.pathArr = _self.pathArr.concat(JSON.parse(uploadFileRes.data))
+								_self.pathArr = _self.pathArr.concat(JSON.parse(uploadFileRes.data)) 
 								_self.state = true
-								console.log(_self.pathArr)  
+								console.log(_self.pathArr)   
 								console.log(uploadFileRes);
 							}
 						}); 
-						 uploadTask.onProgressUpdate((res) => {
-							_self.showBox = true
-							_self.percent = res.progress
-							// console.log('上传进度' + res.progress);
-							// console.log('已经上传的数据长度' + res.totalBytesSent);
-							// console.log('预期需要上传的数据总长度' + res.totalBytesExpectedToSend);
-						});
+						}
+						//  uploadTask.onProgressUpdate((res) => {
+						// 	_self.showBox = true
+						// 	_self.percent = res.progress
+						// });
 					}
 				})
 			},
@@ -196,7 +198,7 @@
 							 list1[i] = res.data[i].id
 						}
 						_self.array = list
-						_self.array1 = list1
+						_self.array1 = list1 
 						console.log(res)
 						console.log(list)
 						
@@ -205,22 +207,22 @@
 			},
 			addInfo:function(){
 				var _self = this
-				if(_self.compony_name == ""){
+				if(_self.index === ""){
 					uni.showToast({
-						title:"企业名称不能为空",
+						title:"请选择加入的企业",
 						icon:"none"
 					})
 					return false
 				}else if(_self.name == ""){
 					uni.showToast({
-						title:"法人姓名不能为空",
+						title:"姓名不能为空",
 						icon:"none"
 					})
 					return false
 				}
 				else if(_self.compony_num == ""){
 					uni.showToast({
-						title:"企业注册号不能为空",
+						title:"手机号不能为空",
 						icon:"none"
 					})
 					return false

@@ -65,12 +65,14 @@
 		data() {  
 			return {
 			details:[],
-			id:""
+			id:"",
+			branch:""
 			}
 		},
 		onLoad:function(option){ 
 			var _self = this
 			_self.id = option.id
+			_self.branch = option.branch
 			console.log(_self.id)
 			_self.getInfo()
 		},
@@ -79,7 +81,7 @@
 				var _self = this
 				uni.request({ 
 					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:_self.id,pull:18,optionId:uni.getStorageSync("openId"),branch:0},
+					data:{id:_self.id,pull:18,optionId:uni.getStorageSync("openId"),branch:_self.branch},
 					method:"GET",
 					success:function(res){
 						console.log(res)

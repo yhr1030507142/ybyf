@@ -3,16 +3,16 @@
 		<!-- 图片 -->
 		<view class="park-box flex col">
 				<view class="park-box-pic">
-					<image :src="details.primary" mode="" class="img"></image>
+					<image :src="details.shrink" mode="" class="img"></image>
 				</view>
 				<view class="park-box-content flex col">
 					<view class="park-box-content-header">
 						{{details.name}}
 					</view>
 					<view class="park-date">
-						活动开始时间:{{details.create_time}}
+						发布时间:{{details.create_time}}
 					</view>
-					<rich-text class="park-box-content-middle" :nodes="nodeContent">
+					<rich-text class="park-box-content-middle" :nodes="details.content">
 					</rich-text>
 				</view>
 		</view>
@@ -66,28 +66,27 @@
 			return {
 			details:[],
 			id:"",
-			nodeContent:""
+			branch:"",
+			tradeId:""
 			}
 		},
 		onLoad:function(option){ 
 			var _self = this
 			_self.id = option.id
-			console.log(_self.id)
+			_self.tradeId = option.tradeId
 			_self.getInfo()
 		},
 		methods: {
 			getInfo:function(){
-				var _self = this
+				var _self = this 
 				uni.request({ 
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:_self.id,pull:19,optionId:uni.getStorageSync("openId"),branch:0},
+					url:_self.$api+"dockingManager/totalNewQuery",
+					data:{pull:18,id:_self.id,optionId:uni.getStorageSync("openId"),branch:0,trade:_self.tradeId},
 					method:"GET",
 					success:function(res){
 						console.log(res)
 						_self.details = res.data[0]
-						_self.nodeContent = res.data[0].content.replace(/<img/gi, '<img style="width:300rpx !important;height:auto;display:block" ').replace(/<section/g, '<div')
-     									.replace(/\/section>/g, '\div>');
-						console.log(res)  
+						console.log(res)
 					}
 				})
 			},

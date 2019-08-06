@@ -11,19 +11,20 @@
 		 <view class="middle">
 			 <view class="head">
 				 <ul class="th flex row row-between">
-				 	<li class="li-10">申请人</li>
+				 	<li class="li-10">姓名</li>
 				 	<li class="li-30">手机号码</li>
-					<li class="li-30">申请时间</li>
 				 	<li class="li-10">操作</li>
 				 </ul>
 			 </view>
 		 	
-		 	<ul class="tr" v-for="(v,i) in list" :key="i" @tap="goDetail(v.id)">
+		 	<ul class="tr" v-for="(v,i) in friendList" :key="i">
 		 	<li class="li-10">{{v.name}}</li>
 		 	<li class="li-30">{{v.phone}}</li>
-		 	<li class="li-30">{{v.createTime | rTime}}</li>
-		 	<li class="li-10">
-			待审核
+		 	<!-- <li class="li-30">{{v.createTime | rTime}}</li> -->
+		 	<li class="li-10 flex row caozuo">
+			<span @tap="tradeTubeAdd(v.id,1)" v-show="v.tube==0">授权</span>
+			<span @tap="tradeTubeAdd(v.id,0)" v-show="v.tube==1">取消授权</span>
+			<span @tap="tradeWorkDelete(v.id,v.tube)">删除</span>
 			</li>
 		 	</ul> 
 		 </view>
@@ -56,7 +57,8 @@ import uniPagination from '@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vu
 			searchList:[],
 			list:[],
 			branch:0,
-			pageSize:10
+			pageSize:10,//每夜条数
+			friendList:[],
 			}  
 		},
 		onLoad(option) { 
@@ -67,15 +69,7 @@ import uniPagination from '@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vu
 			var _self = this
 			_self.getInfo()
 		},
-		onShow(){
-			var _self =this
-			_self.getInfo()
-		},
 		methods: {
-			change(e){
-				console.log(e)
-			},
-
 			changePage(type){
 				//console.log(type.current)
 				this.currentPage = type.current
@@ -84,26 +78,125 @@ import uniPagination from '@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vu
 			getInfo:function(){
 				var _self =this
 				 uni.request({
-				 	url:_self.$api+"dockingManager/cardQuery",
-					data:{optionId:uni.getStorageSync("openId"),branch:_self.currentPage,live:_self.pageSize,id:0},
+				 	url:_self.$api+"dockingManager/tradeWorkQuery",
+					data:{optionId:uni.getStorageSync("openId"),branch:_self.currentPage,live:_self.pageSize},
 					method:"GET",
 					success:function(res){
 						console.log(res)
+						_self.friendList = res.data
 						if(res.data == ""){
 							_self.branch = []
 						}else{
 							_self.branch = res.data[0].branch
 						}
-						_self.list = res.data  
-						 uni.stopPullDownRefresh();
+						 uni.stopPullDownRefresh();  
 					}
 				 })
 			},
-			goDetail:function(id){
-				uni.navigateTo({
-					url:"../auditContent/auditContent?id="+id
-				})
-			}
+			/**
+			 * 删除
+			 */
+			tradeWorkDelete:function(id,tube){
+				var _self = this
+				uni.showModal({
+				title: '提示',
+				content: '是否删除此用户',
+				success: function (res) {
+					if (res.confirm) {
+						uni.request({
+							url:_self.$api+"dockingManager/tradeWorkDelete",
+								data:{id:id,optionId:uni.getStorageSync("openId")},
+								method:"GET",
+								success:function(res){
+									if(res.data == 98){
+										uni.showToast({
+											title:"没有权限",
+											icon:"none"
+										})
+										return false
+									}
+									else if(res.data == 99){
+										uni.showToast({
+											title:"您尚未登录",
+											icon:"none"
+										})
+										return false
+									}
+									else if(res.data == 1){
+										uni.showToast({
+											title:"删除成功"
+										})
+										_self.getInfo()
+									}else{
+										uni.showToast({
+											title:"删除失败",
+											icon:"none"
+										})
+									}	
+								}
+						})
+					} else if (res.cancel) {
+						console.log('用户点击取消');
+					}
+				}
+			});	 
+			},
+			/**
+			 * 授权
+			 */
+			tradeTubeAdd:function(id,tube){
+				console.log(tube)
+				console.log(id)
+					var _self = this
+					uni.showModal({
+					title: '提示',
+					content: '是否为此用户授权或取消管理权限',
+					success: function (res) {
+						if (res.confirm) {
+							uni.request({
+								url:_self.$api+"dockingManager/tradeTubeAdd",
+									data:{id:id,optionId:uni.getStorageSync("openId"),tube:tube},
+									method:"GET",
+									success:function(res){
+										if(res.data == 98){
+											uni.showToast({
+												title:"没有权限",
+												icon:"none"
+											})
+											return false
+										}
+										else if(res.data == 99){
+											uni.showToast({
+												title:"您尚未登录",
+												icon:"none"
+											})
+											return false 
+										}
+										else if(res.data == 1 && tube==0){
+											uni.showToast({
+												title:"取消授权成功"
+											})
+											_self.getInfo()
+										}
+										else if(res.data == 1 && tube==1){
+											uni.showToast({
+												title:"授权成功"
+											})
+											_self.getInfo()
+										}else{
+											uni.showToast({
+												title:"授权失败",
+												icon:"none"
+											})
+										}	
+									}
+							})
+						} else if (res.cancel) {
+							console.log('用户点击取消');
+						}
+					}
+				});	 
+			},
 		},
 		watch:{
 			
@@ -118,7 +211,7 @@ import uniPagination from '@dcloudio/uni-ui/lib/uni-pagination/uni-pagination.vu
 			}
 		},
 		components:{uniPagination}
-	}
+	} 
 </script>
 
 <style lang="scss">
@@ -204,13 +297,16 @@ uni-pagination{
 		width: 100%;
 	}
 .li-10{
-	width: 15%;
+	width: 25%;
+	span{
+		margin-left: 20upx;
+	}
 }
 .li-30{
 	width: 30%;
 }
 .li-25{
-	width: 25%;
+	width: 35%;
 	.icon{
 		font-size: 56upx;
 	}
@@ -220,5 +316,8 @@ uni-pagination{
 }
 .blue{
 	color: #1758EA;
+}
+.caozuo{
+	flex-wrap: nowrap;
 }
 </style>

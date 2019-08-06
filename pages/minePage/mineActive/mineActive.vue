@@ -99,16 +99,17 @@
 			.index-notice-content-img{
 				width: 30%;
 				.img{
-					width: 160upx;
-					height:160upx;
+					width: 200upx;
+					height:200upx;
 				}
 			}
 			.index-notice-content-right{
 				margin-left: 20upx;
 				flex: 1;
 				font-size: 28upx;
-				   height: 160upx;
-				   width: 68%;
+				   height: 200upx;
+				   width: 60%;
+				   justify-content: space-between;
 				.index-notice-content-right-title{
 					font-size: 32upx;
 					color: #000000;

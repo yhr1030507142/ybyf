@@ -72,7 +72,7 @@
 <style lang="scss">
 	page{
 		background: #e8e7e7;
-	}
+	} 
 .box{
 	width: 90%;
 	margin: 30upx auto;
@@ -102,8 +102,8 @@
 			.index-notice-content-img{
 				width: 30%;
 				.img{
-					width: 160upx;
-					height:160upx;
+					width: 200upx;
+					height:200upx;
 				} 
 			}
 			.index-notice-content-right{
@@ -111,7 +111,8 @@
 				margin-left: 20upx;
 				flex: 1;
 				font-size: 28upx;
-				height: 160upx;
+				justify-content: space-between;
+				height: 200upx;
 				.index-notice-content-right-title{
 					font-size: 32upx;
 					color: #000000;

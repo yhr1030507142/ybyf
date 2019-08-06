@@ -96,24 +96,37 @@
 			margin: 0 auto;
 			padding-bottom: 30upx;
 			.index-notice-content-img{
+				width: 30%;
 				.img{
-					width: 150upx;
-					height:150upx;
+					width: 200upx;
+					height:200upx;
 				}
 			}
 			.index-notice-content-right{
+				width: 60%;
+				height: 200upx;
 				margin-left: 20upx;
 				flex: 1;
 				font-size: 28upx;
+				justify-content: space-between;
 				.index-notice-content-right-title{
 					font-size: 32upx;
 					color: #000000;
 					font-weight: 600;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
 				}
 				.index-notice-content-right-text{
 					font-size: 28upx;
 					color: #999999;
 					margin-top: 10upx;
+					 text-overflow: ellipsis;
+					white-space: wrap;
+					 display:-webkit-box; 
+					-webkit-line-clamp:2;
+					-webkit-box-orient:vertical;
+					 overflow: hidden;
 				}
 				.index-notice-content-right-date{
 					margin-top: 10upx;

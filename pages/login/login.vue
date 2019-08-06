@@ -57,22 +57,28 @@
 				 if(res.data == ""){ 
 					uni.setStorageSync("trade","")
 					uni.setStorageSync("componyOwner","3") 
+					uni.setStorageSync("componyId","0")
 				}else{
 					if(res.data[0].state ==1  &&res.data[0].mark==0){
 							uni.setStorageSync("componyOwner","1")
 							uni.setStorageSync("trade",res.data[0].trade)  
+							uni.setStorageSync("componyId",res.data[0].Id)
 					}else if(res.data[0].state ==1  &&res.data[0].mark==1){
 						uni.setStorageSync("componyOwner","2")
 						uni.setStorageSync("trade",res.data[0].upper_name)  
+						uni.setStorageSync("componyId",res.data[0].Id)
 					}else if(res.data[0].state ==0  &&res.data[0].mark==0){
 						//正在认证企业审核
 						uni.setStorageSync("componyOwner","4")
-					}else if(res.data[0].state ==0  &&res.data[0].mark==1){
+							uni.setStorageSync("componyId",res.data[0].Id)
+					}else if(res.data[0].state ==0  &&res.data[0].mark==1){ 
 						//正在加入企业审核
 						uni.setStorageSync("componyOwner","5")
+							uni.setStorageSync("componyId",res.data[0].Id) 
 					}
 					else{
-						uni.setStorageSync("componyOwner","3") 
+						uni.setStorageSync("componyOwner","3")
+						uni.setStorageSync("componyId","0")
 					}
 				}
 			}
