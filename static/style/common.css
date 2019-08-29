@@ -213,7 +213,8 @@ uni-form {
 }
 /* 背景色 */
 .uni-bg-red{
-	background:#F76260; color:#FFF;
+	/* background:#F76260; */
+	 color:#FFF;
 }
 .uni-bg-green{
 	background:#09BB07; color:#FFF;

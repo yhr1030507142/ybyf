@@ -78,13 +78,12 @@
 			getInfo:function(){
 				var _self = this
 				uni.request({ 
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:_self.id,pull:5,optionId:uni.getStorageSync("openId"),branch:0},
+					url:_self.$api+"dockingManager/releaseMainQuery",
+					data:{id:_self.id,pull:3,optionId:uni.getStorageSync("openId")},
 					method:"GET",
 					success:function(res){
-						console.log(res)
+						console.log(res) 
 						_self.details = res.data[0]
-						console.log(res)
 					}
 				})
 			},

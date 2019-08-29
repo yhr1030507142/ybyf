@@ -220,7 +220,7 @@
 					  //## 此为转发页面的描述性文字
 					  desc: _self.supplyList.name, 
 					  //## 此为转发给微信好友或微信群后，对方点击后进入的页面链接，可以根据自己的需求添加参数
-					  path:  'pages/minePage/myComponyNeedDetail/myComponyNeedDetail?id='+_self.id+"&tradeId="+_self.tradeId+"&mark="+mark, 
+					  path:  'pages/minePage/myComponyNeedDetail/myComponyNeedDetail?id='+_self.id+"&tradeId="+_self.tradeId+"&mark="+_self.mark, 
 					  //## 转发操作成功后的回调函数，用于对发起者的提示语句或其他逻辑处理
 					  success: function(res) {
 						  uni.request({

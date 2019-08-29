@@ -34,13 +34,12 @@
 			getInfo:function(){
 				var _self = this
 				uni.request({
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:1,optionId:uni.getStorageSync("openId"),branch:0},
+					url:_self.$api+"dockingManager/releaseMainQuery",
+					data:{id:"0",pull:0,optionId:uni.getStorageSync("openId")},
 					method:"GET",
 					success:function(res){
 						console.log(res)
 						_self.introduceList = res.data
-						console.log(res.data)
 					}
 				})
 			},       
@@ -110,6 +109,7 @@
 			margin: 0 auto;
 			font-size: 28upx;
 			line-height: 50upx;
+			min-height: 700upx;
 		}
 	}
 }

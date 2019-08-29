@@ -21,14 +21,14 @@
 		<view class="bottom_btn flex row">
 			<view class="bottom_btn_left flex row">
 				<button class="bottom_btn_left_block flex col" open-type="share">
-					<view class="iconfont icon-zhuanfa icon"></view>
+					<view class="iconfont iconfenxiang icon"></view>
 					<view class="">
 						转发
 					</view>
 				</button>
 				<view class="bottom_btn_left_block flex col" @tap="collect">
-					<view class="iconfont icon" :class="collection==1?'icon-shoucang':'icon-shoucang2 color1'"></view>
-					<view class="">
+					<view class="iconfont icon" :class="collection==1?'iconshoucang':'iconshoucang2 color1'"></view>
+					<view class=""> 
 						收藏
 					</view>
 				</view>	
@@ -91,6 +91,7 @@
 					url:_self.$api+"dockingManager/activityReport",
 					data:{id:_self.id,optionId:uni.getStorageSync("openId"),report:_self.report},
 					success:function(res){
+						console.log(res)
 						if(_self.report==1){
 							if(res.data ==2){
 								_self.errorMessage = "您尚未进行认证"
@@ -124,6 +125,24 @@
 								})
 								return false
 							}
+							else if(res.data == 99){
+								uni.showModal({
+									title: '提示',
+									content: '此操作需用户授权，是否进行授权',
+									success: function (res) {
+										if (res.confirm) {
+											//跳转到授权页面  
+											uni.navigateTo({
+												url:"../../login/login"  
+											})
+											console.log('用户点击确定');
+										} else if (res.cancel) {
+											console.log('用户点击取消');
+										}
+									}
+								});
+								return false
+							}
 						}else if(_self.report===0){
 							if(res.data == 0){
 								uni.showToast({
@@ -131,7 +150,47 @@
 									icon:"none"
 								})
 								return false
-							}else{
+							}
+							else if(res.data == 99){
+								uni.showModal({
+									title: '提示',
+									content: '此操作需用户授权，是否进行授权',
+									success: function (res) {
+										if (res.confirm) {
+											//跳转到授权页面  
+											uni.navigateTo({
+												url:"../../login/login"  
+											})
+											console.log('用户点击确定');
+										} else if (res.cancel) {
+											console.log('用户点击取消');
+										}
+									}
+								});
+								return false
+							}
+							else if(res.data == 6){
+								uni.showToast({
+									title:"活动已暂停",
+									icon:"none"
+								})
+								return false
+							}
+							else if(res.data == 7){
+								uni.showToast({
+									title:"活动已结束",
+									icon:"none"
+								})
+								return false
+							}
+							else if(res.data == 8){
+								uni.showToast({
+									title:"活动未开始",
+									icon:"none"
+								})
+								return false
+							}
+							else{
 									uni.showToast({
 									title:"取消报名成功",
 									icon:"none"
@@ -153,12 +212,11 @@
 			},
 			getInfo:function(){
 				var _self = this
-				 if(!uni.getStorageSync("openId")||uni.getStorageSync("openId")==undefined||uni.getStorageSync("openId")===""){
-												  uni.navigateTo({
-												  	url:"../../load/load"
-												  })
-				}
-				console.log(_self.id)
+				//  if(!uni.getStorageSync("openId")||uni.getStorageSync("openId")==undefined||uni.getStorageSync("openId")===""){
+				// 								  uni.navigateTo({
+				// 								  	url:"../../load/load"
+				// 								  })
+				// }
 				uni.request({
 					url:_self.$api+"dockingManager/activityTubeQuery",
 					data:{id:_self.id,optionId:uni.getStorageSync("openId")},
@@ -166,16 +224,17 @@
 						console.log(res)
 						_self.details = res.data[0]
 						_self.nodeContent = res.data[0].content.replace(/<img/gi, '<img style="max-width:100%;height:auto;display:block" ');
+						//用户reply为undefined该用户未报名
 						if(res.data[0].reply === undefined || res.data[0].reply===null){
 							_self.report =1
 						}else{
 							_self.report =0
 						}
+						//用户mark为undefined该用户未收藏
 						if(res.data[0].mark === undefined || res.data[0].mark===null){
 							_self.collection = 1
 						}else{
 							_self.collection = 2
-							
 						} 
 						console.log(_self.report)
 					}
@@ -196,9 +255,34 @@
 						url:_self.$api+"dockingManager/activityHideAdd",
 						data:{id:_self.id,mark:0,optionId:uni.getStorageSync("openId")},
 						success:function(res){
+							console.log(res)
 							if(res.data==1){
 								console.log("收藏成功")
 								_self.collection = 2
+							}
+							else if(res.data==99){
+								uni.showModal({
+								title: '提示',
+								content: '此操作需用户授权，是否进行授权',
+								success: function (res) {
+									if (res.confirm) {
+										//跳转到授权页面  
+										uni.navigateTo({
+											url:"../../login/login"  
+										})
+										console.log('用户点击确定');
+									} else if (res.cancel) {
+										console.log('用户点击取消');
+									}
+								}
+							});
+							}
+							else if(res.data ==98){
+									uni.showToast({
+									title:"您尚未进行认证，请先进行认证",
+									icon:"none"
+								})
+								return false
 							}
 							else{
 								uni.showToast({
@@ -213,9 +297,26 @@
 						url:_self.$api+"dockingManager/activityHideDelete",
 						data:{id:_self.id,optionId:uni.getStorageSync("openId")},
 						success:function(res){
-								if(res.data==1){
+							console.log(res)
+							if(res.data==1){
 								console.log("取消收藏成功")
 								_self.collection = 1
+							}else if(res.data==99){
+								uni.showModal({
+									title: '提示',
+									content: '此操作需用户授权，是否进行授权',
+									success: function (res) {
+										if (res.confirm) {
+											//跳转到授权页面  
+											uni.navigateTo({
+												url:"../login/login"  
+											})
+											console.log('用户点击确定');
+										} else if (res.cancel) {
+											console.log('用户点击取消');
+										}
+									}
+								});
 							}
 							else{
 								uni.showToast({
@@ -263,6 +364,9 @@
 			 spliceData:function(newData){
 				
 				  return newData.replace(/\<img/gi,   '<img class="rich-img" ' );
+			 },
+			 pngJpg:function(data){
+				
 			 }
 		 }
 		

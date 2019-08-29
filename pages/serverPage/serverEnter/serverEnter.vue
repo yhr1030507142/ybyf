@@ -6,7 +6,7 @@
 					<image :src="v.primary" mode="" class="img"></image>
 				</view>
 				<view class="park-box-content flex col">
-					<rich-text class="park-box-content-middle" :nodes="v.content">
+					<rich-text class="park-box-content-middle" :nodes="v.sketch">
 					</rich-text>
 				</view>
 		</view>
@@ -33,7 +33,7 @@
 				<view class="park-box-select-title">
 					联系人
 				</view>
-				<input type="text" placeholder="请输入联系人" style="text-align: right;" v-model="name" class="park-box-select-end park-box-select-input" placeholder-style="text-align: right">
+				<input type="text" placeholder="请输入联系人" style="text-align: right;" v-model="name" class="park-box-select-end park-box-select-input" placeholder-style="text-align: right" maxlength="20">
 		
 			</view>
 		</view>
@@ -62,25 +62,41 @@
 	export default {
 		data() {
 			return {
-				array: ['法律服务', '办公用品', '知识产权', '税务服务','品牌设计','高薪申报','人力资源','家政清理','快递物流'],
+				array: [],
                 index: "",
 				List:[],
 			}
 		},
 		onLoad:function(){ 
 			var _self = this
-			_self.getInfo()
+			_self.getArr()
+			
+			
 		},
 		methods: {
 			bindPickerChange: function(e) {
 			console.log('picker发送选择改变，携带值为', e.target.value)
 			this.index = e.target.value
 			},
+			getArr:function(){
+				var _self = this
+				uni.request({ 
+					url:_self.$api+"dockingManager/titleFaceQuery",
+					method:"GET",
+					success:function(res){
+						console.log(res)
+						for(var i = 0;i<res.data.length;i++){
+							_self.array[i] = res.data[i].name
+						}
+						_self.getInfo()
+					}
+				})
+			},
 			getInfo:function(){
 				var _self = this
 				uni.request({ 
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{pull:16,id:0,optionId:uni.getStorageSync("openId"),branch:0},
+					url:_self.$api+"dockingManager/enterSimpleQuery",
+					data:{},
 					method:"GET",
 					success:function(res){
 						_self.List = res.data
@@ -116,18 +132,39 @@
 					data:{name:_self.name,state:_self.array[_self.index],phone :_self.phone,optionId:uni.getStorageSync("openId")},
 					method:"GET",
 					success:function(res){
+						console.log(res)
 						if(res.data == 1){
 							uni.showToast({
 								title:"提交成功",
 								success:function(){
 									setTimeout(function(){
 										uni.switchTab({
-											url:"../../../pages/index/index"
+											url:"../../../pages/server2/server2"
 										})
 									},1000)
 								}
 							})
-						}else{
+							return
+						}
+						if(res.data == 99){
+							uni.showModal({
+								title: '提示',
+								content: '此操作需用户授权，是否进行授权',
+								success: function (res) {
+									if (res.confirm) {
+										//跳转到授权页面  
+										uni.navigateTo({
+											url:"../../login/login"  
+										})
+										console.log('用户点击确定');
+									} else if (res.cancel) { 
+										console.log('用户点击取消');
+									}
+								}
+							});
+							return
+						}
+						else{
 							uni.showToast({
 								title:"提交失败",
 								icon:"none",

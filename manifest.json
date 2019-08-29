@@ -58,7 +58,7 @@
         "appid" : "wx7b341bf0ebd0951f",
         "setting" : {
             "urlCheck" : false,
-            "postcss" : true
+            "postcss" : false
         },
         "usingComponents" : true,
         "permission" : {}

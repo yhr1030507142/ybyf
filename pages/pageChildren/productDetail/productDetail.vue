@@ -2,32 +2,50 @@
 	<view>
 		<!-- 图片 -->
 		<view class="park-box flex col">
-				<view class="park-box-pic">
+				
+				<!-- <view class="park-box-pic">
 					<image :src="details.shrink" mode="" class="img"></image>
-				</view>
+				</view> -->
 				<view class="park-box-content flex col">
 					<view class="park-box-content-header">
+						<view class="flex row row_between">
+							<!-- <view>{{part_name}}详情</view> -->
+							<view class="iconfont iconiconfontshanchu" @click="deleteContent()" v-show="tube==1 || com_mark === 0"></view>
+						</view>
 						{{details.name}}
 					</view>
 					<view class="park-date">
 						发布时间:{{details.create_time}}
 					</view>
-					<rich-text class="park-box-content-middle" :nodes="details.content">
+					<rich-text class="park-box-content-middle" :nodes="details.sketch">
 					</rich-text>
+					<view class="textarea-select flex col">
+						<view class="textarea-select-box flex row row_between">
+							<view class="textarea-select-title">
+								图片
+							</view>
+							<view class="textarea-select-end">
+								
+							</view>
+						</view>
+						<view class="textarea-select-content flex row">
+							<image :src="v" mode="" class="img"  v-for="(v,i) in  pic"  :key="i" @tap="previewImage"></image>
+						</view>
+					</view>
 				</view>
 		</view>
 		<!--  -->
 		 
-		<!-- <view class="bottom_btn flex row">
+		<view class="bottom_btn flex row">
 			<view class="bottom_btn_left flex row">
-				<view class="bottom_btn_left_block flex col">
-					<view class="iconfont icon-zhuanfa icon"></view>
+				<button class="bottom_btn_left_block flex col" open-type="share">
+					<view class="iconfont iconfenxiang icon"></view>
 					<view class="">
 						转发
 					</view>
-				</view>
-				<view class="bottom_btn_left_block flex col">
-						<view class="iconfont icon-shoucang icon"></view>
+				</button>
+				<view class="bottom_btn_left_block flex col" @tap="collect">
+					<view class="iconfont icon" :class="collection==1?'iconshoucang':'iconshoucang2 color1'"></view>
 					<view class="">
 						收藏
 					</view>
@@ -35,10 +53,12 @@
 				
 			</view>
 		    <view class="bottom_btn_right" @tap="apply()">
-				我要报名
+				{{details.phone}}
 			</view>
 			
-		</view> -->
+		</view>
+			
+		<!-- </view> --> 
 			 <!--  -->
 						<!-- <uni-popup :show="showPopupMiddleImg" type="middle" mode="insert" @hidePopup="hidePopup">
 							<view class="uni-center center-box modal-pic-box flex col">
@@ -66,13 +86,26 @@
 			return {
 			details:[],
 			id:"",
-			branch:""
+			branch:"",
+			mark:'',
+			part_name:'',
+			collection:1,
+			pic:[],
+			tube:'',
+			com_mark:999,
+			
 			}
 		},
 		onLoad:function(option){ 
 			var _self = this
 			_self.id = option.id
 			_self.branch = option.branch
+			_self.mark = option.mark
+			_self.part_name = option.part_name
+			
+			_self.tube = uni.getStorageSync('tube')
+			_self.com_mark = uni.getStorageSync('mark')
+			console.log(_self.com_mark)
 			console.log(_self.id)
 			_self.getInfo()
 		},
@@ -80,15 +113,198 @@
 			getInfo:function(){
 				var _self = this
 				uni.request({ 
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:_self.id,pull:18,optionId:uni.getStorageSync("openId"),branch:_self.branch},
+					url:_self.$api+"dockingManager/declareNewQuery",
+					data:{id:_self.id,optionId:uni.getStorageSync("openId"),branch:_self.branch,mark:_self.mark},
 					method:"GET",
 					success:function(res){
 						console.log(res)
+						//用户mark为undefined该用户未收藏
+						if(res.data[0].state === undefined || res.data[0].state===null){
+							_self.collection = 1
+						}else{
+							_self.collection = 2
+						} 
 						_self.details = res.data[0]
+						
+						if(res.data[0].shrink==""){
+							_self.pic= []
+						}else{
+							_self.pic = res.data[0].shrink.split(',')
+						}
 						console.log(res)
 					}
 				})
+			},
+			previewImage: function(e) {
+				var current = e.target.dataset.src
+				uni.previewImage({
+					current: current,
+					urls: this.pic
+				})
+			},
+			/**
+			 * @param {Object} options
+			 * 删除
+			 */
+			deleteContent:function(){
+				  var _self = this
+				  uni.showModal({
+								title: '提示',
+								content: '是否删除此内容',
+								success: function (res) {
+										if (res.confirm) {
+											uni.request({
+												url:_self.$api+'dockingManager/titleDeclareDelete',
+												data:{id:_self.id},
+															success:function(res){
+																if(res.data==1){
+																	uni.showToast({
+																		title:'删除成功'
+																	})
+																	uni.navigateBack({
+																		delta: 1,
+																		animationType: 'pop-out',
+																		animationDuration: 200
+																	});
+																	return
+																}else{
+																	uni.showToast({
+																		title:'删除失败',
+																		icon:'none'
+																	})
+																	return
+																}
+															}
+											})
+										} else if (res.cancel) {
+											console.log('用户点击取消');
+										}
+									}
+								});  
+			},
+			/**
+			 * 转发
+			 */
+			onShareAppMessage: function (options) {
+					var _self = this
+					if (options.from === 'button') {
+					  // 来自页面内转发按钮
+					  console.log(options.target)
+					}
+					return {
+					  //## 此为转发页面所显示的标题
+					  //title: '好友代付', 
+					  //## 此为转发页面的描述性文字
+					  desc: _self.details.name, 
+					  //## 此为转发给微信好友或微信群后，对方点击后进入的页面链接，可以根据自己的需求添加参数
+					  path:  'pages/pageChildren/productDetail/productDetail?id='+_self.id+'&branch='+_self.branch+'&optionId='+uni.getStorageSync("openId")+'&mark='+mark,
+					  //## 转发操作成功后的回调函数，用于对发起者的提示语句或其他逻辑处理
+					  success: function(res) {
+						  uni.request({
+						  url:_self.$api+"dockingManager/totalHideAdd",
+						  data:{id:_self.id,mark:1,optionId:uni.getStorageSync("openId")},
+						  success:function(res){
+							  console.log(res)
+							  	console.log("转发成功")
+						  },
+						  }) 
+					  },
+					  //## 转发操作失败/取消 后的回调处理，一般是个提示语句即可
+					  fail: function() {
+						  console.log("error")
+					  }
+					}
+			},
+			//拨打电话
+			apply:function(){
+				var _self = this
+				 uni.makePhoneCall({
+					phoneNumber: _self.details.phone //仅为示例
+					});
+			},
+			/**
+			 * 收藏
+			 * 
+			 */
+			collect:function(){
+				var _self = this
+				if(this.collection == 1){
+					uni.request({
+						url:_self.$api+"dockingManager/hideAdd",
+						data:{id:_self.id,mark:0,optionId:uni.getStorageSync("openId")},
+						success:function(res){
+							console.log(res)
+							if(res.data==1){
+								console.log("收藏成功")
+								_self.collection = 2
+							}
+							else if(res.data==99){
+								uni.showModal({
+								title: '提示',
+								content: '此操作需用户授权，是否进行授权',
+								success: function (res) {
+									if (res.confirm) {
+										//跳转到授权页面  
+										uni.navigateTo({
+											url:"../../login/login"  
+										})
+										console.log('用户点击确定');
+									} else if (res.cancel) {
+										console.log('用户点击取消');
+									}
+								}
+							});
+							}
+							else if(res.data ==98){
+									uni.showToast({
+									title:"您尚未进行认证，请先进行认证",
+									icon:"none"
+								})
+								return false
+							}
+							else{
+								uni.showToast({
+									title:"收藏失败",
+									icon:"none"
+								})
+							} 
+						}
+					})
+				}else{
+						uni.request({
+						url:_self.$api+"dockingManager/hideDelete",
+						data:{id:_self.id,optionId:uni.getStorageSync("openId")},
+						success:function(res){
+							console.log(res)
+							if(res.data==1){
+								console.log("取消收藏成功")
+								_self.collection = 1 
+							}else if(res.data==99){
+								uni.showModal({
+									title: '提示',
+									content: '此操作需用户授权，是否进行授权',
+									success: function (res) {
+										if (res.confirm) {
+											//跳转到授权页面  
+											uni.navigateTo({
+												url:"../login/login"  
+											})
+											console.log('用户点击确定');
+										} else if (res.cancel) {
+											console.log('用户点击取消');
+										}
+									}
+								});
+							}
+							else{
+								uni.showToast({
+									title:"取消收藏失败",
+									icon:"none"
+								})
+							}						
+						},
+						})
+				}
 			},
 		},
 		 components: {uniPopup},
@@ -99,6 +315,9 @@
 <style lang="scss"> 
 	page{
 		background: #e8e7e7;
+	}
+		.color1{
+		color: #f4ea2a;
 	}
 .park-box{
 	width: 90%;
@@ -138,7 +357,7 @@
 			font-size: 28upx;
 			line-height: 50upx;
 			color: #333333;
-			min-height: 500upx;
+			min-height: 150upx;
 		}
 	}
 }
@@ -179,7 +398,22 @@
 		font-size: 28upx;
 		color: #666666;
 		justify-content: center;
+		button::after {
+				border: none;
+				border-radius:0;
+				color: #333333;
+		}
+		.button-hover{
+			border: 0;
+			background:#ffffff;
+			color:rgba(0, 0, 0, 1);
+			color: #333333;
+		}
 		.bottom_btn_left_block{
+			color: #333333;
+			padding: 0;
+			font-size: 28upx;
+			line-height: 42upx;
 			flex: 1;
 			height: 100%;
 			justify-content: center;
@@ -218,7 +452,7 @@
 	.authentication{
 		width: 100%;
 		height: 90upx;
-		background: #1758EA; 
+		background: #1758EA;
 		color: #ffffff;
 		text-align: center;
 		line-height: 90upx;
@@ -230,4 +464,37 @@
 		border-bottom-right-radius: 10upx;
 	}
 }
+.textarea-select{
+		margin: 30upx auto;
+		min-height: 300upx;
+		background: #ffffff;
+		width: 100%;
+		.textarea-select-box{
+			height: 100upx;
+			width: 90%;
+			margin: 0 auto;
+			align-items: center;
+				.textarea-select-title{
+				font-size: 28upx;
+				color:#000000;
+			}
+			.textarea-select-end{
+				font-size: 28upx;
+				color: #999999;
+			}
+		}
+		.textarea-select-content{
+			min-height: 300upx;
+			width: 90%;
+			margin: 0 auto; 
+			flex-wrap: wrap;
+			padding-bottom: 200upx;
+			.img{
+				width: 30%;
+				height: 200upx;
+				margin-left: 20upx;
+				margin-top: 30upx;
+			}
+		}
+	}
 </style>

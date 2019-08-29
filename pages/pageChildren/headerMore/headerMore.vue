@@ -48,14 +48,14 @@
 			getInfo:function(){
 				var _self = this
 				uni.request({
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:4,optionId:uni.getStorageSync("openId"),branch:0}, 
+					url:_self.$api+"dockingManager/releaseMainQuery",
+					data:{id:"0",pull:2,optionId:uni.getStorageSync("openId")}, 
 					method:"GET",
 					success:function(res){
 						console.log(res)
 						_self.headlineList = res.data
 					}
-				})
+				}) 
 			},
 			goto:function(id){
 				uni.navigateTo({

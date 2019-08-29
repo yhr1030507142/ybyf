@@ -13,7 +13,7 @@
 								<image :src="v.primary" mode="" class="img"></image>
 							</view>
                         </swiper-item>
-                    </swiper>
+                    </swiper> 
                 </view>
             </view>
         </view>
@@ -21,19 +21,19 @@
 		<view class="index-content flex row_between">
 			<view class="index-content-left">
 				<view class="index-content-left-introfuce flex col" @tap="goTo('parkProfile')">
-							<view class="iconfont icon-qiyejianjie icon"></view>
+							<view class="iconfont icongongsijianjie icon"></view>
 							<view class="index-content-left-introfuce-word">园区简介</view>
 							
 				</view>
 				<view class="index-content-left-info flex row row_between">
 					<view class="flex col index-content-left-info-left" @tap="goToSwich('info')"> 
-							<view class="iconfont icon-jiaoyijilu icon"></view>
+							<view class="iconfont iconjiaoyijilu icon"></view>
 							<view class="index-content-left-info-word">
 								供求信息
 							</view>
 					</view>
 					<view class="flex col index-content-left-info-right" @tap="goToSwich('compony')">
-						<view class="iconfont icon-qiyeguanli icon">
+						<view class="iconfont icongongsi icon">
 							
 						</view>
 						<view>
@@ -42,7 +42,7 @@
 					</view>
 				</view>
 				<view class="index-content-left-rent flex col" @tap="goTo('rentRoom')">
-					<view class="iconfont icon-huiyishi icon">
+					<view class="iconfont iconshiwuzhongxin_huiyishishiyong icon">
 						
 					</view>
 					<view>
@@ -52,18 +52,18 @@
 			</view>
 			<view class="index-content-right">
 					<view class="index-content-right-oriented flex row" @tap="goTo('guide')">
-							<view class="iconfont icon-fangxiang icon"></view>
+							<view class="iconfont iconfangxiang icon"></view>
 							<view class="index-content-right-oriented-word">入园导向</view>	
 					</view>
-					<view class="index-content-right-server flex col" @tap="goToSwich('server1')">
-						<view class="iconfont icon-fuwu icon"></view>
+					<view class="index-content-right-server flex col" @tap="goToSwich('server2')">
+						<view class="iconfont iconfuwu1 icon"></view>
 						<view class="">
 							园区服务
 						</view>
 					</view>
 					
 					<view class="index-content-right-head flex col" @tap="goTo('headerMore')">
-						<view class="iconfont icon-liebiaofenlei icon"></view>
+						<view class="iconfont iconliebiao icon"></view>
 						<view class="">
 							园区头条
 						</view>
@@ -71,13 +71,13 @@
 						
 						<view class="index-content-right-wuye flex row row_between">
 						<view class="flex col index-content-right-wuye-left" @tap="goTo('applyFor')">
-								<view class="iconfont icon-weixiujilu icon"></view>
+								<view class="iconfont iconweixiujilu icon"></view>
 								<view class="index-content-left-info-word">
 									维修申请
 								</view>
 						</view>
 						<view class="flex col index-content-right-wuye-right" @tap="goTo('advice')">
-							<view class="iconfont icon-shenqing icon">
+							<view class="iconfont icon971caidan_xinjiantiezi icon">
 								
 							</view>
 							<view>
@@ -221,7 +221,7 @@
 	</view>  
 	<!-- fixed -->
 	<view class="addInfo flex col" @tap="gotoPostMessage">
-		<view class="icon-zhifeiji iconfont icon-fix"></view>
+		<view class="iconzhifeiji iconfont icon-fix"></view>
 		<view class=""> 
 			发布信息
 		</view>
@@ -235,92 +235,61 @@
 		data() {
 			return {
 			background: ['red', 'blue', 'pink'],
-            indicatorDots: true,
+            indicatorDots: true,  
 			indicator1:false,
             autoplay: true,
             interval: 2000,//间隔
             duration: 500,//
-			bannerList:[],
+			bannerList:[],//banner
 			code:"",
 			openId:"",
-			shrink:[],
-			shrink1:[],
-			parkList:[],
-			headlineList:[],
-			parkAdviceList:[],
-			rentList:[],
+			shrink:[],//活动列表
+			parkList:[],//园区动态
+			headlineList:[],//园区头条
+			parkAdviceList:[],//园区公告
+			rentList:[],//转租公告
 			}
 		},
 		onLoad:function(){ 
 			var _self = this
+			wx.showShareMenu() 
+			if(!uni.getStorageSync("openId")&&uni.getStorageSync("openId")!=0){
+				uni.navigateTo({
+					url:"../load/load"
+				})
+			}
+			_self.getPark()
+			_self.getHeadlineList() 
+			_self.getAdvice()  
+			_self.getRentList() 
 			_self.getBanner()
-			// _self.getPark()
-			// _self.getHeadlineList()
-			// _self.getAdvice() 
-			// _self.getParkAdvice()
-			// _self.getRentList() 
 			setTimeout(function(){
-				_self.getPark()
-				_self.getHeadlineList() 
-				_self.getAdvice()  
 				_self.getParkAdvice()
-				_self.getRentList() 
 			},1000)
+			
+			uni.startPullDownRefresh();
 		},
 		onShow:function(){
-			
-			
+
+		},
+		onPullDownRefresh:function() {
+			var _self = this
+			console.log(uni.getStorageSync("openId"))
+			if(!uni.getStorageSync("openId")&&uni.getStorageSync("openId")!=0){
+				uni.navigateTo({
+					url:"../load/load"
+				})
+			}
+			_self.getBanner()
+			_self.getPark()
+			_self.getHeadlineList() 
+			_self.getAdvice()  
+			_self.getRentList() 
+			_self.getParkAdvice()
 			
 		},
 		methods: {
-			/**
-			 * 获取用户信息
-			 */
-			getUserInfo:function(){
-				var _self = this
-				uni.login({
-					provider: 'weixin',
-					success:function(res){
-						console.log(res)
-						_self.code = res.code
-						console.log(res.code)  
-						uni.request({
-							url:_self.$api+"Wechat/Land",
-							data:{code:_self.code},
-							success:function(res){
-								console.log(res) 
-								_self.openId=res.data[0].openid
-								uni.setStorageSync("openId",res.data[0].openid)
-							}  
-						})  
-					}
-				})
-			},
-			getMyInfo:function(){
-				var _self = this
-				 uni.request({
-				 	url:_self.$api+"dockingManager/cardIdQuery",
-					data:{optionId:uni.getStorageSync("openId")},
-					success:function(res){
-						console.log(res)
-						uni.request({
-							url:_self.$api+"dockingManager/cardIdQuery",
-							data:{optionId:uni.getStorageSync("openId")},
-							success:function(res){
-								console.log(res)
-								if(res.data.state ==1  &&res.data.mark==0){
-										uni.setStorageSync("componyOwner","1")
-								}else if(res.data.state ==1  &&res.data.mark==1){
-									uni.setStorageSync("componyOwner","2")
-								}else{  
-									uni.setStorageSync("componyOwner","3")
-
-								}
-							}
-						})
-					}
-				 })
-			},
+		
 			/** 
 			 * 获取活动公告
 			 */
@@ -328,13 +297,12 @@
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/activityTubeQuery",
-					data:{id:"0",optionId:uni.getStorageSync("openId"),branch:0},
+					data:{id:"0",optionId:uni.getStorageSync("openId")},
 					method:"GET",
 					success:function(res){ 
 						console.log(res)
 						var data = res.data
 						_self.shrink = data.slice(0,2)
-						_self.shrink1 = res.data
 					}
 					
 				})
@@ -361,12 +329,11 @@
 			getPark:function(){
 				var _self = this 
 				uni.request({
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:6,optionId:uni.getStorageSync("openId"),branch:0},
+					url:_self.$api+"dockingManager/releaseMainQuery",
+					data:{pull:5,optionId:uni.getStorageSync("openId"),id:0},
 					method:"GET",
 					success:function(res){
 						_self.parkList = res.data.slice(0,5)
-						// console.log(res.data)
 					}
 				})
 			},
@@ -381,16 +348,16 @@
 			},
 			/**
 			 * 园区公告
-			 */
+			 */ 
 			getParkAdvice:function(){
 				var _self = this 
 				uni.request({
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:5,optionId:uni.getStorageSync("openId"),branch:0},
+					url:_self.$api+"dockingManager/releaseMainQuery",
+					data:{pull:3,optionId:uni.getStorageSync("openId"),id:0},
 					method:"GET",
 					success:function(res){
 						_self.parkAdviceList = res.data.slice(0,2)
-						console.log(res.data)
+						uni.stopPullDownRefresh();
 					}
 				})
 			},    
@@ -417,12 +384,11 @@
 			getRentList:function(){
 				var _self = this 
 				uni.request({
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:19,optionId:uni.getStorageSync("openId"),branch:0},
+					url:_self.$api+"dockingManager/releaseMainQuery",
+					data:{pull:4,optionId:uni.getStorageSync("openId"),id:0},
 					method:"GET",
 					success:function(res){
 						_self.rentList = res.data.slice(0,2) 
-						console.log(res.data)
 					}
 				})
 			}, 
@@ -450,11 +416,10 @@
 			getHeadlineList:function(res){
 					var _self = this
 				uni.request({
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:4,optionId:uni.getStorageSync("openId"),branch:0},
+					url:_self.$api+"dockingManager/releaseMainQuery",
+					data:{pull:2,optionId:uni.getStorageSync("openId"),id:0},
 					method:"GET",
 					success:function(res){
-						console.log(res)
 						_self.headlineList = res.data.slice(0,2)
 					}
 				})
@@ -498,7 +463,6 @@
 					url:_self.$api+"dockingManager/pictureQuery",
 					data:{id:0},
 					success:function(res){
-						console.log(res)
 						_self.bannerList = res.data
 					} 
 				}) 
@@ -522,7 +486,9 @@ $height :650upx;
 page{
 	background: #e8e7e7;
 }
-
+.icon{
+	color: #EDB200;
+}
 .addInfo{
 	width: 150upx;
 	height: 150upx;
@@ -559,8 +525,8 @@ page{
 		.index-content-left-introfuce{
 			width: 100%;
 			height: 230upx;
-			background:#2867F4;
-			color: #ffffff;
+			background: #ffffff;
+			color: #333333;
 			font-size: 28upx;
 			align-items: center;
 			justify-content: center;
@@ -580,8 +546,8 @@ page{
 			.index-content-left-info-left{
 				width: 49%;
 				height: 100%;
-				background: #79A1FB;
-				color: #ffffff;
+				background: #ffffff;
+				color: #333333;
 				font-size: 28upx;
 				justify-content: center;
 				align-items: center;
@@ -589,8 +555,8 @@ page{
 			.index-content-left-info-right{
 				width: 49%;
 				height: 100%;
-				background: #87C9F3;
-				color: #ffffff;
+				background: #ffffff;
+				color: #333333;
 				font-size: 28upx;
 				justify-content: center;
 				align-items: center;
@@ -600,9 +566,9 @@ page{
 			margin-top: 10upx;
 			justify-content: center;
 			align-items: center;
-			background: #5A7ED0;
+			background: #ffffff;
+			color: #333333;
 			height: 230upx;
-			color: #ffffff;
 			font-size: 28upx;
 			.icon{
 				font-size: 84upx;
@@ -613,14 +579,14 @@ page{
 		width: 49%;
 		height: $height;
 		.index-content-right-oriented{
-			background: #739EFF;
-			color: #ffffff;
+			background: #ffffff;
+			color: #333333;
 			font-size: 28upx;
 			height: 120upx;
 			justify-content: center;
 			align-items: center;
 			.icon{
-				font-size: 48upx;
+				font-size: 80upx;
 				margin-right: 10upx;
 			}
 		}
@@ -628,8 +594,8 @@ page{
 			margin-top: 10upx;
 			height: 160upx;
 			font-size: 28upx;
-			background: #5282ED;
-			color: #ffffff;
+			background: #ffffff;
+			color: #333333;
 			justify-content: center;
 			align-items: center;
 			.icon{
@@ -638,12 +604,12 @@ page{
 		}
 		.index-content-right-head{
 			margin-top: 10upx;
-			background: #1B51C9;
+			background: #ffffff;
+			color: #333333;
 			font-size: 28upx;
 			height: 200upx;
 			justify-content: center;
 			align-items: center;
-			color: #ffffff;
 			.icon{
 				font-size: 84upx;
 			}
@@ -657,8 +623,8 @@ page{
 		.index-content-right-wuye-left{
 			width: 49%;
 			height: 100%;
-			background: #2867F4;
-			color: #ffffff;
+			background: #ffffff;
+			color: #333333;
 			font-size: 28upx;
 			justify-content: center;
 			align-items: center;
@@ -666,8 +632,8 @@ page{
 		.index-content-right-wuye-right{
 			width: 49%;
 			height: 100%;
-			background: #5282ED;
-			color: #ffffff;
+			background: #ffffff;
+			color: #333333;
 			font-size: 28upx;
 			justify-content: center;
 			align-items: center;
@@ -744,7 +710,7 @@ page{
 	background: #ffffff;
 	width: 90%;
 	margin: 30upx auto;
-	height: 520upx;
+	height: 570upx;
 	.index-dynamic-header{
 		width: 90%;
 		margin: 0 auto;
@@ -786,10 +752,14 @@ page{
 				overflow: hidden;
 				text-overflow: ellipsis;
 				white-space: nowrap;
+				display: flex;
+				direction: row;
+				justify-content: center;
 			}
 			.lunbo1-date{
 				font-size: 24upx;
 				color: #999999;
-			}
+				margin-top:20upx;
+			} 
 		}
 </style>

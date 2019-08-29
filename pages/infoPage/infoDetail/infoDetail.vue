@@ -53,13 +53,13 @@
 		<view class="bottom_btn flex row">
 			<view class="bottom_btn_left flex row">
 				<button class="bottom_btn_left_block flex col" open-type="share">
-					<view class="iconfont icon-zhuanfa icon"></view>
+					<view class="iconfont iconfenxiang icon"></view>
 					<view class="">
 						转发
 					</view>
 				</button>
 				<view class="bottom_btn_left_block flex col" @tap="collect">
-					<view class="iconfont icon" :class="collection==1?'icon-shoucang':'icon-shoucang2 color1'"></view>
+					<view class="iconfont icon" :class="collection==1?'iconshoucang':'iconshoucang2 color1'"></view>
 					<view class="">
 						收藏
 					</view>
@@ -67,7 +67,7 @@
 				
 			</view>
 		    <view class="bottom_btn_right" @tap="apply()">
-				直接联系
+				{{supplyList.phone}}
 			</view>
 			
 		</view>
@@ -119,17 +119,7 @@
 			console.log(option)
 			_self.mark = option.mark
 			_self.id = option.id
-			if(option.branch==undefined){
-				_self.branch = 0
-			}else{
-				_self.branch = option.branch
-			}
-			if(option.tradeId == undefined){
-				_self.tradeId = 0
-			}else{
-				_self.tradeId = option.tradeId
-			}
-			console.log(_self.mark+"/"+_self.id)
+			
 			_self.getInfo()
 		},
 		onShow:function(){
@@ -151,21 +141,19 @@
 			},
 			getInfo:function(){
 				var _self = this
-				if(!uni.getStorageSync("openId")||uni.getStorageSync("openId")==undefined||uni.getStorageSync("openId")===""){
-					        uni.navigateTo({
-					        	url:"../../load/load"
-					        })
-				}
 				uni.request({ 
-					url:_self.$api+"dockingManager/declareNewQuery",
-					data:{id:_self.id,mark:_self.mark,optionId:uni.getStorageSync("openId"),branch:_self.branch,trade:_self.tradeId},
+					url:_self.$api+"dockingManager/declareQuery",
+					data:{id:_self.id,mark:_self.mark,optionId:uni.getStorageSync("openId")},
 					method:"GET",
-					success:function(res){
+					success:function(res){ 
 						console.log(res)
-						_self.shrink = res.data[0].shrink.split(',')
-						_self.phone = res.data[0].phone
-						
+						if(res.data[0].shrink == ''||res.data[0].shrink==null || res.data[0].shrink==undefined){
+							res.data[0].shrink = ''
+						}else{
+							_self.shrink = res.data[0].shrink.split(',')
+						}
 						console.log(_self.shrink)
+						_self.phone = res.data[0].phone
 						_self.supplyList = res.data[0]
 						if(res.data[0].state === undefined || res.data[0].state===null){
 							_self.collection =1
@@ -185,9 +173,36 @@
 						url:_self.$api+"dockingManager/hideAdd",
 						data:{id:_self.id,mark:0,optionId:uni.getStorageSync("openId")},
 						success:function(res){
+							console.log(res)
 							if(res.data==1){
 								console.log("收藏成功")
 								_self.collection = 2
+								return 
+							}
+							if(res.data==99){
+								uni.showModal({
+									title: '提示',
+									content: '此操作需用户授权，是否进行授权',
+									success: function (res) {
+										if (res.confirm) {
+											//跳转到授权页面  
+											uni.navigateTo({
+												url:"../../login/login"  
+											})
+											console.log('用户点击确定');
+										} else if (res.cancel) {
+											console.log('用户点击取消');
+										}
+									}
+								});
+								return false
+							}
+							if(res.data == 98){
+									uni.showToast({
+									title:"您尚未进行认证，请先进行认证",
+									icon:"none"
+								})
+								return false
 							}
 							else{
 								uni.showToast({
@@ -202,9 +217,29 @@
 						url:_self.$api+"dockingManager/hideDelete",
 						data:{id:_self.id,optionId:uni.getStorageSync("openId")},
 						success:function(res){
-								if(res.data==1){
+							console.log(res)
+							if(res.data==1){
 								console.log("取消收藏成功")
 								_self.collection = 1
+								return
+							}
+							if(res.data==99){
+								uni.showModal({
+									title: '提示',
+									content: '此操作需用户授权，是否进行授权',
+									success: function (res) {
+										if (res.confirm) {
+											//跳转到授权页面  
+											uni.navigateTo({
+												url:"../../login/login"  
+											})
+											console.log('用户点击确定');
+										} else if (res.cancel) {
+											console.log('用户点击取消');
+										}
+									}
+								});
+								return false
 							}
 							else{
 								uni.showToast({
@@ -231,7 +266,7 @@
 					  //## 此为转发页面的描述性文字
 					  desc: _self.supplyList.name, 
 					  //## 此为转发给微信好友或微信群后，对方点击后进入的页面链接，可以根据自己的需求添加参数
-					  path:  'pages/infoPage/infoDetail/infoDetail?id='+_self.id, 
+					  path:  'pages/infoPage/infoDetail/infoDetail?id='+_self.id+'&mark='+_self.mark, 
 					  //## 转发操作成功后的回调函数，用于对发起者的提示语句或其他逻辑处理
 					  success: function(res) {
 						  uni.request({
@@ -239,7 +274,7 @@
 						  data:{id:_self.id,mark:1,optionId:uni.getStorageSync("openId")},
 						  success:function(res){
 							  console.log(res)
-							  	console.log("转发成功")
+							  console.log("转发成功")
 						  },
 						  })  
 					  },
@@ -254,7 +289,7 @@
 	}
 </script>
 
-<style lang="scss">
+<style lang="scss"> 
 	page{
 		color: #333333;
 			background: #e8e7e7;

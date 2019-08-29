@@ -39,22 +39,22 @@
 									{{v.name}}
 								</view> 
 								<view class="index-notice-content-right-text">
-									{{v.sketch}}
+									{{v.sketch | changeData}}
 								</view>
 								<view class="index-notice-content-right-date flex col">
 									<view class="flex row position-icon">
 										<view class="iconfont icon-chanpinshezhi icon1"></view>
-										<view class="">{{v.branch_name}}</view> 
+										<view class="">主营:{{v.branch_name |changeData}}</view> 
 									</view>
 										<view class="flex row">
-										<view class="iconfont icon-dingwei1"></view>
-										<view class="">{{v.address}}</view>
+										<view class="iconfont icondizhi"></view>
+										<view class="">{{v.address | changeData}}</view>
 									</view>
 								</view>
 						</view>
 				</view>
 			</view>
-			<!--  -->
+			<!--  --> 
 		</view>
 		
 		
@@ -76,9 +76,25 @@
 		},
 		onLoad:function(){
 			var _self = this
+			// wx.showShareMenu() 
+			// if(!uni.getStorageSync("openId")){
+			// 	uni.navigateTo({
+			// 		url:"../load/load"
+			// 	})
+			// }
 			_self.getInfo()
 			_self.getBranchQuery()
 		},  
+		onPullDownRefresh:function() {
+			var _self = this
+			// if(!uni.getStorageSync("openId")){
+			// 	uni.navigateTo({
+			// 		url:"../load/load"
+			// 	})
+			// }
+			_self.getInfo()
+			_self.getBranchQuery()
+		},
 		methods: {
 			bindPickerChange: function(e) {
 				var _self = this
@@ -96,7 +112,7 @@
 					method:"GET",
 					success:function(res){
 						console.log(res)
-						_self.comPonyList = res.data.slice(0,10)
+						_self.comPonyList = res.data
 						console.log(res.data)
 					}
 				}) 
@@ -121,7 +137,7 @@
 						}
 						_self.array = array
 						_self.array1 = array1
-						console.log(_self.array)
+						 uni.stopPullDownRefresh();
 					}
 				}) 
 				
@@ -134,7 +150,8 @@
 					method:"GET",
 					success:function(res){
 						console.log(res)
-						_self.comPonyList = res.data.slice(0,10)
+						// _self.comPonyList = res.data.slice(0,10)
+						_self.comPonyList = res.data
 					}
 				}) 
 			},
@@ -143,6 +160,15 @@
 					url:"../componyEnterDetail/componyEnterDetail?id="+id
 				})
 			},
+		},
+		filters:{
+			changeData:function(data){
+				 if(data == undefined || data==null || data ==''){
+					 return '暂无'
+				 }else{
+					 return data
+				 }
+			}
 		},
 		watch:{
 			SearchInput:function(newData){
@@ -153,7 +179,8 @@
 					_self.searchInfo()
 				}
 			}
-		}
+		},
+		
 	}
 </script>
 

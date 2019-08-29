@@ -79,9 +79,9 @@
 			getInfo:function(){
 				var _self = this
 				uni.request({ 
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:_self.id,pull:19,optionId:uni.getStorageSync("openId"),branch:0},
-					method:"GET",
+					url:_self.$api+"dockingManager/releaseMainQuery",
+					data:{id:_self.id,pull:4,optionId:uni.getStorageSync("openId")}, 
+					method:"GET", 
 					success:function(res){
 						console.log(res)
 						_self.details = res.data[0]

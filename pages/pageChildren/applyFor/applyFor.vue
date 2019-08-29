@@ -162,8 +162,26 @@
 							})
 							return false 
 						}else if(res.data ==99){
-							uni.showToast({
-								title:"您尚未登录，请登录后重试",
+							uni.showModal({
+								title: '提示',
+								content: '此操作需用户授权，是否进行授权',
+								success: function (res) {
+									if (res.confirm) {
+										//跳转到授权页面  
+										uni.navigateTo({
+											url:"../../login/login"  
+										})
+										console.log('用户点击确定');
+									} else if (res.cancel) {
+										console.log('用户点击取消');
+									}
+								}
+							});
+							return false
+						}
+						else if(res.data ==98){
+								uni.showToast({
+								title:"您尚未进行认证，请先进行认证",
 								icon:"none"
 							})
 							return false

@@ -67,21 +67,25 @@
 			details:[],
 			id:"",
 			branch:"",
+			mark:'',
+			
 			tradeId:""
 			}
 		},
 		onLoad:function(option){ 
 			var _self = this
 			_self.id = option.id
-			_self.tradeId = option.tradeId
+			_self.branch = option.branch
+			_self.mark = option.mark
+			_self.part_name = option.part_name
 			_self.getInfo()
 		},
 		methods: {
 			getInfo:function(){
 				var _self = this 
 				uni.request({ 
-					url:_self.$api+"dockingManager/totalNewQuery",
-					data:{pull:18,id:_self.id,optionId:uni.getStorageSync("openId"),branch:0,trade:_self.tradeId},
+					url:_self.$api+"dockingManager/declareNewQuery",
+					data:{id:_self.id,optionId:uni.getStorageSync("openId"),branch:_self.branch,mark:_self.mark},
 					method:"GET",
 					success:function(res){
 						console.log(res)

@@ -115,7 +115,24 @@
 								}
 							})
 							return false
-						}else{
+						}else if(res.data==99){
+							uni.showModal({
+								title: '提示',
+								content: '此操作需用户授权，是否进行授权',
+								success: function (res) {
+									if (res.confirm) { 
+										//跳转到授权页面  
+										uni.navigateTo({
+											url:"../../login/login"  
+										})
+										console.log('用户点击确定');
+									} else if (res.cancel) {
+										console.log('用户点击取消');
+									}
+								}
+							});
+						}
+						else{
 								uni.showToast({
 								title:"申请失败",
 								icon:"none"

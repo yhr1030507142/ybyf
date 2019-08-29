@@ -1,6 +1,26 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-					
+				
+				{
+					"path": "pages/index/index",
+					"style": {
+						"navigationBarTitleText": "首页", 
+						 "enablePullDownRefresh": true 
+					}
+				},  
+				{
+					"path" : "pages/server2/server2",
+					"style" : {
+							"navigationBarTitleText": "园区服务",
+							"enablePullDownRefresh": true
+							} 
+					},
+					 {
+					    "path" : "pages/minePage/serverContent/serverContent",
+					    "style" : {
+							"navigationBarTitleText": "新增服务内容"
+						}
+					}, 
 					 {
 					    "path" : "pages/load/load",
 					    "style" : {
@@ -13,16 +33,12 @@
 					  		"navigationBarTitleText": "授权"
 					  	}
 					  },
-					  {
-						"path": "pages/index/index",
-						"style": {
-							"navigationBarTitleText": "首页" 
-						}
-					},  
+					
 					 {
 						"path" : "pages/server1/server1",
 						"style" : {
-								"navigationBarTitleText": "园区服务"
+								"navigationBarTitleText": "园区服务",
+								"enablePullDownRefresh": true
 								}
 					},
 						
@@ -75,7 +91,8 @@
 							{
 							"path": "pages/info/info",
 							"style": {
-								"navigationBarTitleText": "供求信息"
+								"navigationBarTitleText": "供求信息",
+								"enablePullDownRefresh": true
 							}
 						},
 							 {
@@ -87,7 +104,8 @@
 					{
 				"path": "pages/compony/compony",
 				"style": {
-					"navigationBarTitleText": "入驻企业"
+					"navigationBarTitleText": "入驻企业",
+					"enablePullDownRefresh": true 
 				}
 			},
 			{
@@ -230,13 +248,13 @@
         ,{
             "path" : "pages/serverPage/tax/tax",
             "style" : {
-				"navigationBarTitleText": "税务服务"
+				"navigationBarTitleText": "服务内容"
 			}
         }
         ,{
             "path" : "pages/serverPage/taxDetail/taxDetail",
             "style" : {
-				"navigationBarTitleText": "税务服务详情"
+				"navigationBarTitleText": "详情"
 			}
         }
         ,{
@@ -266,13 +284,13 @@
         ,{
             "path" : "pages/serverPage/goodMoney/goodMoney",
             "style" : {
-					"navigationBarTitleText": "高薪申请"
+					"navigationBarTitleText": "高新申报"
 			}
         }
         ,{
             "path" : "pages/serverPage/goodMoneyDetail/goodMoneyDetail",
             "style" : {
-				"navigationBarTitleText": "高薪申请详情"
+				"navigationBarTitleText": "高新申报详情"
 			}
         }
         ,{
@@ -327,13 +345,13 @@
         ,{
             "path" : "pages/pageChildren/product/product",
             "style" : {
-				"navigationBarTitleText": "产品服务"
+				"navigationBarTitleText": ""
 			}
         }
         ,{
             "path" : "pages/pageChildren/productDetail/productDetail",
             "style" : {
-				"navigationBarTitleText": "产品服务详情"
+				"navigationBarTitleText": ""
 			}
         }
        
@@ -366,7 +384,7 @@
         ,{
             "path" : "pages/pageChildren/componyProduct/componyProduct",
             "style" : {
-				"navigationBarTitleText": "产品服务"
+				"navigationBarTitleText": ""
 			}
         }
         ,{
@@ -420,6 +438,13 @@
 				"enablePullDownRefresh": true
 			}
         }
+       
+        ,{
+            "path" : "pages/minePage/editMyCompony/editMyCompony",
+            "style" : {
+				"navigationBarTitleText": "修改企业信息"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
@@ -429,20 +454,20 @@
 	},
 	"tabBar" : {
 	    "color" : "#666666",
-	    "selectedColor" : "#1758EA",
+	    "selectedColor" : "#EDB200",
 	    "borderStyle" : "black",
 	    "backgroundColor" : "#ffffff",
 	    "list" : [
 	        {
 	            "pagePath" : "pages/index/index",
-	            "iconPath" : "static/img/shouye1.png",
-	            "selectedIconPath" :"static/img/shouye.png",
+	            "iconPath" : "static/img/one1.png",
+	            "selectedIconPath" :"static/img/one.png",
 	            "text" : "首页"
 	        },
 			{
-			    "pagePath" : "pages/server1/server1",
-			     "iconPath" : "static/img/fuwu1.png",
-			    "selectedIconPath" :"static/img/fuwu.png",
+			    "pagePath" : "pages/server2/server2",
+			     "iconPath" : "static/img/two1.png",
+			    "selectedIconPath" :"static/img/two.png",
 				"text" : "园区服务"
 			},
 	        // {
@@ -453,20 +478,20 @@
 	        // },
 	        {
 	           "pagePath" : "pages/compony/compony",
-	           "iconPath" : "static/img/qiye1.png",
-	           "selectedIconPath" :"static/img/qiye.png",
+	           "iconPath" : "static/img/three1.png",
+	           "selectedIconPath" :"static/img/three.png",
 	           "text" : "入驻企业"
 	        },
 			  {
 			   "pagePath" : "pages/info/info",
-			   "iconPath" : "static/img/xinxi1.png",
-			   "selectedIconPath" :"static/img/xinxi.png",
+			   "iconPath" : "static/img/four1.png",
+			   "selectedIconPath" :"static/img/four.png",
 			   "text" : "供求信息" 
 			},
 	        {
 	           "pagePath" : "pages/mine/mine",
-	           "iconPath" : "static/img/mine1.png",
-	           "selectedIconPath" :"static/img/mine.png",
+	           "iconPath" : "static/img/five1.png",
+	           "selectedIconPath" :"static/img/five.png",
 	           "text" : "我的"
 	        }
 			

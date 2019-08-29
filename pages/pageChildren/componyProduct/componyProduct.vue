@@ -3,20 +3,20 @@
 		<view class="box">
 			<!-- 活动公告 -->
 			<view class="index-notice flex col">
-				<view class="index-notice-header flex row row_between">
+				<view class="index-notice-header flex row row_center">
 					<view class="index-notice-header-tilte">
-						
+						{{part_name}}
 					</view>
 					<view class="index-notice-header-more">
 					</view>
 				</view>
-				<view class="index-notice-content flex row" v-for="(v,i) in serverList" :key="i" @tap="goto(v.Id,v.branch)">
+				<view class="index-notice-content flex row" v-for="(v,i) in serverList" :key="i" @tap="goProductDetail(v.Id,v.branch,v.mark)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink" mode="" class="img"></image>
+							<image :src="v.shrink | getPic" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
-									{{v.name}}
+									{{v.name}} 
 								</view> 
 								<view class="index-notice-content-right-text">
 									{{v.sketch}}
@@ -37,33 +37,47 @@
 		data() {
 			return {
 			serverList:[],
-			id:"",
+			branch:"",
+			mark:'',
+			part_name:'',
 			}
 		},
 		onLoad:function(option){
 			var _self = this
 			console.log(option)
-			_self.id = option.branch
-			
+			_self.branch = option.branch
+			_self.mark = option.mark
+			_self.part_name = option.part_name
 			_self.getInfo()
 		},
 		methods: {
 			getInfo:function(){
 			var _self = this
 			uni.request({
-				url:_self.$api+"dockingManager/totalQuery",
-				data:{pull:18,id:0,optionId:uni.getStorageSync("openId"),branch:_self.id},
+				url:_self.$api+"dockingManager/declareNewQuery",
+				data:{branch:_self.branch,mark:_self.mark,id:0,optionId:uni.getStorageSync('optionId')},
 				method:"GET",
-				success:function(res){
+				success:function(res){ 
 					_self.serverList = res.data
-					console.log(res.data)
+					console.log(res)
 				}
 			})
 			},
-			goto:function(id,branch){
+			/**
+			 * @param {Object} id
+			 * @param {Object} branch
+			 * 产品详情
+			 */
+			goProductDetail:function(id,branch,mark){
+				var _self = this
 				uni.navigateTo({
-					url:"../productDetail/productDetail?id="+id+"&branch="+branch
+					url:"../productDetail/productDetail?id="+id+"&branch="+branch+"&part_name="+_self.part_name+'&mark='+mark
 				})
+			},
+		},
+		filters: {
+			getPic:function(res){
+				return res.split(',')[0]
 			},
 		}
 	}
@@ -83,7 +97,7 @@
 		.index-notice-header{
 			width: 90%;
 			margin: 0 auto;
-			height: 30upx;
+			height: 100upx;
 			align-items: center;
 			.index-notice-header-tilte{
 				font-size: 40upx;

@@ -29,7 +29,7 @@
 									url:"../index/index"
 							}) 
 						}else{ 
-								//跳转到授权页面  
+							//跳转到授权页面  
 							uni.navigateTo({
 								url:"../login/login"  
 							})

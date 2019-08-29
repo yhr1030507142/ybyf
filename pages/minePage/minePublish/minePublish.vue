@@ -48,7 +48,7 @@
 						console.log(res.data)
 					}
 				})
-			},
+			}, 
 			goDetail:function(id,mark){
 				var _self = this
 				uni.navigateTo({

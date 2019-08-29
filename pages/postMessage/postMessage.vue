@@ -115,8 +115,12 @@
 			}
 		},
 		onLoad:function(){
-			var _self = this
+			var _self = this 
 		},
+		onShow:function(){
+			this.imageList = [] 
+			this.pathArr = []
+		}, 
 		methods: {
 			bindPickerChange: function(e) {
 				console.log('picker发送选择改变，携带值为', e.target.value)
@@ -159,7 +163,7 @@
 								}
 							  }); 
 							}
-							_self.state = true
+							_self.state = true 
 						} 
 					})
 				},
@@ -249,21 +253,35 @@
 					_self.listPath.push({phone:_self.phone,mark:_self.index,name:_self.title,sketch:_self.textarea,optionId:uni.getStorageSync("openId")})
 					console.log(JSON.stringify(_self.listPath))
 				uni.request({
-					url:_self.$api+"dockingManager/declareAdd",
-					data:JSON.stringify(_self.listPath),
+					url:_self.$api+"dockingManager/declareAdd", 
+					data:JSON.stringify(_self.listPath), 
 					method:"POST",
-					success:function(res){
+					success:function(res){ 
 						if(res.data ==98){
 							uni.showToast({
-								title:"您尚未认证"
+								title:"您尚未认证",
+								icon:'none'
 							})
 							return false
 						}else if(res.data ==99){
-								uni.showToast({
-								title:"您尚未登录"
-						})
+							uni.showModal({
+							title: '提示',
+							content: '此操作需用户授权，是否进行授权',
+							success: function (res) {
+								if (res.confirm) {
+									//跳转到授权页面  
+									uni.navigateTo({
+										url:"../login/login"  
+									})
+									console.log('用户点击确定');
+								} else if (res.cancel) {
+									console.log('用户点击取消');
+								}
+							}
+						});
+		
 							return false
-						}else if(res.data ==0){
+						}else if(res.data ===0){
 								uni.showToast({
 								title:"发布失败"
 						})
@@ -368,6 +386,7 @@ page{
 			min-height: 300upx;
 			width: 90%;
 			margin: 0 auto; 
+			font-size: 32upx;
 		}
 	}
 }

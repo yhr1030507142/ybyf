@@ -166,7 +166,7 @@
 				<view class="index-notice flex col">
 					<view class="index-notice-header flex row row_between">
 						<view class="index-notice-header-tilte">
-							高薪申报
+							高新申报
 						</view>
 						<view class="index-notice-header-more" @tap="learMore('goodMoney')">
 							查看更多>
@@ -220,7 +220,7 @@
 								<view class="index-notice flex col">
 									<view class="index-notice-header flex row row_between">
 										<view class="index-notice-header-tilte">
-											家政清洁
+											快递物流
 										</view>
 										<view class="index-notice-header-more" @tap="learMore('logistics')">
 											查看更多>
@@ -271,6 +271,29 @@
 		},
 		onLoad:function(){ 
 			var _self = this
+			wx.showShareMenu()
+			if(!uni.getStorageSync("openId")){
+				uni.navigateTo({
+					url:"../load/load"
+				})
+			}
+			_self.getLawyer()
+			_self.getintellectual()
+			_self.getTax()
+			_self.getHuman()
+			_self.getOffice()
+			_self.getBrand()
+			_self.getGoodMoney()
+			_self.getClean()
+			_self.getLogistics()
+		},
+		onPullDownRefresh:function() {
+			var _self = this
+			if(!uni.getStorageSync("openId")){
+				uni.navigateTo({
+					url:"../load/load"
+				})
+			}
 			_self.getLawyer()
 			_self.getintellectual()
 			_self.getTax()
@@ -435,6 +458,7 @@
 					success:function(res){ 
 						var data = res.data
 						_self.logisticsList = data.slice(0,2)
+						 uni.stopPullDownRefresh();
 					}
 					
 				})

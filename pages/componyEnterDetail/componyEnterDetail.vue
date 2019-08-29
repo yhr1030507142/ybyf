@@ -3,7 +3,7 @@
 		<view class="compony-detail">
 			<!--  -->
 			<view class="compony-detail-pic">
-				<image :src="List.shrink" mode="" class="img"></image>
+				<image :src="List.primary" mode="" class="img"></image>
 			</view>
 			<view class="compony-detail-info">
 				<view class="compony-detail-info-header flex row">
@@ -12,18 +12,18 @@
 				</view>
 				<view class="compony-detail-info-address flex row row_between">
 							<view class="address flex row">
-								<view class="iconfont icon-dingwei1"></view>
-								<view class="">{{List.address}}</view>
+								<view class="iconfont icondizhi"></view>
+								<view class="">{{List.address | changeData}}</view>
 							</view>
 							
 								<view class="address flex row">
-								<view class="iconfont icon-yduidianhua2"></view>
+								<view class="iconfont icondianhua"></view>
 								<view class="">{{List.phone}}</view>
 							</view>
 							
 								<view class="address flex row">
-								<view class="iconfont icon-chanpinshezhi"></view>
-								<view class="">主营:{{List.branch_name}}</view>
+								<view class="iconfont"></view>
+								<view class="">主营:{{List.branch_name | changeData}}</view>
 							</view>
 				
 				</view>
@@ -31,7 +31,7 @@
 					<view class="compony-detail-info-cotent-header">
 						公司简介
 					</view>
-					<rich-text class="compony-detail-info-cotent-text" :nodes="List.sketch"></rich-text>
+					<rich-text class="compony-detail-info-cotent-text" :nodes="List.sketch | changeData"></rich-text>
 					
 				</view>
 			</view>
@@ -39,35 +39,32 @@
 	
 		</view>
 		<!-- 产品服务 -->
-		<view class="index-notice flex col">
+		<view class="index-notice flex col" v-for='(v,i) in  nameList' :key='i'>
 			<view class="index-notice-header flex row row_between">
 				<view class="index-notice-header-tilte">
-					产品服务
+					{{v.name}}
 				</view>
-				<view class="index-notice-header-more" @tap="goProductMore">
-					查看更多>
+				<view class="index-notice-header-more" @tap="goProductMore(v.id,v.stationedId,v.name)">
+					查看更多> 
 				</view>
 			</view>
-			<view class="index-notice-content flex row" v-for="(v,i) in serverList" :key="i" @tap="goProductDetail(v.Id,v.branch)">
+			<view class="index-notice-content flex row" v-for="(val,index) in v.declareNewList" :key="index" @tap="goProductDetail(val.Id,val.branch,val.mark,v.name)">
 					<view class="index-notice-content-img flex">
-						<image :src="v.shrink" mode="" class="img"></image>
+						<image :src="val.shrink | getPic" mode="" class="img"></image>
 					</view>
 					<view class="index-notice-content-right flex col">
 							<view class="index-notice-content-right-title">
-								{{v.name}}
+								{{val.name}}
 							</view>
 							<view class="index-notice-content-right-text">
-								{{v.sketch}}
+								{{val.sketch}} 
 							</view>
-							<!-- <view class="index-notice-content-right-date">
-								2019年04月08日
-							</view> -->
 					</view>
 			</view>
 		</view>  
 		<!--  -->
 		<!-- 需求资源 -->
-		<view class="index-notice flex col">
+	<!-- 	<view class="index-notice flex col">
 			<view class="index-notice-header flex row row_between">
 				<view class="index-notice-header-tilte">
 					需求资源
@@ -87,15 +84,12 @@
 							<view class="index-notice-content-right-text">
 								{{v.sketch}}
 							</view>
-							<!-- <view class="index-notice-content-right-date">
-								2019年04月08日
-							</view> -->
 					</view>
 			</view>
-		</view>  
+		</view>  -->
 		<!--  -->
 			<!-- 需求资源 -->
-		<view class="index-notice flex col">
+	<!-- 	<view class="index-notice flex col">
 			<view class="index-notice-header flex row row_between">
 				<view class="index-notice-header-tilte">
 					供应资源
@@ -115,13 +109,11 @@
 							<view class="index-notice-content-right-text">
 									{{v.sketch}}
 							</view>
-							<!-- <view class="index-notice-content-right-date">
-								2019年04月08日
-							</view> -->
+						
 					</view>
 			</view>
 			
-		</view>  
+		</view>  -->
 		<!--  -->
 		 <view class="park-box-select">
 			 <button type="primary" class="btn" @tap="apply">立即咨询</button>
@@ -137,6 +129,7 @@
 				word:"132",
 				id:"",
 				List:[],
+				nameList:[],
 				supplyList:[],
 				supplyList2:[],
 				serverList:[],
@@ -147,9 +140,10 @@
 			var _self = this
 			_self.id = option.id
 			_self.getInfo()
-			_self.getNeedInfo()
-			_self.getSupplyInfo()
-			_self.getServerInfo()
+			_self.getDataList()
+			// _self.getNeedInfo()
+			// _self.getSupplyInfo()
+			// _self.getServerInfo()
 		},
 		methods: {
 				getInfo:function(){
@@ -159,7 +153,6 @@
 					data:{id:_self.id,name:"",pull:0}, 
 					success:function(res){
 						console.log(res)
-						console.log(res.data)
 						_self.List = res.data[0]
 					}
 				 })
@@ -172,6 +165,34 @@
 				 uni.makePhoneCall({
 					phoneNumber: _self.List.phone //仅为示例
 				 });
+			},
+			/**
+			 * 获取动态子列表，例如：产品服务(模块)
+			 */
+			getDataList:function(){
+				var _self = this
+				uni.request({
+					url:_self.$api+'dockingManager/titleBranchQuery',
+					data:{id:_self.id,optionId:uni.getStorageSync('optionId')},
+					success:function(res){
+						console.log(res)
+						_self.nameList = res.data
+					}
+				})
+			},
+			/**
+			 * 获取模块下子内容
+			 */
+			getChildList:function(mark,branch){
+				var _self = this
+				uni.request({
+					url:_self.$api+'dockingManager/declareNewQuery',
+					data:{id:0,mark:mark,branck:branch,optionId:uni.getStorageSync('optionId')},
+					success:function(res){
+						console.log(res)
+						_self.serverList[i] = res.data
+					}
+				})
 			},
 			/**
 			 * 需求资源
@@ -221,18 +242,18 @@
 			/**
 			 * 更多产品
 			 */
-			goProductMore:function(){
+			goProductMore:function(mark,branch,part_name){
 				var _self = this
 				uni.navigateTo({
-					url:"../pageChildren/componyProduct/componyProduct?branch="+_self.id
+					url:"../pageChildren/componyProduct/componyProduct?mark="+mark+'&branch='+branch+'&part_name='+part_name
 				})
 			},
 			/**
 			 * 产品详情
 			 */
-			goProductDetail:function(id,branch){
+			goProductDetail:function(id,branch,mark,part_name){
 				uni.navigateTo({
-					url:"../pageChildren/productDetail/productDetail?id="+id+"&branch="+branch
+					url:"../pageChildren/productDetail/productDetail?id="+id+"&branch="+branch+"&part_name="+part_name+'&mark='+mark
 				})
 			},
 			/**
@@ -266,7 +287,14 @@
 		filters:{
 			getPic:function(res){
 				return res.split(',')[0]
-			}
+			},
+			changeData:function(data){
+				 if(data == undefined || data==null || data ==''){
+					 return '暂无'
+				 }else{
+					 return data
+				 }
+			},
 		}
 	}
 </script>
@@ -376,6 +404,7 @@
 			}
 		}
 		.index-notice-content-right{
+			width: 68%;
 			margin-left: 20upx;
 			flex: 1;
 			font-size: 28upx;

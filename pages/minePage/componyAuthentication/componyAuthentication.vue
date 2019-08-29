@@ -241,7 +241,7 @@
 									title:"提交成功",
 									success:function(){
 										setTimeout(function(){
-											uni.switchTab({
+											uni.switchTab({ 
 												url:"../../../pages/mine/mine"
 											})
 										},1000)

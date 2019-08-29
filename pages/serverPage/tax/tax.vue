@@ -3,9 +3,9 @@
 		<view class="box">
 			<!-- 活动公告 -->
 			<view class="index-notice flex col">
-				<view class="index-notice-header flex row row_between">
+				<view class="index-notice-header flex row row_center">
 					<view class="index-notice-header-tilte">
-					
+						{{tax_name}}
 					</view>
 					<view class="index-notice-header-more">
 					</view>
@@ -37,19 +37,23 @@
 		data() {
 			return {
 			headlineList:[],
+			id:'',
+			tax_name:'',
 			}
 		},
-		onLoad:function(){
-			
+		onLoad:function(option){
 			var _self = this
+			_self.id = option.id
+			_self.tax_name = option.tax_name
+			console.log(option)
 			_self.getInfo()
 		},
 		methods: {
 			getInfo:function(){
 				var _self = this
 				uni.request({
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:10,optionId:uni.getStorageSync("openId"),branch:0},
+					url:_self.$api+"dockingManager/totalMainQuery",
+					data:{id:"0",pull:_self.id,optionId:uni.getStorageSync("openId")},
 					method:"GET",
 					success:function(res){
 						console.log(res)
@@ -58,8 +62,9 @@
 				})
 			},
 			goto:function(id){
+				var _self = this
 				uni.navigateTo({
-					url:"../taxDetail/taxDetail?id="+id
+					url:"../taxDetail/taxDetail?id="+id+'&pull='+_self.id+'&tax_name='+_self.tax_name
 				})
 			},
 		}
@@ -80,12 +85,14 @@
 		.index-notice-header{
 			width: 90%;
 			margin: 0 auto;
-			height: 30upx;
+			height: 70upx;
+			padding-bottom:30upx;
 			align-items: center;
 			.index-notice-header-tilte{
 				font-size: 40upx;
 				font-weight: 800;
 				color: #000000;
+				margin-top: 50upx;
 			}
 			.index-notice-header-more{
 				font-size: 28upx;
@@ -94,7 +101,7 @@
 		}
 		.index-notice-content{
 			width: 90%;
-			margin: 0 auto;
+			margin: 30upx auto;
 			padding-bottom: 30upx;
 			.index-notice-content-img{
 				width: 30%;

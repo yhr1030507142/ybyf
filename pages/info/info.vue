@@ -45,7 +45,7 @@
 			<view class="index-notice flex col" v-show="active==2">
 				<view class="index-notice-content flex row" v-for="(v,i) in supplyList2" :key="i" @tap="lookDetail(v.Id,1)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink" mode="" class="img"></image>
+							<image :src="v.shrink | getPic" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
@@ -85,6 +85,22 @@
 		},
 		onLoad:function(){
 			var _self = this
+			// wx.showShareMenu() 
+			// if(!uni.getStorageSync("openId")){
+			// 	uni.navigateTo({
+			// 		url:"../load/load"
+			// 	})
+			// }
+			_self.getInfo()
+			_self.getInfo1()
+		},
+		onPullDownRefresh:function() {
+			var _self = this
+			// if(!uni.getStorageSync("openId")){
+			// 	uni.navigateTo({
+			// 		url:"../load/load"
+			// 	})
+			// }
 			_self.getInfo()
 			_self.getInfo1()
 		},
@@ -96,7 +112,7 @@
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/declareQuery",
-					data:{id:"0",mark:0,optionId:uni.getStorageSync("openId"),branch:0}, 
+					data:{id:"0",mark:0,optionId:uni.getStorageSync("openId")}, 
 					method:"GET",
 					success:function(res){
 						_self.supplyList = res.data
@@ -109,11 +125,12 @@
 				var _self = this
 				uni.request({
 					url:_self.$api+"dockingManager/declareQuery",
-					data:{id:"0",mark:1,optionId:uni.getStorageSync("openId"),branch:0},
+					data:{id:"0",mark:1,optionId:uni.getStorageSync("openId")},
 					method:"GET",
 					success:function(res){
 						_self.supplyList2 = res.data
 						console.log(res.data)
+						 uni.stopPullDownRefresh();
 					}
 				})
 			},

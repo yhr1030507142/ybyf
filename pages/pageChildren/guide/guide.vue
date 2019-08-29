@@ -9,7 +9,7 @@
 					<view class="park-box-content-header">
 						{{v.name}}
 					</view>
-					<rich-text class="park-box-content-middle" :nodes="v.content">
+					<rich-text class="park-box-content-middle" :nodes="v.content | imgData">
 					</rich-text>
 				</view>
 		</view>
@@ -73,9 +73,9 @@
 			getInfo:function(){
 				var _self = this
 				uni.request({
-					url:_self.$api+"dockingManager/totalQuery",
-					data:{id:"0",pull:2,optionId:uni.getStorageSync("openId"),branch:0},
-					method:"GET",
+					url:_self.$api+"dockingManager/releaseMainQuery",
+					data:{id:"0",pull:1,optionId:uni.getStorageSync("openId")},
+					method:"GET", 
 					success:function(res){
 						console.log(res)
 						var data = res.data
@@ -125,7 +125,26 @@
 								}
 							})
 							return false
-						}else{
+						}
+						if(res.data ==99){
+								uni.showModal({
+									title: '提示',
+									content: '此操作需用户授权，是否进行授权',
+									success: function (res) {
+										if (res.confirm) {
+											//跳转到授权页面  
+											uni.navigateTo({
+												url:"../../login/login"  
+											})
+											console.log('用户点击确定');
+										} else if (res.cancel) {
+											console.log('用户点击取消');
+										}
+									}
+								});
+								return false
+						}
+						else{
 								uni.showToast({
 								title:"申请失败",
 								icon:"none"
@@ -136,7 +155,14 @@
 				})
 			},
 			
-		} 
+		},
+		 filters:{
+			 imgData:function(newdata){
+				 return newdata.replace(/<img/gi, '<img style="max-width:100%;height:auto;display:block"')
+                                        .replace(/<section/g,'<div')
+                                        .replace(/\/section>/g,'\div>');
+			 }
+		 }
 		 
 	}
 </script>
@@ -166,6 +192,9 @@
 		background: #ffffff;
 		width: 100%;
 		color: #333333;
+		img{
+			max-width: 100%;
+		}
 		.park-box-content-header{
 			height: 70upx;
 			width: 90%;
@@ -179,6 +208,9 @@
 			margin: 0 auto;
 			font-size: 28upx;
 			line-height: 50upx;
+			img{
+				width: 100%;
+			}
 		}
 	}
 }

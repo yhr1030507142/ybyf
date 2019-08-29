@@ -9,7 +9,7 @@
 					<view class="index-notice-header-more">
 					</view>
 				</view>
-				<view class="index-notice-content flex row" v-for="(v,i) in shrink" :key="i" @tap="goto(v.Id,v.branch)">
+				<view class="index-notice-content flex row" v-for="(v,i) in shrink" :key="i" @tap="goto(v.Id,v.branch,v.mark)">
 						<view class="index-notice-content-img flex">
 							<image :src="v.shrink | getPic" mode="" class="img"></image>
 						</view>
@@ -37,19 +37,24 @@
 			return {
 				shrink:[],
 				tradeId:"",
+				branch:'',
+				mark:'',
+				part_name:'',
 			} 
 		},
 		onLoad:function(option){
 			var _self = this
-			_self.tradeId = option.tradeId
+			_self.branch = option.branch
+			_self.mark = option.mark
+			_self.part_name = option.part_name
 			_self.getInfo()
 		},
 		methods: {
 			getInfo:function(){
 				var _self = this
 				uni.request({
-					url:_self.$api+"dockingManager/totalNewQuery",
-					data:{pull:18,id:0,optionId:uni.getStorageSync("openId"),branch:0,trade:_self.tradeId},
+					url:_self.$api+"dockingManager/declareNewQuery",
+					data:{id:0,optionId:uni.getStorageSync("openId"),branch:_self.branch,mark:_self.mark},
 					method:"GET",
 					success:function(res){
 						console.log(res)
@@ -58,10 +63,10 @@
 					}
 				})
 			},
-			goto:function(id){
+			goto:function(id,branch,mark){
 				var _self = this
 				uni.navigateTo({
-					url:"../myComponyProductDetail/myComponyProductDetail?id="+id+"&tradeId="+_self.tradeId
+					url:"../myComponyProductDetail/myComponyProductDetail?id="+id+"&branch="+branch+"&part_name="+_self.part_name+'&mark='+mark
 				})
 			},
 		},
