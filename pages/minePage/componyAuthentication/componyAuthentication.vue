@@ -66,7 +66,7 @@
 									<view class="uni-uploader__files">
 										<block v-for="(image,index) in imageList" :key="index">
 											<view class="uni-uploader__file">
-												<image class="uni-uploader__img" :src="image" :data-src="image" @tap="previewImage"></image>
+												<image class="uni-uploader__img" :src="image" :data-src="image" @tap="previewImage" @longpress="deletePic(index)"></image>
 											</view>
 										</block>
 										<view class="uni-uploader__input-box">
@@ -108,6 +108,13 @@
 			}
 		},
 		methods: {
+			deletePic:function(e){
+				var _self = this
+				console.log(e)
+				_self.imageList.splice(e,1)
+				_self.pathArr.splice(e,1)
+				console.log(_self.imageList)
+			},
 			bindPickerChange: function(e) {
             console.log('picker发送选择改变，携带值为', e.target.value)
             this.index = e.target.value
@@ -178,6 +185,7 @@
 				 */
 				addAudit:function(){
 					var _self = this
+					var myreg = /^((0\d{2,3}-\d{7,8})|(1[3456789]\d{9}))$/;
 					if(_self.compony_name == ""){
 						uni.showToast({
 							title:"企业名称不能为空",
@@ -211,7 +219,14 @@
 							icon:"none"
 						})
 						return false
-					}else if(_self.imageList.length === 0){
+					}else if(!myreg.test(_self.tel)){
+						uni.showToast({
+						title:"手机号码格式不正确",
+						icon:"none"
+					})
+					return false
+					}
+					else if(_self.imageList.length === 0){
 						uni.showToast({
 							title:"请上传企业照片",
 							icon:"none" 
@@ -256,6 +271,27 @@
 								})
 								return false
 							}
+							else if(res.data == 2){
+								uni.showToast({
+									title:"该企业已注册",
+									icon:"none"
+								})
+								return false
+							}
+							else if(res.data == 3){
+								uni.showToast({
+									title:"该企业已在认证阶段",
+									icon:"none"
+								})
+								return false
+							}
+							else{
+								uni.showToast({
+									title:"提交失败，请联系管理员",
+									icon:"none"
+								})
+								return false
+							}
 						}
 						})
 				}
@@ -269,7 +305,7 @@ page{
 	background: #e8e7e7;
 }
 .btn{
-	background: #1758EA !important;
+	background: #E0AF2F !important;
 }
 .red{
 	color: red;

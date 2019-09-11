@@ -10,9 +10,12 @@
 					<view class="index-notice-header-more">
 					</view>
 				</view>
+				<view class="index-notice-content flex row" v-show="ListLen==0" style="min-height:1000upx;">
+					<image src="../../../static/img/null2.png" mode="" class="null_img"></image>
+				</view>
 				<view class="index-notice-content flex row" v-for="(v,i) in headlineList" :key="i" @tap="goto(v.Id)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink" mode="" class="img"></image>
+							<image :src="v.small_primary" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
@@ -37,6 +40,7 @@
 		data() {
 			return {
 			headlineList:[],
+			ListLen:0,
 			}
 		},
 		onLoad:function(){
@@ -54,6 +58,7 @@
 					success:function(res){
 						console.log(res)
 						_self.headlineList = res.data
+						_self.ListLen = _self.headlineList.length
 					}
 				}) 
 			},
@@ -97,14 +102,14 @@
 			margin: 0 auto;
 			padding-bottom: 30upx;
 			.index-notice-content-img{
-				width: 30%;
+				width: 200upx;
 				.img{
 					width: 200upx;
 					height:200upx;
 				}
 			} 
 			.index-notice-content-right{
-				width: 60%;
+				width: 200upx;
 				margin-left: 20upx;
 				flex: 1;
 				justify-content: space-between;

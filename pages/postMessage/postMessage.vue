@@ -1,5 +1,6 @@
 <template>
 	<view class="box">
+		
 		<!-- 选择 -->
 		<view class="select">
 			
@@ -12,10 +13,10 @@
 				</view>
 				<view class="select-end flex row">
 					 <view class="uni-input" v-if="index == ''">请选择</view>
-					 <view class="uni-input uni-input1" v-else="">{{array[index]}}</view>
+					 <view class="uni-input uni-input1" v-else="">{{array[index]}}</view> 
 					 <view class="iconfont icon-xiala1 icon"></view>
-
-				</view>
+ 
+				</view> 
 			</view>
 			</picker>
 		</view>
@@ -55,7 +56,19 @@
 			<textarea class="textarea-select-content" v-model="textarea"></textarea>
    		</view>
    <!--  -->
-   <!-- 选择 -->
+   <view class="select">
+   	<view class="select-box flex row row_between">
+   		<view class="select-title">
+   			添加缩略图片(1：1)
+   		</view>
+   	</view>
+   	<view class="select-pic">
+		
+			<image :src="thumbnail" @tap="clk(0)" class="myimg"></image>
+			<avatar @upload="doUpload" @avtinit="doBefore" quality="0.8" ref="avatar"></avatar>
+	</view>
+	</view>	 
+   <!-- 选择 --> 
    		<view class="select">
    			<view class="select-box flex row row_between">
    				<view class="select-title">
@@ -74,7 +87,7 @@
 									<view class="uni-uploader__files">
 										<block v-for="(image,index) in imageList" :key="index">
 											<view class="uni-uploader__file">
-												<image class="uni-uploader__img" :src="image" :data-src="image" @tap="previewImage"></image>
+												<image class="uni-uploader__img" :src="image" :data-src="image" @tap="previewImage" @longpress="deletePic(index)"></image>
 											</view>
 										</block>
 										<view class="uni-uploader__input-box">
@@ -90,11 +103,13 @@
 			</view>
    		</view>
    <!--  -->
+  
    <button type="primary" class="btn" @tap="addInfo">确定发布</button>
 	</view>
 </template>
 
 <script>
+	import avatar from "../yq-avatar.vue";
 	import {uniCollapse,uniCollapseItem} from "@dcloudio/uni-ui"
 	export default {
 		data() {
@@ -112,26 +127,77 @@
 				percent:0,
 				showBox:false,
 				state:false,
+				urls: ["../../static/img/timg1.jpg","../../static/logo.png"],
+				thumbnail:'../../static/img/timg1.jpg'
 			}
 		},
 		onLoad:function(){
 			var _self = this 
 		},
 		onShow:function(){
-			this.imageList = [] 
-			this.pathArr = []
+			var _self  = this
+			let pages = getCurrentPages();
+			let currPage = pages[pages.length-1];
+			if(currPage.data.imageList==undefined || currPage.data.imageList=='' || currPage.data == undefined){
+				
+			}else{
+				_self.imageList = []
+				_self.pathArr = []
+				_self.listPath = []
+				console.log(_self.pathArr)
+			}
+			
 		}, 
 		methods: {
+			/**
+			 * 删除数组图片
+			 */
+			deletePic:function(e){
+				var _self = this
+				console.log(e)
+				_self.imageList.splice(e,1)
+				_self.pathArr.splice(e,1)
+			},
+			/**
+			 * @param {Object} e缩略图
+			 */
+			doBefore() {
+				console.log('doBefore');
+			},
+			clk(index) {
+				this.$refs.avatar.fChooseImg(index,{
+					selWidth: '350upx', selHeight: '350upx', 
+					expWidth: '260upx', expHeight: '260upx', 
+					inner: index ? 'true' : 'false' 
+				});
+			},
+			doUpload(rsp) {
+				var _self = this
+				console.log(rsp);
+				uni.uploadFile({
+					url: _self.$api+'dockingManager/upload', //仅为示例，非真实的接口地址
+					//url: "http://www.tp5.com/index", //仅为示例，非真实的接口地址
+					filePath: rsp.path,
+					name: 'file', 
+					formData: {
+						'user': 'test'
+					},
+					success: (uploadFileRes) => {
+						console.log(uploadFileRes)
+						_self.thumbnail = uploadFileRes.data.replace("\"","").replace("\"","")
+					}
+				  }); 
+			},
 			bindPickerChange: function(e) {
 				console.log('picker发送选择改变，携带值为', e.target.value)
 				this.index = e.target.value 
 			},
 			previewImage: function(e) {
-				var current = e.target.dataset.src
-				uni.previewImage({
-					current: current,
-					urls: this.imageList
-				})
+				// var current = e.target.dataset.src
+				// uni.previewImage({
+				// 	current: current,
+				// 	urls: this.imageList
+				// })
 			},
 			chooseImage: async function() {
 				var _self = this
@@ -189,8 +255,10 @@
 					this.showBox = false
 				},
 			addInfo:function(){
+				
 				var _self = this
-				var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
+				console.log(_self.pathArr)
+				var myreg = /^((0\d{2,3}-\d{7,8})|(1[3456789]\d{9}))$/;
 				if(_self.index == ""){
 					uni.showToast({
 						title:"请选择供求",
@@ -214,7 +282,7 @@
 				// }
 				else if(_self.state == false && _self.imageList.length>0){ 
 					uni.showToast({
-						title:"图片正在上传，请稍后提交1",
+						title:"图片正在上传，请稍后提交",
 						icon:"none"  
 					})
 					return false
@@ -226,13 +294,13 @@
 					})
 					return false
 				}
-				// else if(_self.pathArr.length === 0){
-				// 	uni.showToast({
-				// 		title:"请上照片",
-				// 		icon:"none"
-				// 	})
-				// 	return false
-				// }
+				else if(_self.thumbnail == ''){
+					uni.showToast({
+						title:"请上传缩略图",
+						icon:"none"
+					})
+					return false
+				}
 				else if(_self.phone == ""){
 					uni.showToast({
 						title:"请输入联系方式",
@@ -246,14 +314,14 @@
 					})
 					return false
 				}
-					for(var i =0;i<_self.pathArr.length;i++){
+				for(var i =0;i<_self.pathArr.length;i++){
 						_self.listPath.push({testName1:_self.pathArr[i]})
 						console.log(_self.listPath)
 					}
-					_self.listPath.push({phone:_self.phone,mark:_self.index,name:_self.title,sketch:_self.textarea,optionId:uni.getStorageSync("openId")})
+				_self.listPath.push({phone:_self.phone,mark:_self.index,name:_self.title,sketch:_self.textarea,optionId:uni.getStorageSync("openId"),smallPrimary:_self.thumbnail})
 					console.log(JSON.stringify(_self.listPath))
 				uni.request({
-					url:_self.$api+"dockingManager/declareAdd", 
+					url:_self.$api+"dockingManager/declareAdd",
 					data:JSON.stringify(_self.listPath), 
 					method:"POST",
 					success:function(res){ 
@@ -310,7 +378,7 @@
 				})
 			}
 		},
-		 components: {uniCollapse,uniCollapseItem}
+		 components: {uniCollapse,uniCollapseItem,avatar}
 	}
 </script>
 
@@ -319,7 +387,7 @@ page{
 	background: #e8e7e7;
 }
 .btn{
-	background: #1758EA !important;
+	background: #E0AF2F !important;
 }
 .uni-input1{
 	color: #000000;
@@ -393,4 +461,10 @@ page{
 .uni-uploader-head{
 	font-size: 28upx;
 }
+.myimg {
+		width: 200upx;
+		height: 200upx;
+		border-radius: 0 !important;
+		border: 1px solid #ccc;
+	}
 </style>

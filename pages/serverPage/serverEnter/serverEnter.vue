@@ -106,7 +106,7 @@
 			},
 			addInfo:function(){
 				var _self = this
-				var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
+				var myreg = /^((0\d{2,3}-\d{7,8})|(1[3456789]\d{9}))$/;
 				if(_self.name == "" || _self.name==null){
 					uni.showToast({
 						title:"请输入联系人",
@@ -251,6 +251,6 @@
 }
 .btn{
 	border-radius: 5upx;
-	background: #1758EA !important;
+	background: #E0AF2F !important;
 }
 </style>

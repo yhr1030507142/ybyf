@@ -16,9 +16,12 @@
 			
 				<!-- 需求资源 -->
 			<view class="index-notice flex col" v-show="active==1">
+				<view class="index-notice-content flex row" v-show="ListLen==0" style="min-height:1000upx;">
+					<image src="../../static/img/null.png" mode="" class="img"></image>
+				</view>
 				<view class="index-notice-content flex row" v-for="(v,i) in supplyList" :key="i" @tap="lookDetail(v.Id,0)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink | getPic" mode="" class="img"></image>
+							<image :src="v.small_primary" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
@@ -43,9 +46,12 @@
 			<!--  -->
 				<!-- 需求资源 -->
 			<view class="index-notice flex col" v-show="active==2">
+				<view class="index-notice-content flex row" v-show="ListLen1==0" style="min-height:1000upx;">
+					<image src="../../static/img/null.png" mode="" class="img"></image>
+				</view>
 				<view class="index-notice-content flex row" v-for="(v,i) in supplyList2" :key="i" @tap="lookDetail(v.Id,1)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink | getPic" mode="" class="img"></image>
+							<image :src="v.small_primary" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
@@ -79,7 +85,9 @@
 				active:1,
 				activeClass:"info-header-btn-active",
 				supplyList:[],
+				ListLen:0,
 				supplyList2:[],
+				ListLen1:0,
 				shrink:"",
 			}
 		},
@@ -117,6 +125,7 @@
 					success:function(res){
 						_self.supplyList = res.data
 						_self.shrink = res.data
+						_self.ListLen = res.data.length
 						console.log(res.data) 
 					} 
 				})
@@ -129,6 +138,7 @@
 					method:"GET",
 					success:function(res){
 						_self.supplyList2 = res.data
+						_self.ListLen1 = res.data.length
 						console.log(res.data)
 						 uni.stopPullDownRefresh();
 					}
@@ -214,14 +224,14 @@ page{
 		margin: 0 auto;
 		padding-bottom: 30upx;
 		.index-notice-content-img{
-			width: 30%;
+			width: 200upx;
 			.img{
 				width: 200upx;
 				height: 200upx;
 			}
 		}
 		.index-notice-content-right{
-			width: 60%;
+			width:200upx;
 			margin-left: 20upx;
 			flex: 1;
 			font-size: 28upx;

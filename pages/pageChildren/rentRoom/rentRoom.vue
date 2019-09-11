@@ -111,7 +111,7 @@
    			</view>
    		</view>
    <!--  -->
-   <button type="primary" class="btn">确定发布</button>
+   <button type="primary" class="btn">确定</button>
 	</view>
 </template>
 
@@ -278,7 +278,7 @@ page{
 	background: #e8e7e7;
 }
 .btn{
-	background: #1758EA !important;
+	background: #E0AF2F !important;
 }
 .box{
 	width: 90%;
@@ -354,7 +354,7 @@ page{
 }
  .selectBox{
 	width: 23%;
-    background: #1758EA!important;
+    background: #E0AF2F !important;
     color: #fff!important;
 	margin-top: 20upx;
 	font-size: 28upx;

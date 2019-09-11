@@ -18,13 +18,13 @@
             </view>
         </view>
 		<!-- 中间导航 -->
-		<view class="index-content flex row_between">
+		<view class="index-content flex row_between"> 
 			<view class="index-content-left">
 				<view class="index-content-left-introfuce flex col" @tap="goTo('parkProfile')">
 							<view class="iconfont icongongsijianjie icon"></view>
-							<view class="index-content-left-introfuce-word">园区简介</view>
-							
-				</view>
+							<view class="index-content-left-introfuce-word">园区简介</view>  
+							 
+				</view> 
 				<view class="index-content-left-info flex row row_between">
 					<view class="flex col index-content-left-info-left" @tap="goToSwich('info')"> 
 							<view class="iconfont iconjiaoyijilu icon"></view>
@@ -100,7 +100,7 @@
 			</view>
 			<view class="index-notice-content flex row" v-for="(v,i) in shrink" :key="i" @tap="goToDetail(v.Id)">
 					<view class="index-notice-content-img flex">
-						<image :src="v.shrink" mode="" class="img"></image>
+						<image :src="v.small_primary" mode="" class="img"></image>
 					</view>
 					<view class="index-notice-content-right flex col">
 							<view class="index-notice-content-right-title">
@@ -127,7 +127,7 @@
 			</view>
 			<view class="index-notice-content flex row" v-for="(v,i) in parkAdviceList" :key="i" @tap="gotoAdvicePark(v.Id)">
 					<view class="index-notice-content-img flex">
-						<image :src="v.shrink" mode="" class="img"></image>
+						<image :src="v.small_primary" mode="" class="img"></image>
 					</view>
 					<view class="index-notice-content-right flex col">
 							<view class="index-notice-content-right-title">
@@ -154,7 +154,7 @@
 				</view>
 				<view class="index-notice-content flex row" v-for="(v,i) in rentList" :key="i" @tap="gotoRent(v.Id)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink" mode="" class="img"></image>
+							<image :src="v.small_primary" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title"> 
@@ -169,8 +169,35 @@
 						</view>
 				</view>
 			</view>
+				<!-- 园区动态 -->
+				<view class="index-notice flex col">
+					<view class="index-notice-header flex row row_between">
+						<view class="index-notice-header-tilte">
+							园区动态
+						</view>
+						<view class="index-notice-header-more" @tap="goParkMore()">
+							查看更多>
+						</view>
+					</view>
+					<view class="index-notice-content flex row" v-for="(v,i) in parkList" :key="i" @tap="gotoPark(v.Id)">
+							<view class="index-notice-content-img flex">
+								<image :src="v.small_primary" mode="" class="img"></image>
+							</view>
+							<view class="index-notice-content-right flex col">
+									<view class="index-notice-content-right-title"> 
+										{{v.name}}
+									</view> 
+									<view class="index-notice-content-right-text">
+										{{v.sketch}}
+									</view>
+									<view class="index-notice-content-right-date">
+										{{v.create_time}}
+									</view>
+							</view>
+					</view>
+				</view>
 	<!-- 园区动态 -->
-	<view class="index-dynamic">
+	<!-- <view class="index-dynamic">
 		<view class="index-dynamic-header flex row col">
 			<view class="index-dynamic-header-title flex col"> 
 				园区动态 
@@ -179,7 +206,7 @@
 				 <swiper class="swiper swiper1" :indicator-dots="indicator1" :autoplay="autoplay" :interval="interval" :duration="duration" next-margin="100upx" previous-margin="100upx">
 				    <swiper-item v-for="(v,i) in parkList" :key="i" @tap="gotoPark(v.Id)">
 				        <view class="swiper-item lunbo1 flex col">
-							<image :src="v.shrink" mode="" class="img1"></image>
+							<image :src="v.primary" mode="" class="img1"></image>
 							<view class="lunbo1-title">
 								{{v.name}}
 							</view>
@@ -191,7 +218,7 @@
 				</swiper>
 		    </view>
 	    </view>
-	</view>
+	</view> -->
 	<!-- 园区头条 -->
 	<view class="index-notice flex col">
 		<view class="index-notice-header flex row row_between">
@@ -204,7 +231,7 @@
 		</view>
 		<view class="index-notice-content flex row"  v-for="(v,i) in headlineList" :key="i" @tap="gotoHeadLine(v.Id)">
 				<view class="index-notice-content-img flex">
-					<image :src="v.shrink" mode="" class="img"></image>
+					<image :src="v.small_primary" mode="" class="img"></image>
 				</view>
 				<view class="index-notice-content-right flex col">
 						<view class="index-notice-content-right-title">
@@ -333,8 +360,17 @@
 					data:{pull:5,optionId:uni.getStorageSync("openId"),id:0},
 					method:"GET",
 					success:function(res){
-						_self.parkList = res.data.slice(0,5)
+						console.log(res)
+						_self.parkList = res.data.slice(0,2)
 					}
+				})
+			},
+			/**
+			 * 更多园区动态
+			 */
+			goParkMore:function(){
+				uni.navigateTo({
+					url:"../pageChildren/parkMore/parkMore"
 				})
 			},
 			/**
@@ -356,6 +392,7 @@
 					data:{pull:3,optionId:uni.getStorageSync("openId"),id:0},
 					method:"GET",
 					success:function(res){
+						console.log(res)
 						_self.parkAdviceList = res.data.slice(0,2)
 						uni.stopPullDownRefresh();
 					}
@@ -665,14 +702,14 @@ page{
 		margin: 0 auto;
 		padding-bottom: 30upx;
 		.index-notice-content-img{
-			width: 30%;
+			width: 200upx;
 			.img{
 				width: 200upx;
 				height: 200upx;
 			}
 		}
 		.index-notice-content-right{
-			width: 60%;
+			width: 200upx;
 			justify-content: space-between;
 			margin-left: 20upx;
 			flex: 1;
@@ -737,7 +774,8 @@ page{
 }
 //  
 .img1{
-			height: 300upx;
+		height: 300upx;
+		width: 100%;
 	}
 .lunbo1{
 			height: 400upx;
@@ -754,7 +792,7 @@ page{
 				white-space: nowrap;
 				display: flex;
 				direction: row;
-				justify-content: center;
+				// justify-content: center;
 			}
 			.lunbo1-date{
 				font-size: 24upx;

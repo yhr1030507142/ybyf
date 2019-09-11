@@ -11,11 +11,14 @@
 					<view class="index-notice-header-more">
 					</view>
 				</view>
+				<view class="index-notice-content flex row" v-show="ListLen==0" style="min-height:1000upx;">
+					<image src="../../../static/img/null2.png" mode="" class="null_img"></image>
+				</view>
 				<view class="index-notice-content flex row" v-for="(v,i) in shrink" :key="i" @tap="goto(v.Id)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink" mode="" class="img"></image>
+							<image :src="v.small_primary" mode="" class="img"></image>
 						</view>
-						<view class="index-notice-content-right flex col">
+						<view class="index-notice-content-right flex col">  
 								<view class="index-notice-content-right-title">
 									{{v.name}}
 								</view> 
@@ -37,7 +40,8 @@
 	export default {
 		data() {
 			return {
-				shrink:[]
+				shrink:[],
+				ListLen:0,
 			}
 		},
 		onLoad:function(){
@@ -56,6 +60,7 @@
 						console.log(res)
 						var data = res.data
 						_self.shrink = res.data 
+						_self.ListLen = _self.shrink.length
 					}
 					
 				})

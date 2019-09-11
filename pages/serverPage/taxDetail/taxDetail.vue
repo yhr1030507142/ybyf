@@ -5,7 +5,7 @@
 		<view class="park-box flex col">
 			
 				<view class="park-box-pic">
-					<image :src="details.primary" mode="" class="img"></image>
+					<image :src="details.primary" mode="" class="img" @tap="previewImage(details.primary)"></image>
 				</view>
 				<view class="park-box-content flex col">
 					<view class="park-box-content-header">
@@ -40,7 +40,8 @@
 				
 			</view>
 		    <view class="bottom_btn_right" @tap="apply()">
-				{{details.phone}}
+				<text v-if="!checkTitle">直接联系</text>
+				<text v-if="checkTitle">{{details.phone}}</text>
 			</view>
 			
 		</view>
@@ -74,6 +75,7 @@
 			tax_name:'',
 			pull:'',
 			collection:1,
+			checkTitle:false
 			}
 		},
 		onLoad:function(option){ 
@@ -83,8 +85,36 @@
 			_self.tax_name = option.tax_name
 			console.log(option)
 			_self.getInfo()
+			_self.checkAuth()
 		},
 		methods: {
+				previewImage: function(e) {
+				uni.previewImage({
+					current: e,
+					urls: [e]
+				})
+			},
+			/**
+			 * 判断是否验证
+			 */
+			checkAuth:function(){
+				var _self = this
+				uni.request({ 
+					url:_self.$api+"dockingManager/judgeCard",
+					data:{optionId:uni.getStorageSync("openId")},
+					method:"GET",
+					success:function(res){
+						console.log(res)
+						if(res.data==0){
+							_self.checkTitle = false
+						}
+						if(res.data==1){
+							_self.checkTitle = true
+						}
+					}
+				})
+				
+			},
 			getInfo:function(){
 				var _self = this
 				uni.request({ 
@@ -140,9 +170,18 @@
 				//拨打电话
 				apply:function(){
 					var _self = this
-					 uni.makePhoneCall({
+					if(_self.checkTitle){
+						uni.makePhoneCall({
 						phoneNumber: _self.details.phone //仅为示例
 						});
+					}else{
+						uni.showToast({
+							title:"您尚未进行认证，请先进行认证",
+							icon:"none"
+						})
+						return false
+					}
+						
 				},
 				/**
 				 * 收藏
@@ -248,10 +287,11 @@
 	.park-box-pic{
 		margin-top: 20upx;
 		width: 100%;
-		height: 300upx;
+		//height: 300upx;
 		.img{
 			width: 100%;
-			height: 100%;
+			height: 300upx;
+			//height: 100%;
 		}
 	}
 	.park-box-content{
@@ -348,7 +388,7 @@
 	}
 	.bottom_btn_right{
 		width: 60%;
-		background: #1758EA;
+		background: #E0AF2F;
 		text-align: center;
 		height: 100upx;
 		line-height: 100upx;

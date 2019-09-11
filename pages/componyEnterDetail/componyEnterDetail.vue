@@ -3,7 +3,7 @@
 		<view class="compony-detail">
 			<!--  -->
 			<view class="compony-detail-pic">
-				<image :src="List.primary" mode="" class="img"></image>
+				<image :src="List.primary | getPic" mode="" class="img"  @tap="previewImage(List.primary)"></image>
 			</view>
 			<view class="compony-detail-info">
 				<view class="compony-detail-info-header flex row">
@@ -11,22 +11,32 @@
 					<view class="compony-name">{{List.name}}</view>
 				</view>
 				<view class="compony-detail-info-address flex row row_between">
-							<view class="address flex row">
-								<view class="iconfont icondizhi"></view>
-								<view class="">{{List.address | changeData}}</view>
-							</view>
+					<view class="address flex row">
+						<view class="iconfont icondizhi"></view>
+						<view class="">{{List.address | changeData}}</view>
+					</view>
+					</view>
+				<view class="compony-detail-info-address flex row row_between">
 							
-								<view class="address flex row">
+							<view class="address flex row">
 								<view class="iconfont icondianhua"></view>
 								<view class="">{{List.phone}}</view>
 							</view>
-							
-								<view class="address flex row">
-								<view class="iconfont"></view>
-								<view class="">主营:{{List.branch_name | changeData}}</view>
+							<view class="address flex row">
+								<view class="iconfont iconxingming"></view>
+								<view class="">{{List.user_name | changeData}}</view>
 							</view>
-				
-				</view>
+							<view class="address flex row">
+								<view class="iconfont iconzhiwu"></view> 
+								<view class="">{{List.user_post | changeData}}</view>
+							</view>
+					</view>
+					<view class="compony-detail-info-address flex row row_between" style="border-bottom:1px solid #DDDDDD;">
+						<view class="address flex row">
+							<view class="iconfont"></view>
+							<view class="">主营:{{List.branch_name | changeData}}</view>
+						</view>
+					</view>
 				<view class="compony-detail-info-cotent flex col">
 					<view class="compony-detail-info-cotent-header">
 						公司简介
@@ -44,13 +54,14 @@
 				<view class="index-notice-header-tilte">
 					{{v.name}}
 				</view>
-				<view class="index-notice-header-more" @tap="goProductMore(v.id,v.stationedId,v.name)">
-					查看更多> 
+				<view class="index-notice-header-more">
+					<!-- @tap="goProductMore(v.id,v.stationedId,v.name)" 查看更多> -->
 				</view>
 			</view>
 			<view class="index-notice-content flex row" v-for="(val,index) in v.declareNewList" :key="index" @tap="goProductDetail(val.Id,val.branch,val.mark,v.name)">
+					
 					<view class="index-notice-content-img flex">
-						<image :src="val.shrink | getPic" mode="" class="img"></image>
+						<image :src="val.small_primary" mode="" class="img"></image>
 					</view>
 					<view class="index-notice-content-right flex col">
 							<view class="index-notice-content-right-title">
@@ -116,7 +127,10 @@
 		</view>  -->
 		<!--  -->
 		 <view class="park-box-select">
-			 <button type="primary" class="btn" @tap="apply">立即咨询</button>
+			 <button type="primary" class="btn" @tap="apply">
+				 <text v-if="!checkTitle">直接联系</text>
+				 <text v-if="checkTitle">{{details.phone}}</text>
+			 </button>
 		 </view>
 			 <!--  -->
 	</view>
@@ -133,6 +147,10 @@
 				supplyList:[],
 				supplyList2:[],
 				serverList:[],
+				checkTitle:false,
+				upper_id:'',
+				Id:'',//企业id
+				
 			
 			}
 		},
@@ -141,11 +159,18 @@
 			_self.id = option.id
 			_self.getInfo()
 			_self.getDataList()
+			_self.checkAuth()
 			// _self.getNeedInfo()
 			// _self.getSupplyInfo()
 			// _self.getServerInfo()
 		},
 		methods: {
+				previewImage: function(e) {
+				uni.previewImage({
+					current: e,
+					urls: [e]
+				})
+			},
 				getInfo:function(){
 				var _self = this
 				 uni.request({
@@ -154,17 +179,49 @@
 					success:function(res){
 						console.log(res)
 						_self.List = res.data[0]
+						_self.upper_id = res.data[0].upper_id
+						_self.Id = res.data[0].Id
+						console.log(_self.upper_id)
 					}
 				 })
+			},
+			/**
+			 * 判断是否验证
+			 */
+			checkAuth:function(){
+				var _self = this
+				uni.request({ 
+					url:_self.$api+"dockingManager/judgeCard",
+					data:{optionId:uni.getStorageSync("openId")},
+					method:"GET",
+					success:function(res){
+						console.log(res)
+						if(res.data==0){
+							_self.checkTitle = false
+						}
+						if(res.data==1){
+							_self.checkTitle = true
+						}
+					}
+				})
+				
 			},
 			/**
 			 * 立即咨询
 			 */
 			apply:function(){
 				var _self = this
-				 uni.makePhoneCall({
-					phoneNumber: _self.List.phone //仅为示例
-				 });
+			if(_self.checkTitle){
+				uni.makePhoneCall({
+				phoneNumber: _self.List.phone //仅为示例
+				});
+			}else{
+				uni.showToast({
+					title:"您尚未进行认证，请先进行认证",
+					icon:"none"
+				})
+				return false
+			}
 			},
 			/**
 			 * 获取动态子列表，例如：产品服务(模块)
@@ -251,9 +308,11 @@
 			/**
 			 * 产品详情
 			 */
-			goProductDetail:function(id,branch,mark,part_name){
+			goProductDetail:function(id,branch,mark,part_name,Id){
+				var _self = this
 				uni.navigateTo({
-					url:"../pageChildren/productDetail/productDetail?id="+id+"&branch="+branch+"&part_name="+part_name+'&mark='+mark
+					url:"../pageChildren/productDetail/productDetail?id="+id+"&branch="+branch+"&part_name="+part_name+'&mark='+mark+'&Id='+_self.Id
+					
 				})
 			},
 			/**
@@ -286,7 +345,11 @@
 		},
 		filters:{
 			getPic:function(res){
-				return res.split(',')[0]
+				if(res===undefined || res==''){
+					return ''
+				}else{
+					return res.split(',')[0]
+				}
 			},
 			changeData:function(data){
 				 if(data == undefined || data==null || data ==''){
@@ -306,7 +369,7 @@
 	}
 	.btn{
 		border-radius: 5upx;
-		background: #1758EA !important;
+		background: #E0AF2F !important;
 	}
 .compony-detail{
 	background: #ffffff;
@@ -314,10 +377,11 @@
 	margin: 10upx auto;
 	.compony-detail-pic{
 		width: 100%;
-		height: 300upx;
+		// height: 300upx;
 		.img{
 			width:100%;
-			height: 100%;
+			height: 300upx;
+			// height: 100%;
 		}
 	}
 	.compony-detail-info{
@@ -343,11 +407,11 @@
 		}
 		.compony-detail-info-address{
 			width: 90%;
-			margin: 20upx auto;
+			margin: 0 auto;
 			font-size: 28upx;
 			color: #666666;
 			min-height: 70upx;
-			border-bottom:1px solid #DDDDDD;
+			
 			flex-wrap: wrap;
 			
 			.address{

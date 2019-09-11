@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "维修申请",
+  "usingComponents": {
+    "uni-collapse": "/node-modules/_@dcloudio_uni-ui@0.0.8@@dcloudio/uni-ui/lib/uni-collapse/uni-collapse",
+    "uni-collapse-item": "/node-modules/_@dcloudio_uni-ui@0.0.8@@dcloudio/uni-ui/lib/uni-collapse-item/uni-collapse-item"
+  }
+}

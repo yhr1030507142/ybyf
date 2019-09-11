@@ -3,7 +3,7 @@
 		<!-- 图片 -->
 		<view class="park-box flex col">
 				<view class="park-box-pic">
-					<image :src="details.primary" mode="" class="img"></image>
+					<image :src="details.primary" mode="" class="img" @click="previewImage(details.primary)"></image>
 				</view>
 				<view class="park-box-content flex col">
 					<view class="park-box-content-header">
@@ -75,6 +75,12 @@
 			_self.getInfo()
 		},
 		methods: {
+			previewImage: function(e) {
+				uni.previewImage({
+					current: e,
+					urls: [e]
+				})
+			},
 			getInfo:function(){
 				var _self = this
 				uni.request({ 
@@ -102,10 +108,11 @@
 	.park-box-pic{
 		margin-top: 20upx;
 		width: 100%;
-		height: 300upx;
+		// height: 300upx;
 		.img{
 			width: 100%;
-			height: 100%;
+			height: 300rpx;
+			// height: 100%;
 		}
 	}
 	.park-box-content{

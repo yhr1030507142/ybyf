@@ -9,9 +9,14 @@
 				<view class="park-box-content flex col">
 					<view class="park-box-content-header">
 						<view class="flex row row_between">
-							<!-- <view>{{part_name}}详情</view> -->
-							<view class="iconfont iconiconfontshanchu" @click="deleteContent()" v-show="tube==1 || com_mark === 0"></view>
-						</view>
+							<view></view>
+							<!-- {{part_name}}详情 -->
+							<view class="flex row">
+								
+								<view class="iconfont iconxiugai" @click="editContent()" v-show="(Id == tradeId && tube==1) || (Id == tradeId &&com_mark=== 0) " style="margin-right: 20upx;"></view>
+								<view class="iconfont iconiconfontshanchu" @click="deleteContent()" v-show="(Id == tradeId && tube==1) || (Id == tradeId &&com_mark=== 0) "></view>
+							</view>
+						</view> 
 						{{details.name}}
 					</view>
 					<view class="park-date">
@@ -22,14 +27,26 @@
 					<view class="textarea-select flex col">
 						<view class="textarea-select-box flex row row_between">
 							<view class="textarea-select-title">
+								缩略图
+							</view>
+							<view class="textarea-select-end">	
+							</view>
+						</view>
+						<view class="textarea-select-content flex row" style="padding-bottom: 10upx;">
+							<image :src="details.small_primary" mode="" class="img"    @tap="previewImage1(details.small_primary)"></image>
+						</view>
+					</view>
+					
+					<view class="textarea-select flex col">
+						<view class="textarea-select-box flex row row_between">
+							<view class="textarea-select-title">
 								图片
 							</view>
-							<view class="textarea-select-end">
-								
+							<view class="textarea-select-end">	
 							</view>
 						</view>
 						<view class="textarea-select-content flex row">
-							<image :src="v" mode="" class="img"  v-for="(v,i) in  pic"  :key="i" @tap="previewImage"></image>
+							<image :src="v" mode="" class="img"  v-for="(v,i) in  pic"  :key="i"  @tap="previewImage(v)"></image>
 						</view>
 					</view>
 				</view>
@@ -53,7 +70,8 @@
 				
 			</view>
 		    <view class="bottom_btn_right" @tap="apply()">
-				{{details.phone}}
+				<text v-if="!checkTitle">直接联系</text>
+				<text v-if="checkTitle">{{details.phone}}</text>
 			</view>
 			
 		</view>
@@ -93,7 +111,10 @@
 			pic:[],
 			tube:'',
 			com_mark:999,
-			
+			checkTitle:false,
+			upper_id:'',
+			Id:'',
+			tradeId:'',
 			}
 		},
 		onLoad:function(option){ 
@@ -102,14 +123,47 @@
 			_self.branch = option.branch
 			_self.mark = option.mark
 			_self.part_name = option.part_name
-			
-			_self.tube = uni.getStorageSync('tube')
+			_self.tradeId = uni.getStorageSync('tradeId')
+			_self.tube = uni.getStorageSync('tube') 
 			_self.com_mark = uni.getStorageSync('mark')
+			_self.upper_id = option.upper_id
+			_self.Id = option.Id
+			console.log(option)
+			
+			console.log(_self.tradeId)
+			console.log(_self.Id)
 			console.log(_self.com_mark)
 			console.log(_self.id)
+			console.log(option)
 			_self.getInfo()
+			_self.checkAuth()
+		},
+		onShow:function(){
+			var _self  = this
+			_self.getInfo()
+			_self.checkAuth()
 		},
 		methods: {
+			/**
+			 * 判断是否验证
+			 */
+			checkAuth:function(){
+				var _self = this
+				uni.request({ 
+					url:_self.$api+"dockingManager/judgeCard",
+					data:{optionId:uni.getStorageSync("openId")},
+					method:"GET",
+					success:function(res){
+						console.log(res)
+						if(res.data==0){
+							_self.checkTitle = false
+						}
+						if(res.data==1){
+							_self.checkTitle = true
+						}
+					}
+				})
+			},
 			getInfo:function(){
 				var _self = this
 				uni.request({ 
@@ -135,10 +189,16 @@
 					}
 				})
 			},
-			previewImage: function(e) {
-				var current = e.target.dataset.src
+			previewImage1: function(e) {
+				console.log(e)
 				uni.previewImage({
-					current: current,
+					current: e,
+					urls: [e]
+				})
+			},
+			previewImage: function(e) {
+				uni.previewImage({
+					current: e,
 					urls: this.pic
 				})
 			},
@@ -183,6 +243,16 @@
 								});  
 			},
 			/**
+			 * @param {Object} options
+			 * 修改
+			 */
+			editContent:function(){
+				 var _self = this
+				 uni.navigateTo({
+				 	url:'../productDetailEdit/productDetailEdit?id='+_self.id+'&branch='+_self.branch+'&mark='+_self.mark
+				 })
+			},
+			/**
 			 * 转发
 			 */
 			onShareAppMessage: function (options) {
@@ -218,9 +288,17 @@
 			//拨打电话
 			apply:function(){
 				var _self = this
-				 uni.makePhoneCall({
+				if(_self.checkTitle){
+					uni.makePhoneCall({
 					phoneNumber: _self.details.phone //仅为示例
 					});
+				}else{
+					uni.showToast({
+						title:"您尚未进行认证，请先进行认证",
+						icon:"none"
+					})
+					return false
+				}
 			},
 			/**
 			 * 收藏
@@ -425,7 +503,7 @@
 	}
 	.bottom_btn_right{
 		width: 60%;
-		background: #1758EA;
+		background: #E0AF2F;
 		text-align: center;
 		height: 100upx;
 		line-height: 100upx;
@@ -465,7 +543,7 @@
 	}
 }
 .textarea-select{
-		margin: 30upx auto;
+		margin: 10upx auto;
 		min-height: 300upx;
 		background: #ffffff;
 		width: 100%;
@@ -488,7 +566,7 @@
 			width: 90%;
 			margin: 0 auto; 
 			flex-wrap: wrap;
-			padding-bottom: 200upx;
+			padding-bottom: 150upx;
 			.img{
 				width: 30%;
 				height: 200upx;

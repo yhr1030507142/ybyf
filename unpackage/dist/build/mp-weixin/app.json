@@ -1,0 +1,102 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/mine/mine",
+    "pages/server/server",
+    "pages/minePage/auditManager/auditManager",
+    "pages/minePage/auditContent/auditContent",
+    "pages/minePage/componyAuthentication/componyAuthentication",
+    "pages/minePage/minePublish/minePublish",
+    "pages/infoPage/infoDetail/infoDetail",
+    "pages/info/info",
+    "pages/componyEnterDetail/componyEnterDetail",
+    "pages/compony/compony",
+    "pages/serverPage/serverEnter/serverEnter",
+    "pages/serverPage/lawServerDetail/lawServerDetail",
+    "pages/serverPage/lawServer/lawServer",
+    "pages/pageChildren/activity/activity",
+    "pages/pageChildren/sublet/sublet",
+    "pages/pageChildren/applyFor/applyFor",
+    "pages/pageChildren/advice/advice",
+    "pages/pageChildren/rentRoom/rentRoom",
+    "pages/pageChildren/guide/guide",
+    "pages/pageChildren/parkProfile/parkProfile",
+    "pages/postMessage/postMessage",
+    "pages/minePage/mineCollect/mineCollect",
+    "pages/minePage/mineActive/mineActive",
+    "pages/minePage/joinCompony/joinCompony",
+    "pages/pageChildren/activeMore/activeMore",
+    "pages/pageChildren/parkDetail/parkDetail",
+    "pages/pageChildren/headerMore/headerMore",
+    "pages/pageChildren/headerDetail/headerDetail",
+    "pages/serverPage/office/office",
+    "pages/serverPage/officeDetail/officeDetail",
+    "pages/serverPage/intellectual/intellectual",
+    "pages/serverPage/intellectualDetail/intellectualDetail",
+    "pages/serverPage/tax/tax",
+    "pages/serverPage/taxDetail/taxDetail",
+    "pages/serverPage/human/human",
+    "pages/serverPage/humanDetail/humanDetail",
+    "pages/serverPage/brand/brand",
+    "pages/serverPage/brandDetail/brandDetail",
+    "pages/serverPage/goodMoney/goodMoney",
+    "pages/serverPage/goodMoneyDetail/goodMoneyDetail",
+    "pages/serverPage/clean/clean",
+    "pages/serverPage/cleanDetail/cleanDetail",
+    "pages/serverPage/logistics/logistics",
+    "pages/serverPage/logisticsDetail/logisticsDetail",
+    "pages/pageChildren/parkAdvice/parkAdvice",
+    "pages/pageChildren/parkAdviceMore/parkAdviceMore",
+    "pages/pageChildren/rentDetail/rentDetail",
+    "pages/pageChildren/rentMore/rentMore",
+    "pages/pageChildren/product/product",
+    "pages/pageChildren/productDetail/productDetail"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#1758EA",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/img/shouye1.png",
+        "selectedIconPath": "static/img/shouye.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/server/server",
+        "iconPath": "static/img/fuwu1.png",
+        "selectedIconPath": "static/img/fuwu.png",
+        "text": "园区服务"
+      },
+      {
+        "pagePath": "pages/compony/compony",
+        "iconPath": "static/img/qiye1.png",
+        "selectedIconPath": "static/img/qiye.png",
+        "text": "入驻企业"
+      },
+      {
+        "pagePath": "pages/info/info",
+        "iconPath": "static/img/xinxi1.png",
+        "selectedIconPath": "static/img/xinxi.png",
+        "text": "供求信息"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "iconPath": "static/img/mine1.png",
+        "selectedIconPath": "static/img/mine.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "permission": {},
+  "usingComponents": {}
+}

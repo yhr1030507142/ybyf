@@ -46,7 +46,7 @@
    		<view class="select">
    			<view class="select-box flex row row_between">
    				<view class="select-title">
-   					<text class="red">*</text>上传正面照片
+   					<text class="red"></text>上传正面照片
    				</view>
 				<view class="select-title" style="font-size: 24upx;color: #999999;">图片大小不得超过5M，格式为jpg,png</view>
 
@@ -62,7 +62,7 @@
 									<view class="uni-uploader__files">
 										<block v-for="(image,index) in imageList" :key="index">
 											<view class="uni-uploader__file">
-												<image class="uni-uploader__img" :src="image" :data-src="image" @tap="previewImage"></image>
+												<image class="uni-uploader__img" :src="image" :data-src="image" @tap="previewImage" @longpress="deletePic(index)"></image>
 											</view>
 										</block>
 										<view class="uni-uploader__input-box">
@@ -109,6 +109,15 @@
 			_self.getComPonyInfo()
 		},
 		methods: {
+			/**
+			 * 删除数组图片
+			 */
+			deletePic:function(e){
+				var _self = this
+				console.log(e)
+				_self.imageList.splice(e,1)
+				_self.pathArr.splice(e,1)
+			},
 			bindPickerChange: function(e) {
             console.log('picker发送选择改变，携带值为', e.target.value)
             this.index = e.target.value
@@ -207,6 +216,7 @@
 			},
 			addInfo:function(){
 				var _self = this
+				var myreg = /^((0\d{2,3}-\d{7,8})|(1[3456789]\d{9}))$/;
 				if(_self.index === ""){
 					uni.showToast({
 						title:"请选择加入的企业",
@@ -220,9 +230,16 @@
 					})
 					return false
 				}
-				else if(_self.compony_num == ""){
-					uni.showToast({
+				else if(_self.tel == ""){
+					uni.showToast({ 
 						title:"手机号不能为空",
+						icon:"none"
+					})
+					return false
+				}
+				else if(!myreg.test(_self.tel)){
+						uni.showToast({
+						title:"联系电话格式不正确",
 						icon:"none"
 					})
 					return false
@@ -290,9 +307,9 @@ page{
 }
 .uni-input1{
 	color: #000000;
-}
+} 
 .btn{
-	background: #1758EA !important;
+	background: #E0AF2F !important;
 }
 .red{
 	color: red;

@@ -1,0 +1,155 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* components/vas-prompt/vas-prompt.wxss */
+.prompt-box {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 11;
+  background: rgba(0, 0, 0, 0.5);
+}
+.prompt-content {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  width: 80%;
+  max-width: 600rpx;
+  border: 2rpx solid #ccc;
+  -webkit-border-radius: 10rpx;
+          border-radius: 10rpx;
+  -webkit-box-sizing: bordre-box;
+          box-sizing: bordre-box;
+  -webkit-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%); 
+  overflow: hidden;
+  background: #fff;
+}
+.prompt-title {
+  width: 100%;
+  padding: 20rpx;
+  text-align: center;
+  font-size: 40rpx;
+  border-bottom: 2rpx solid gray;
+}
+.prompt-input{
+  margin: 8%;
+  padding: 10rpx 15rpx;
+  width: 80%;
+  height:85rpx;
+  border: 1px solid #ccc;
+  -webkit-border-radius: 10rpx;
+          border-radius: 10rpx;
+}
+.prompt-btn-group{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+.btn-item {
+  width: 35%;
+  margin-bottom: 20rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  background-color: white;
+  -webkit-justify-content: space-around;
+      -ms-flex-pack: distribute;
+          justify-content: space-around;
+}
+.prompt-certain-btn{
+  color: white;
+  background-color: #E0AF2F;
+}
+.prompt-cancel-btn{
+  border: 1px solid #E0AF2F;
+}
+.contentFontColor {
+  color: #868686;
+}
+.prompt-text{
+	margin-top:15rpx;
+	font-size:38rpx;
+}
+

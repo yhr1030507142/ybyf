@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "园区头条详情",
+  "usingComponents": {
+    "uni-popup": "/node-modules/_@dcloudio_uni-ui@0.0.8@@dcloudio/uni-ui/lib/uni-popup/uni-popup"
+  }
+}

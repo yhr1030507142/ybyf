@@ -1,0 +1,1 @@
+<view><block wx:for="{{List}}" wx:for-item="v" wx:for-index="i" wx:key="i"><view data-event-opts="{{[['tap',[['goDetail',['$0'],[[['List','',i,'id']]]]]]]}}" class="law-pic" bindtap="__e"><image class="img" src="{{v.primary}}" mode></image><view class="modal">{{v.name}}</view></view></block></view>

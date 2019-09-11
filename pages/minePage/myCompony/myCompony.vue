@@ -38,7 +38,7 @@
 								地址
 							</view>
 							<view class="select-end flex row"> 
-								{{list.address}}
+								{{list.address | changeData}}
 							</view>
 						</view>
 					
@@ -49,10 +49,36 @@
 					
 						<view class="select-box flex row row_between">
 							<view class="select-title">
-								官网
+								邮箱
 							</view>
 							<view class="select-end flex row"> 
-								{{list.network}}
+								{{list.network | changeData}}
+							</view>
+						</view>
+					</view>
+			<!--  -->
+			<!-- 选择 -->
+					<view class="select">
+					
+						<view class="select-box flex row row_between">
+							<view class="select-title">
+								联系人
+							</view>
+							<view class="select-end flex row"> 
+								{{list.userName | changeData}}
+							</view>
+						</view>
+					</view>
+			<!--  -->
+			<!-- 选择 -->
+					<view class="select">
+					
+						<view class="select-box flex row row_between">
+							<view class="select-title">
+								职务
+							</view>
+							<view class="select-end flex row"> 
+								{{list.userPost | changeData}}
 							</view>
 						</view>
 					</view>
@@ -124,7 +150,7 @@
 			<!--  -->
 			<view class="" v-show="tube==1 || com_mark === 0">
 				<prompt ref="prompt" @onConfirm="onConfirm" @onCancel="onCancel" title="请输入模块名称" :text="promptText"></prompt>
-				<button type="primary" @click="prompt">新增服务模块</button>
+				<button type="primary" @click="prompt" class="btn_primary">新增服务模块</button>
 			</view>
 				<!-- 需求资源 -->
 			<view class="index-notice flex col" v-for='(v,i) in dataList' :key='i'>
@@ -134,17 +160,20 @@
 						{{v.name}} 
 					</view>
 					<view class="flex row">
-						<view style='margin-right:20upx;' class="iconfont iconxinzeng" @click="goServerContent(v.id)" v-show="tube==1 || com_mark === '0' || com_mark === 0"></view>
+						<view style='margin-right:20upx;' class="iconfont iconicon-test" @click="goServerContent(v.id)" v-show="tube==1 || com_mark === '0' || com_mark === 0"></view>
+						<view style='margin-right:20upx;' class="iconfont iconxiugai" @click="editprompt(v.id)" v-show="tube==1 || com_mark === '0' || com_mark === 0"></view>
+						<prompt ref="editprompt" @onConfirm="onConfirm1" @onCancel="onCancel1" title="请输入模块名称" :text="promptText"></prompt>
+
 						<view style='margin-right:20upx;' class="iconfont iconiconfontshanchu" @click="deleteContent(v.id)" v-show="tube==1 || com_mark === '0' || com_mark === 0"></view>
-						<view class="index-notice-header-more" @tap="gotoSupplyMore2(v.id,v.stationedId,v.name)">
+						<!-- <view class="index-notice-header-more" @tap="gotoSupplyMore2(v.id,v.stationedId,v.name)">
 							查看更多>
-						</view>
+						</view> -->
 					</view>
 					
 				</view>
 				<view class="index-notice-content flex row" v-for="(v1,i1) in v.declareNewList" :key="i1" @tap="goProductDetail(v1.Id,v1.branch,v1.mark,v.name)">
 						<view class="index-notice-content-img flex">
-							<image :src="v1.shrink | getPic" mode="" class="img"></image>
+							<image :src="v1.small_primary" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
@@ -186,6 +215,9 @@
 				dataList:[],
 				tube:'',
 				com_mark:999,
+				job:'',
+				contract_name:'',
+				edit_id:''
 				
 			}
 		},
@@ -282,7 +314,7 @@
 				goProductDetail:function(id,branch,mark,part_name){
 					var _self = this
 					uni.navigateTo({
-						url:"../../pageChildren/productDetail/productDetail?id="+id+"&branch="+branch+"&part_name="+part_name+'&mark='+mark
+						url:"../../pageChildren/productDetail/productDetail?id="+id+"&branch="+branch+"&part_name="+part_name+'&mark='+mark+'&Id='+_self.tradeId
 					})
 				},
 				/**
@@ -325,7 +357,7 @@
 				/**
 				 * 操作
 				 */
-				prompt:function(){
+			prompt:function(){
 				this.$refs.prompt.show();
 			},
 			onConfirm:function(e){
@@ -376,6 +408,68 @@
 				this.$refs.prompt.cost = '';
 			},
 			/**
+			 * @param {Object} id
+			 * 修改分类
+			 */
+			editprompt:function(id){
+				var _self = this
+				console.log(id)
+				_self.edit_id = id
+				console.log(_self.$refs.editprompt)
+				_self.$refs.editprompt[0].show();
+			},
+			onConfirm1:function(e){
+				
+				var _self = this
+				console.log(_self.edit_id)
+				console.log(_self.Id)
+				console.log(e);
+				let _cost = e;
+				if (_cost == '') {
+				 uni.showToast({
+				 	'title':'请输入服务模块名称',
+					'icon':'none'
+				 })
+				 console.log('你还未输入');
+				 return;
+				}
+				else{  
+				  uni.showModal({
+				  	title: '提示',
+				  	content: '是否修改服务模块:'+_cost, 
+				  	showCancel: false,
+				  	confirmText: "确定",
+					success:function(){
+						uni.request({
+							url:_self.$api+'dockingManager/titleBranchUpdate',
+							data:{id:_self.edit_id,name:_cost,mark:_self.tradeId},
+							success:function(res){
+								console.log(res)
+								if(res.data == 1){
+									 uni.showToast({
+										'title':'修改成功',
+									})
+									_self.$refs.editprompt[0].hide();
+									_self.getInfo()
+									return
+								}else{
+									 uni.showToast({
+										'title':'修改失败，请联系工作人员',
+									})
+									_self.$refs.editprompt[0].hide();
+									return false
+								}
+							}
+						})
+					}
+				  })
+				}
+			},
+			onCancel1:function(){
+				this.$refs.editprompt[0].hide();
+				this.$refs.editprompt[0].cost = '';
+			},
+			/**
 			* 跳转发布内容
 			*/
 		   goServerContent:function(id){
@@ -390,7 +484,7 @@
 			   var _self = this
 			   uni.showModal({
 				title: '提示',
-				content: '是否删除此分类',
+				content: '是否删除此模块',
 				success: function (res) {
 						if (res.confirm) {
 							uni.request({
@@ -431,7 +525,14 @@
 			 },
 			 getTime:function(res){
 			 	return res.slice(0,11)
-			 }
+			 },	
+			 changeData:function(data){
+			 		 if(data == undefined || data==null || data ==''){
+			 			 return '暂无'
+			 		 }else{
+			 			 return data
+			 		 }
+			 	},
 		 }
 	}
 </script>
@@ -589,7 +690,7 @@ page{
 }
 .friend_box{
 width:23%;
-border:1upx solid #007AFF;
+border:1upx solid #E0AF2F;
 color:#fff;
 margin-top:20upx;
 font-size:28upx;
@@ -599,8 +700,11 @@ line-height:70upx;
 -webkit-border-radius:5upx;
 border-radius:5upx;
 overflow: hidden;
-background: #007AFF;
+background: #E0AF2F;
 text-align: center;
 margin-left: 5upx;
+}
+.btn_primary{
+	background: #E0AF2F !important;
 }
 </style>

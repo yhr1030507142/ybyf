@@ -47,7 +47,7 @@
    				</view>
    			</view>
 			<view class="textarea-select-content flex row">
-				<image :src="v" mode="" class="img"  v-for="(v,i) in  pic"  :key="i" @tap="previewImage"></image>
+				<image :src="v" mode="" class="img"  v-for="(v,i) in  pic"  :key="i" @tap="previewImage(i)"></image>
 			</view>
    		</view>
    <!--  -->
@@ -93,9 +93,8 @@
             this.index = e.target.value
 			},
 			previewImage: function(e) {
-				var current = e.target.dataset.src
 				uni.previewImage({
-					current: current,
+					current: e,
 					urls: this.pic
 				})
 			},
@@ -218,7 +217,7 @@ page{
 	background: #e8e7e7;
 }
 .btn{
-	background: #1758EA !important;
+	background: #E0AF2F !important;
 }
 .box{
 	width: 90%;
@@ -285,10 +284,13 @@ page{
 			min-height: 300upx;
 			width: 90%;
 			margin: 0 auto; 
+			flex-wrap: wrap;
 			.img{
 				width: 30%;
 				height: 200upx;
 				margin-left: 20upx;
+				margin-top: 20upx;
+				padding-bottom: 20upx;
 			}
 		}
 	}

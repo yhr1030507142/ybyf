@@ -3,14 +3,14 @@
 		<!-- 图片 -->
 		<view class="park-box flex col">
 				<view class="park-box-pic">
-					<image :src="details.shrink" mode="" class="img"></image>
+					<image :src="details.shrink | getpic" mode="" class="img" @tap="previewImage(details.shrink)"></image>
 				</view>
 				<view class="park-box-content flex col">
 					<view class="park-box-content-header">
 						{{details.name}}
 					</view>
 					<view class="park-date">
-						活动开始时间:{{details.open_time}}
+						活动开始时间:{{details.open_time}} 
 					</view>
 					<rich-text class="park-box-content-middle" :nodes='nodeContent'>
 					</rich-text>
@@ -85,6 +85,12 @@
 			_self.getInfo()
 		},
 		methods: {
+			previewImage: function(e) {
+				uni.previewImage({
+					current: e,
+					urls: [e]
+				})
+			},
 			apply:function(){
 				var _self = this
 				uni.request({
@@ -144,6 +150,11 @@
 								return false
 							}
 						}else if(_self.report===0){
+							if(res.data ==2){
+								_self.errorMessage = "您尚未进行认证"
+								_self.showPopupMiddleImg1 = true
+								return false
+							}
 							if(res.data == 0){
 								uni.showToast({
 									title:"取消报名失败",
@@ -190,7 +201,7 @@
 								})
 								return false
 							}
-							else{
+							else if(res.data==1){
 									uni.showToast({
 									title:"取消报名成功",
 									icon:"none"
@@ -212,11 +223,6 @@
 			},
 			getInfo:function(){
 				var _self = this
-				//  if(!uni.getStorageSync("openId")||uni.getStorageSync("openId")==undefined||uni.getStorageSync("openId")===""){
-				// 								  uni.navigateTo({
-				// 								  	url:"../../load/load"
-				// 								  })
-				// }
 				uni.request({
 					url:_self.$api+"dockingManager/activityTubeQuery",
 					data:{id:_self.id,optionId:uni.getStorageSync("openId")},
@@ -362,11 +368,17 @@
 		 components: {uniPopup},
 		 filters:{
 			 spliceData:function(newData){
-				
 				  return newData.replace(/\<img/gi,   '<img class="rich-img" ' );
 			 },
 			 pngJpg:function(data){
 				
+			 },
+			 getpic:function(data){
+				 if(data == undefined){
+					 return ''
+				 }else{
+					 return data.split(',')[0]
+				 }
 			 }
 		 }
 		
@@ -389,10 +401,11 @@
 	.park-box-pic{
 		margin-top: 20upx;
 		width: 100%;
-		height: 300upx;
+		// height: 300upx;
 		.img{
 			width: 100%;
-			height: 100%;
+			height: 300rpx;
+			// height: 100%;
 		}
 	}
 	.park-box-content{
@@ -494,7 +507,7 @@
 	}
 	.bottom_btn_right{
 		width: 60%;
-		background: #1758EA;
+		background: #E0AF2F;
 		text-align: center;
 		height: 100upx;
 		line-height: 100upx;
@@ -521,7 +534,7 @@
 	.authentication{
 		width: 100%;
 		height: 90upx;
-		background: #1758EA;
+		background: #E0AF2F;
 		color: #ffffff;
 		text-align: center;
 		line-height: 90upx;

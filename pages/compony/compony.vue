@@ -30,9 +30,13 @@
 					<view class="index-notice-header-more">
 					</view>
 				</view>
+				
+				<view class="index-notice-content flex row" v-show="ListLen==0" style="min-height:1000upx;">
+					<image src="../../../static/img/null2.png" mode="" class="null_img"></image>
+				</view>
 				<view class="index-notice-content flex row" v-for="(v,i) in comPonyList" :key="i" @tap="gotoDetail(v.Id)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink" mode="" class="img"></image>
+							<image :src="v.small_primary" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
@@ -46,7 +50,7 @@
 										<view class="iconfont icon-chanpinshezhi icon1"></view>
 										<view class="">主营:{{v.branch_name |changeData}}</view> 
 									</view>
-										<view class="flex row">
+									<view class="flex row">
 										<view class="iconfont icondizhi"></view>
 										<view class="">{{v.address | changeData}}</view>
 									</view>
@@ -66,6 +70,7 @@
 		data() {
 			return {
 				comPonyList:[],
+				ListLen:0,
 				SearchInput:"",
 				branch:[],
 				array: [],
@@ -113,7 +118,8 @@
 					success:function(res){
 						console.log(res)
 						_self.comPonyList = res.data
-						console.log(res.data)
+						_self.ListLen = _self.comPonyList.length
+						console.log(res.data.length)
 					}
 				}) 
 			}, 
@@ -152,6 +158,7 @@
 						console.log(res)
 						// _self.comPonyList = res.data.slice(0,10)
 						_self.comPonyList = res.data
+						_self.ListLen = _self.comPonyList.length
 					}
 				}) 
 			},
@@ -202,7 +209,7 @@ page{
 			width: 20%;
 			height: 70upx;
 			font-size: 24upx;
-			background: #1758EA;
+			background: #E0AF2F;
 			color: #ffffff;
 			justify-content: center;
 			 align-items: center;
@@ -210,7 +217,7 @@ page{
 			width: 100%;
 			height: 100%;
 			font-size: 24upx;
-			background: #1758EA;
+			background: #E0AF2F;
 			color: #ffffff;
 			justify-content: center;
 		    align-items: center;
@@ -274,19 +281,19 @@ page{
 			margin: 0 auto;
 			padding-bottom: 30upx;
 			.index-notice-content-img{
-				width: 30%;
+				width: 200upx;
 				.img{
-					width: 210upx;
-					height:210upx;
+					width: 200upx;
+					height:200upx;
 				}
 			}
 			.index-notice-content-right{
 				justify-content: space-between;
-				width: 60%;
+				width: 200upx;
 				margin-left: 20upx;
 				flex: 1;
 				font-size: 28upx;
-				height: 210upx;
+				height: 200upx;
 				.index-notice-content-right-title{
 					font-size: 32upx;
 					color: #000000;
@@ -305,13 +312,13 @@ page{
 					text-overflow: ellipsis;
 				    white-space: wrap;
 					 display:-webkit-box; 
-					-webkit-line-clamp:2;
+					-webkit-line-clamp:1;
 					-webkit-box-orient:vertical;
 				}
 				.index-notice-content-right-date{
 					margin-top: 10upx;
 					font-size: 24upx;
-					color: #1758EA;
+					color: #E0AF2F;
 					.position-icon{
 						margin-right: 30upx;
 					}

@@ -3,7 +3,8 @@
 		<!-- 图片 -->
 		<view class="park-box flex col">
 				<view class="park-box-pic">
-					<image :src="list.primary" mode="" class="img"></image>
+					<image :src="list.primary" mode="" class="img" @click="previewImage(list.primary)"></image>
+					
 				</view>
 				<view class="park-box-content flex col">
 					<view class="park-box-content-header">
@@ -14,27 +15,34 @@
 				</view>
 		</view>
 			<!-- 选择 -->
-				<view class="textarea-select flex col">
-					<view class="textarea-select-box flex row row_between">
-						<view class="textarea-select-title">
-							留言框
-						</view>
-						<view class="textarea-select-end">
-							请输入留言
-						</view>
+			<view class="select">
+				<view class="select-box flex row">
+					<view class="select-title">
+						姓名
 					</view>
-					<textarea class="textarea-select-content" v-model="textMessage"></textarea>
+					<input type="text" placeholder="请输入姓名" style="text-align: right;" v-model="title" class="select-end select-input" placeholder-style="text-align: right">
 				</view>
+			</view>
+		<!--  -->
+		<!-- 选择 -->
+			<view class="select">
+				<view class="select-box flex row">
+					<view class="select-title">
+					联系方式
+					</view>
+					<input type="number" placeholder="请输入联系方式" style="text-align: right;" v-model="title_phone" class="select-end select-input" placeholder-style="text-align: right" maxlength="11">
+				</view>
+			</view>
 		<!--  -->
 	
 				
 		<!--  -->
 		 <view class="park-box-select">
-			 <button type="primary" class="btn" @tap="addData">立即咨询</button>
+			 <button type="primary" class="btn" @tap="addData">合作咨询</button>
 		 </view>
 			 <!--  -->
 			  <view class="park-box-select">
-			 <button type="primary" class="btn" @tap="apply">直接联系</button>
+			 <button type="primary" class="btn" @tap="apply"><text class="iconfont icondianhua"></text>{{list.phone}}</button> 
 			 </view>
 	</view>
 </template>
@@ -46,6 +54,8 @@
 				list:[],
 				name:"",
 				phone:"",
+				title:'',
+				title_phone:'',
 				area:"",
 				id:"",
 				content:"",
@@ -58,6 +68,12 @@
 			_self.getInfo()
 		},
 		methods: {
+			previewImage: function(e) {
+				uni.previewImage({
+					current: e,
+					urls: [e]
+				})
+			},
 			getInfo:function(){
 				var _self = this
 				uni.request({
@@ -86,9 +102,24 @@
 			},
 			addData:function(){
 				var _self = this
-				if(_self.textMessage == ""){
+				var myreg = /^((0\d{2,3}-\d{7,8})|(1[3456789]\d{9}))$/;
+				if(_self.title == ""){
 						uni.showToast({
-						title:"请输入留言",
+						title:"请输入您的姓名",
+						icon:"none"
+					})
+					return false
+				}
+				if(_self.title_phone == ""){
+						uni.showToast({
+						title:"请输入您的联系方式",
+						icon:"none"
+					})
+					return false
+				}
+				if(!myreg.test(_self.title_phone)){
+						uni.showToast({
+						title:"联系电话格式不正确",
 						icon:"none"
 					})
 					return false
@@ -98,8 +129,9 @@
 					data:{
 						id:_self.id,
 						optionId:uni.getStorageSync("openId"),
-						name:uni.getStorageSync("name"),
-						sketch:_self.textMessage
+						name:_self.title,
+						sketch:'',
+						phone:_self.title_phone
 					},
 					success:function(res){
 						console.log(res)
@@ -153,7 +185,7 @@
 		background: #e8e7e7;
 	}
 	.btn{
-		background: #1758EA !important;
+		background: #E0AF2F !important;
 		border-radius:10upx;
 		margin-top: 20upx;
 	}
@@ -240,5 +272,66 @@
 					flex: 1;
 				}
 		}
-}
+}	.select{
+		width: 90%;
+		margin: 30upx auto;
+		min-height: 100upx;
+		background: #ffffff;
+		.picker{
+			height: 100%;
+		}
+		.select-box{
+			    height: 100upx;
+				align-items: center;
+				width: 90%;
+				margin: 0 auto;
+				.select-title{
+					font-size: 28upx;
+					color:#000000;
+				}
+				.select-end{
+					font-size: 28upx;
+					color: #999999;
+					align-items: center;
+					.icon{
+						font-size: 12upx;
+					}
+				}
+				.select-input{
+					margin-left: 20upx;
+					flex: 1;
+					color: #000000;
+				}
+		}
+		.select-pic{
+			width: 90%;
+			margin: 0 auto;
+			height: 300upx;
+		}
+	}
+	.textarea-select{
+		margin: 30upx auto;
+		min-height: 300upx;
+		background: #ffffff;
+		.textarea-select-box{
+			height: 100upx;
+			width: 90%;
+			margin: 0 auto;
+			align-items: center;
+				.textarea-select-title{
+				font-size: 28upx;
+				color:#000000;
+			}
+			.textarea-select-end{
+				font-size: 28upx;
+				color: #999999;
+			}
+		}
+		.textarea-select-content{
+			min-height: 300upx;
+			width: 90%;
+			margin: 0 auto; 
+			font-size: 32upx;
+		}
+	}
 </style>

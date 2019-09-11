@@ -9,6 +9,9 @@
 			</view>
 				<!--  -->
 				<!--  -->
+				<view class="index-notice-content flex row row_center" v-show="ListLen==0" style="min-height:600upx;width: 90%;background: #ffffff;margin: 0 auto;">
+					<image src="../../static/img/null.png" mode="" class="img" style="padding-top: 50upx;"></image>
+				</view>
 				<view class="flex  server-box col">
 					<ul class='server-ul'>
 						<li class='server-li' v-for='(v,i) in iconList' :key='i' @click="goTOChildren(v.id,v.name)">
@@ -35,7 +38,7 @@
 				<!--  -->
 				<!-- 我要入驻 -->
 				<view class="server-box-pic" @tap="goTO('serverEnter')">
-						<image src="../../static/img/rzfw.jpg" mode="" class="img"></image>
+						<image src="../../static/img/rzfw1.png" mode="" class="img"></image>
 				</view>
 				<!--  -->
 				
@@ -52,6 +55,7 @@
 			return {
 				name:'',
 				iconList:[], 
+				ListLen:0,
 				currentPage:1,
 				branch:0,
 				pageSize:9,
@@ -78,6 +82,7 @@
 						console.log(res)
 						console.log(res.data) 
 						_self.iconList = res.data
+						_self.ListLen = res.data.length
 						if(res.data == '' || res.data == []){ 
 							_self.branch = 0
 						}else{
@@ -135,7 +140,7 @@
 			.icon{
 				position: absolute;
 				right: 80upx;
-				top: 20upx;
+				top: 40upx;
 				width: 45upx;
 				height: 45upx;
 				.img{

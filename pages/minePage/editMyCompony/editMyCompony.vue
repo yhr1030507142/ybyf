@@ -45,10 +45,36 @@
 					
 						<view class="select-box flex row row_between">
 							<view class="select-title">
-								官网
+								邮箱
 							</view>
 							<view class="selec-name">
 								<input type="text" v-model="network" style="text-align: right;">
+							</view>
+						</view>
+					</view>
+			<!--  --> 
+			<!-- 选择 -->
+					<view class="select">
+					
+						<view class="select-box flex row row_between">
+							<view class="select-title">
+								联系人
+							</view>
+							<view class="selec-name">
+								<input type="text" v-model="contract_name" style="text-align: right;">
+							</view>
+						</view>
+					</view>
+			<!--  --> 
+			<!-- 选择 -->
+					<view class="select">
+					
+						<view class="select-box flex row row_between">
+							<view class="select-title">
+								职务
+							</view>
+							<view class="selec-name">
+								<input type="text" v-model="job" style="text-align: right;">
 							</view>
 						</view>
 					</view>
@@ -99,17 +125,16 @@
 				</view>
 		<!--  -->
 				<!-- 选择 -->
-				<view class="select">
-				
-					<view class="select-box flex row row_between">
-						<view class="select-title">
-							用户名称
-						</view>
-						<view class="selec-name">
-							<input type="text" v-model="userName" style="text-align: right;">
-						</view>
-					</view>
-				</view>
+					<!-- 	<view class="select">		
+							<view class="select-box flex row row_between">
+								<view class="select-title">
+									用户名称
+								</view>
+								<view class="selec-name">
+									<input type="text" v-model="userName" style="text-align: right;">
+								</view>
+							</view>
+						</view> -->
 				<!--  -->
 				<!--  -->
 				<!-- 选择 -->
@@ -129,7 +154,7 @@
 		<view class="textarea-select flex col">
 			<view class="textarea-select-box flex row row_between">
 				<view class="textarea-select-title">
-					原图
+					原图(推荐宽:高=>2:1)
 				</view>
 				<view class="textarea-select-end">
 					
@@ -144,14 +169,14 @@
 		<view class="textarea-select flex col">
 			<view class="textarea-select-box flex row row_between">
 				<view class="textarea-select-title">
-					缩略图
+					缩略图(推荐宽高1:1,100px左右)
 				</view>
 				<view class="textarea-select-end">
 					
 				</view>
 			</view>
 			<view class="textarea-select-content flex row">
-				<image :src="shrink" mode="" class="img"   @tap="chooseImage1"></image>
+				<image :src="smallPrimary" mode="" class="img1"   @tap="clk(0)"></image>
 			</view>
 		</view>
 		<!--  -->
@@ -196,11 +221,13 @@
 			
 			<!--  -->
   <button type="primary" class="btn" @tap="EditInfo">修改</button>
+  <avatar @upload="doUpload" @avtinit="doBefore" quality="0.8" ref="avatar"></avatar>
 	</view>
 </template>
 
 <script>
 	import {uniCollapse,uniCollapseItem} from "@dcloudio/uni-ui"
+	import avatar from "../../yq-avatar.vue";
 	import prompt from '../../prompt.vue';
 	export default {
 		data() {
@@ -222,7 +249,9 @@
 				camp:'',
 				shrink:'',
 				primary:'',
-				
+				contract_name:'',
+				job:'',
+				smallPrimary:'',
 				
 				
 				selectValue:"",   
@@ -240,12 +269,53 @@
 			var _self = this
 			_self.Id = option.id
 			_self.getKindList()	
+			if(!uni.getStorageSync('componyId')|| uni.getStorageSync('componyId')==''){
+					uni.setStorageSync("componyId","0") 
+			}
 			
 		},
 		onShow:function(){
 			
 		},
 		methods: {
+			/**
+			 * @param {Object} e缩略图
+			 */
+			doBefore() {
+				console.log('doBefore');
+			},
+			clk(index) {
+				this.$refs.avatar.fChooseImg(index,{
+					selWidth: '300upx', selHeight: '300upx', 
+					expWidth: '200upx', expHeight: '200upx',
+					inner: index ? 'true' : 'false'
+				});
+			},
+			doUpload(rsp) {
+				var _self = this
+				console.log(rsp);
+				//this.$set(this.urls, rsp.index, rsp.path);
+				uni.uploadFile({
+					url: _self.$api+'dockingManager/upload', //仅为示例，非真实的接口地址
+					//url: "http://www.tp5.com/index", //仅为示例，非真实的接口地址
+					filePath: rsp.path,
+					name: 'file', 
+					formData: {
+						'user': 'test'
+					},
+					success: (uploadFileRes) => {
+						console.log(uploadFileRes)
+						_self.smallPrimary = uploadFileRes.data.replace("\"","").replace("\"","")
+					}
+				  }); 
+			},
+			previewImage: function(e) {
+				var current = e.target.dataset.src
+				uni.previewImage({
+					current: current,
+					urls: this.imageList
+				})
+			},
 			getKindList:function(){
 				var _self = this
 				uni.request({
@@ -278,6 +348,7 @@
 					 	data:{id:_self.Id}, 
 						method:"GET",
 						success:function(res){
+							console.log(res)
 							_self.name = res.data[0].name
 							_self.address = res.data[0].address
 							_self.network = res.data[0].network
@@ -286,31 +357,38 @@
 							_self.branch = res.data[0].branch
 							_self.pull = res.data[0].branch
 							_self.index = _self.array1.indexOf(_self.branch) 
+							console.log(_self.index)
 							_self.branch_name = _self.array[_self.index]
 							_self.nots = res.data[0].nots
 							_self.userName = res.data[0].userName
+							_self.contract_name = res.data[0].userName
+							_self.job = res.data[0].userPost
+							_self.smallPrimary = res.data[0].smallPrimary
 							_self.camp = res.data[0].camp
+							if(res.data[0].smallPrimary==''||res.data[0].smallPrimary==undefined|| res.data[0].smallPrimary == null){
+								_self.smallPrimary = '../../../static/img/timg1.jpg'
+							}else{ 
+								_self.smallPrimary = res.data[0].smallPrimary.replace(/\"/g, "");
+							}
 							if(res.data[0].primary==''||res.data[0].primary==undefined|| res.data[0].primary == null){
-								_self.primary = '../../../staic/img/timg1.jpg'
+								_self.primary = '../../../static/img/timg1.jpg'
 							}else{ 
 								_self.primary = res.data[0].primary.replace(/\"/g, "");
 							}
 							if(res.data[0].shrink==''||res.data[0].shrink==undefined || res.data[0].shrink == null){
-								
-								_self.shrink = '../../../staic/img/timg1.jpg' 
+								_self.shrink = '../../../static/img/timg1.jpg' 
 							}else{
 								_self.shrink = res.data[0].shrink.replace(/\"/g, "");
 							}
 							console.log(res.data[0].shrink)
 							console.log(res.data[0].primary)
-							console.log(res.data[0].primary.replace(/\"/g, ""))
 							// console.log(_self.imageList)
 							// if(_self.imageList==''||_self.imageList==undefined){
 							// 	_self.imageList = []
 							// }else{
 							// 	_self.imageList = res.data[0].shrink.split(',')
 							// }
-							console.log(res)
+							
 	
 						}
 					 })
@@ -352,6 +430,13 @@
 						})
 						return false
 					}
+					else if(_self.smallPrimary == ""){
+						uni.showToast({
+							title:"请输入简介",
+							icon:"none"
+						})
+						return false
+					}
 					else if(_self.phone == ""){
 						uni.showToast({
 							title:"请输入联系方式",
@@ -367,7 +452,7 @@
 					}
 					uni.request({
 						url:_self.$api+"dockingManager/tradeUpdate", 
-						data:{id:uni.getStorageSync('tradeId'),name:_self.name,sketch:_self.sketch,phone:_self.phone,address:_self.address,branch:_self.pull,network:_self.network,nots:_self.nots,upperId:uni.getStorageSync('componyId'),userName:_self.userName,camp:_self.camp,primary:_self.primary,shrink:_self.shrink}, 
+						data:{id:uni.getStorageSync('tradeId'),name:_self.name,sketch:_self.sketch,phone:_self.phone,address:_self.address,branch:_self.pull,network:_self.network,nots:_self.nots,upperId:uni.getStorageSync('componyId'),userName:_self.userName,camp:_self.camp,primary:_self.primary,shrink:_self.primary,smallPrimary:_self.smallPrimary,userPost:_self.job,userName:_self.contract_name}, 
 						method:"GET",
 						success:function(res){ 
 							if(res.data ==98){
@@ -657,7 +742,7 @@
 			
 
 		},
-		 components: {uniCollapse,uniCollapseItem,prompt},
+		 components: {uniCollapse,uniCollapseItem,prompt,avatar},
 		 computed: {
 		  
 		 },
@@ -686,7 +771,7 @@ input{
 	color: #000000;
 }
 .btn{
-	background: #1758EA !important;
+	background: #E0AF2F !important;
 }
 .box{
 	width: 90%;
@@ -733,7 +818,6 @@ input{
 	}
 	.textarea-select{
 		margin: 30upx auto;
-		min-height: 300upx;
 		background: #ffffff;
 		.textarea-select-box{
 			height: 100upx;
@@ -750,9 +834,9 @@ input{
 			}
 		}
 		.textarea-select-content{
-			min-height: 150upx;
 			width: 90%;
 			margin: 0 auto; 
+			min-height: 100upx;
 			flex-wrap: nowrap;
 			overflow: hidden;
 			justify-content: flex-start;
@@ -760,7 +844,11 @@ input{
 			.name{
 			}
 			.img{
-				width: 60%;
+				width: 100%;
+				margin-left: 20upx;
+			}
+			.img1{
+				width: 200upx;
 				height: 200upx;
 				margin-left: 20upx;
 			}

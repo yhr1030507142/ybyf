@@ -133,10 +133,10 @@
 }
 .prompt-certain-btn{
   color: white;
-  background-color: #4FEBDE;
+  background-color: #E0AF2F;
 }
 .prompt-cancel-btn{
-  border: 1px solid #4FEBDE;
+  border: 1px solid #E0AF2F;
 }
 .contentFontColor {
   color: #868686;

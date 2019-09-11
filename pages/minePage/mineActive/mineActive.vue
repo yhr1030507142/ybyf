@@ -3,9 +3,12 @@
 		<view class="box">
 			<!-- 活动公告 -->
 			<view class="index-notice flex col">
+				<view class="index-notice-content flex row" v-show="ListLen == 0">
+					<image src="../../../static/img/null2.png" mode="" class="null_img"></image>
+				</view>
 				<view class="index-notice-content flex row " v-for="(v,i) in List" :key="i" @tap="goActiveDetail(v.Id)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink" mode="" class="img"></image>
+							<image :src="v.small_primary" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
@@ -29,7 +32,8 @@
 	export default {
 		data() {
 			return {
-				List:[]
+				List:[],
+				ListLen:0,
 			}
 		},
 		onLoad:function(){
@@ -49,6 +53,7 @@
 					success:function(res){
 						console.log(res.data)
 						_self.List = res.data  
+						_self.ListLen = res.data.length
 					} 
 				 })
 			},
@@ -97,7 +102,7 @@
 			margin: 0 auto;
 			padding-bottom: 30upx;
 			.index-notice-content-img{
-				width: 30%;
+				width: 200upx;
 				.img{
 					width: 200upx;
 					height:200upx;
@@ -108,7 +113,7 @@
 				flex: 1;
 				font-size: 28upx;
 				   height: 200upx;
-				   width: 60%;
+				   width: 200upx;
 				   justify-content: space-between;
 				.index-notice-content-right-title{
 					font-size: 32upx;

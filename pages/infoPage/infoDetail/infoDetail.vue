@@ -11,7 +11,7 @@
 				            <swiper class="swiper" :indicator-dots="indicatorDots" :autoplay="autoplay" :interval="interval" :duration="duration" indicator-color='rgba(255, 255, 255, .3)' indicator-active-color='#1758EA'>
 				                <swiper-item v-for="(v,i) in shrink" :key="i">
 				                    <view class="swiper-item uni-bg-red">
-										<image :src="v" mode="" class="img"></image>
+										<image :src="v" mode="" class="img" @tap="previewImage(i)"></image>
 									</view>
 				                </swiper-item>
 				            </swiper>
@@ -67,7 +67,8 @@
 				
 			</view>
 		    <view class="bottom_btn_right" @tap="apply()">
-				{{supplyList.phone}}
+				<text v-if="!checkTitle">直接联系</text>
+				<text v-if="checkTitle">{{supplyList.phone}}</text>
 			</view>
 			
 		</view>
@@ -112,6 +113,7 @@
 				phone:"",
 				branch:0,
 				tradeId:0,
+				checkTitle:false
 			}
 		},
 		onLoad:function(option){
@@ -121,17 +123,53 @@
 			_self.id = option.id
 			
 			_self.getInfo()
+			_self.checkAuth()
 		},
 		onShow:function(){
 				var _self = this
 			
 		},
 		methods: {
+			previewImage: function(e) {
+				uni.previewImage({
+					current: e,
+					urls: this.shrink
+				})
+			},
+			/**
+			 * 判断是否验证
+			 */
+			checkAuth:function(){
+				var _self = this
+				uni.request({ 
+					url:_self.$api+"dockingManager/judgeCard",
+					data:{optionId:uni.getStorageSync("openId")},
+					method:"GET",
+					success:function(res){
+						console.log(res)
+						if(res.data==0){
+							_self.checkTitle = false
+						}
+						if(res.data==1){
+							_self.checkTitle = true
+						}
+					}
+				})
+				
+			},
 			apply:function(){
 				var _self = this
-				 uni.makePhoneCall({
-					phoneNumber: _self.phone //仅为示例
-				 });
+				if(_self.checkTitle){
+					uni.makePhoneCall({
+					phoneNumber: _self.details.phone //仅为示例
+					});
+				}else{
+					uni.showToast({
+						title:"您尚未进行认证，请先进行认证",
+						icon:"none"
+					})
+					return false
+				}
 			},
 			hidePopup:function(){
 				this.showPopupMiddleImg = false
@@ -299,7 +337,7 @@
 	}
 	.uni-padding-wrap{
 		width: 100% !important;
-		height: 150upx;
+		//height: 150upx;
 	}
 .uni-bg-red{
 	height: 100%;
@@ -310,7 +348,6 @@
 	margin: 10upx auto;
 	.compony-detail-pic{
 		width: 100%;
-		height: 300upx;
 		.img{
 			width:100%;
 			height: 100%;
@@ -456,7 +493,7 @@
 	}
 	.bottom_btn_right{
 		width: 60%;
-		background: #1758EA;
+		background: #E0AF2F;
 		text-align: center;
 		height: 100upx;
 		line-height: 100upx;

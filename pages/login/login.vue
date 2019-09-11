@@ -27,20 +27,23 @@
 		onLoad:function(){ 
 			var _self = this
 		},
+		onShow:function(){
+			
+		},
 		methods: {
 			wxGetUserInfo:function(res){
+				console.log(res)
 				if (!res.detail.iv) {
 					uni.showToast({
 						title: "您取消了授权,登录失败",
 						icon: "none"
-					}); 
+					});  
 					return false;
 				}
 				var _self = this
 				_self.getLogin()
 				uni.setStorageSync("name",JSON.parse(res.detail.rawData).nickName)
 				uni.setStorageSync("pic",JSON.parse(res.detail.rawData).avatarUrl)
-			
 			// if(uni.getStorageSync("opneId")){
 			// 	uni.setStorageSync("name",JSON.parse(res.detail.rawData).nickName)
 			// 	uni.setStorageSync("pic",JSON.parse(res.detail.rawData).avatarUrl)
@@ -67,6 +70,16 @@
 					uni.setStorageSync("trade","")
 					uni.setStorageSync("componyOwner","3") 
 					uni.setStorageSync("componyId","0")
+					if(_self.isGetAddress == 1){
+						let index = e.currentTarget.dataset.index
+						var pages = getCurrentPages();
+						var currPage = pages[pages.length - 1];   //当前页面
+						var prevPage = pages[pages.length - 2];  //上一个页面
+						prevPage.setData({
+						imageList : [],
+						pathArr : [],
+						})
+					}
 					uni.navigateBack({ 
 						delta: 1,
 						animationType: 'pop-out',

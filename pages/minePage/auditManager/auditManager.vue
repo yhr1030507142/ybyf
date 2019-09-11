@@ -17,7 +17,9 @@
 				 	<li class="li-10">操作</li>
 				 </ul>
 			 </view>
-		 	
+		 	<view class="flex row" v-show="branch == 0" style="min-height: 700upx;width: 90%;margin: 0 auto;">
+		 		<image src="../../../static/img/null2.png" mode="" class="null_img"></image>
+		 	</view>
 		 	<ul class="tr" v-for="(v,i) in list" :key="i" @tap="goDetail(v.id)">
 		 	<li class="li-10">{{v.name}}</li>
 		 	<li class="li-30">{{v.phone}}</li>

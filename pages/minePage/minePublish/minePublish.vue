@@ -3,9 +3,12 @@
 		<view class="box">
 			<!-- 活动公告 -->
 			<view class="index-notice flex col">
-				<view class="index-notice-content flex row " v-for="(v,i) in List" :key="i" @tap="goDetail(v.Id,v.mark)">
+				<view class="index-notice-content flex row" v-show="ListLen==0">
+					<image src="../../../static/img/null2.png" mode="" class="null_img"></image>
+				</view>
+				<view class="index-notice-content flex row " v-for="(v,i) in List" :key="i" @tap="goDetail(v.Id,v.mark,v.branch)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink | getPic" mode="" class="img"></image>
+							<image :src="v.small_primary" mode="" class="img"></image>
 						</view>
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
@@ -30,6 +33,7 @@
 		data() {
 			return {
 				List:[],
+				ListLen:0,
 			}
 		},
 		onLoad:function(){
@@ -45,15 +49,24 @@
 					method:"GET",
 					success:function(res){
 						_self.List = res.data
+						_self.ListLen = res.data.length
+						console.log(_self.List.length)
 						console.log(res.data)
 					}
 				})
 			}, 
-			goDetail:function(id,mark){
+			goDetail:function(id,mark,branch){
 				var _self = this
-				uni.navigateTo({
-					url:"../../infoPage/infoDetail/infoDetail?id="+id+"&mark="+mark
-				})
+				if(branch ==0){
+						uni.navigateTo({
+							url:"../../infoPage/infoDetail/infoDetail?id="+id+'&mark='+mark
+						})
+					
+				}else{
+					uni.navigateTo({
+					url:"../../pageChildren/productDetail/productDetail?id="+id+'&mark='+mark+'&branch='+branch
+					})
+				}
 			}
 		},
 			filters:{
@@ -96,14 +109,14 @@
 			margin: 0 auto;
 			padding-bottom: 30upx;
 			.index-notice-content-img{
-				width: 30%;
+				width: 200upx;
 				.img{
 					width: 200upx;
 					height:200upx;
 				}
 			}
 			.index-notice-content-right{
-				width: 60%;
+				width: 200upx;
 				height: 200upx;
 				margin-left: 20upx;
 				flex: 1;

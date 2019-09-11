@@ -21,7 +21,7 @@
 									<view class="uni-uploader__files">
 										<block v-for="(image,index) in imageList" :key="index">
 											<view class="uni-uploader__file">
-												<image class="uni-uploader__img" :src="image" :data-src="image" @tap="previewImage"></image>
+												<image class="uni-uploader__img" :src="image" :data-src="image" @tap="previewImage" @longpress="deletePic(index)"></image>
 											</view>	
 										</block>
 										<view class="uni-uploader__input-box">
@@ -59,6 +59,15 @@
 			}
 		},
 		methods: {
+			/**
+			 * 删除数组图片
+			 */
+			deletePic:function(e){
+				var _self = this
+				console.log(e)
+				_self.imageList.splice(e,1)
+				_self.pathArr.splice(e,1)
+			},
 			bindPickerChange: function(e) {
             console.log('picker发送选择改变，携带值为', e.target.value)
             this.index = e.target.value
@@ -216,7 +225,7 @@ page{
 	background: #e8e7e7;
 }
 .btn{
-	background: #1758EA !important;
+	background: #E0AF2F !important;
 }
 .box{
 	width: 90%;

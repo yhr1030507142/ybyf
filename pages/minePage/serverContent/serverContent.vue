@@ -36,6 +36,21 @@
 			<textarea class="textarea-select-content" v-model="textarea"></textarea>
    		</view>
    <!--  -->
+		<!--  -->
+		<view class="textarea-select flex col">
+			<view class="textarea-select-box flex row row_between">
+				<view class="textarea-select-title">
+					缩略图
+				</view>
+				<view class="textarea-select-end">
+					
+				</view>
+			</view>
+			<view class="textarea-select-content flex row">
+				<image :src="smallPrimary" mode="" class="img1"   @tap="clk(0)" style="width: 200upx;height:200upx;padding: 50upx;"></image>
+			</view>
+		</view>
+		<!--  -->
    <!-- 选择 -->
    		<view class="select">
    			<view class="select-box flex row row_between">
@@ -55,10 +70,13 @@
 									<view class="uni-uploader__files">
 										<block v-for="(image,index) in imageList" :key="index">
 											<view class="uni-uploader__file">
-												<image class="uni-uploader__img" :src="image" :data-src="image" @tap="previewImage"></image>
+												<image class="uni-uploader__img" :src="image" :data-src="image" @tap="previewImage" @longpress="deletePic(index)"></image>
 											</view>
 										</block>
-										<view class="iconfont icontupian icon_inot">
+										<!-- <view class="iconfont icontupian icon_inot">
+											<view class="uni-uploader__input"  @tap="chooseImage"></view>
+										</view> -->
+										<view class="uni-uploader__input-box">
 											<view class="uni-uploader__input" @tap="chooseImage"></view>
 										</view>
 										<progress :percent="percent" active stroke-width="3" backgroundColor="#999" @activeend="showOrHide" v-show="showBox"/>
@@ -72,11 +90,13 @@
    		</view>
    <!--  -->
    <button type="primary" class="btn" @tap="addInfo">新增</button>
+   <avatar @upload="doUpload" @avtinit="doBefore" quality="0.8" ref="avatar"></avatar>
 	</view>
 </template>
 
 <script>
 	import {uniCollapse,uniCollapseItem} from "@dcloudio/uni-ui"
+	import avatar from "../../yq-avatar.vue";
 	export default {
 		data() {
 			return {
@@ -93,7 +113,8 @@
 				percent:0,
 				showBox:false,
 				state:false,
-				id:''
+				id:'',
+				smallPrimary:'../../../static/img/timg1.jpg',
 			}
 		},
 		onLoad:function(option){
@@ -101,17 +122,59 @@
 			_self.id = option.id
 		},
 		methods: {
+			/**
+			 * @param {Object} e缩略图
+			 */
+			doBefore() {
+				console.log('doBefore');
+			},
+			clk(index) {
+				this.$refs.avatar.fChooseImg(index,{
+					selWidth: '300upx', selHeight: '300upx', 
+					expWidth: '200upx', expHeight: '200upx',
+					inner: index ? 'true' : 'false'
+				});
+			},
+			doUpload(rsp) {
+				var _self = this
+				console.log(rsp.path);
+				//this.$set(this.urls, rsp.index, rsp.path);
+				uni.uploadFile({
+					url: _self.$api+'dockingManager/upload', //仅为示例，非真实的接口地址
+					//url: "http://www.tp5.com/index", //仅为示例，非真实的接口地址
+					filePath: rsp.path,
+					name: 'file', 
+					formData: {
+						'user': 'test'
+					},
+					success: (uploadFileRes) => {
+						console.log(uploadFileRes)
+						_self.smallPrimary = uploadFileRes.data.replace("\"","").replace("\"","")
+					}
+				  }); 
+			},
+			/**
+			 * @param {Object} e删除图片
+			 */
+			deletePic:function(e){
+				var _self = this
+				console.log(e)
+				_self.imageList.splice(e,1)
+				_self.pathArr.splice(e,1)
+				console.log(_self.imageList)
+			},
 			bindPickerChange: function(e) {
 				console.log('picker发送选择改变，携带值为', e.target.value)
 				this.index = e.target.value 
 			},
 			previewImage: function(e) {
+				console.log(this.imageList)
 				var current = e.target.dataset.src
 				uni.previewImage({
 					current: current,
 					urls: this.imageList
 				})
-			},
+			}, 
 			chooseImage: async function() {
 				var _self = this
 					if (this.imageList.length === 9) {
@@ -169,7 +232,7 @@
 				},
 			addInfo:function(){
 				var _self = this
-				var myreg = /^((0\d{2,3}-\d{7,8})|(1[34578]\d{9}))$/;
+				var myreg = /^((0\d{2,3}-\d{7,8})|(1[3456789]\d{9}))$/;
 				if(_self.title == ""){
 					uni.showToast({
 						title:"请输入标题",
@@ -197,7 +260,15 @@
 						icon:"none"
 					})
 					return false
-				}else if(!myreg.test(_self.phone)){
+				}
+				else if(_self.smallPrimary == ""){
+					uni.showToast({
+						title:"请上传缩略图",
+						icon:"none"
+					})
+					return false
+				}
+				else if(!myreg.test(_self.phone)){
 						uni.showToast({
 						title:"联系电话格式不正确",
 						icon:"none"
@@ -208,8 +279,9 @@
 						_self.listPath.push({testName1:_self.pathArr[i]})
 						console.log(_self.listPath)
 					}
-					_self.listPath.push({phone:_self.phone,mark:_self.id,name:_self.title,sketch:_self.textarea,optionId:uni.getStorageSync("openId"),branch:uni.getStorageSync('tradeId'),trade:0})
+					_self.listPath.push({phone:_self.phone,mark:_self.id,name:_self.title,sketch:_self.textarea,optionId:uni.getStorageSync("openId"),branch:uni.getStorageSync('tradeId'),trade:0,smallPrimary:_self.smallPrimary})
 					console.log(JSON.stringify(_self.listPath))
+					console.log(_self.smallPrimary)
 				uni.request({
 					url:_self.$api+"dockingManager/titleDeclareAdd", 
 					data:JSON.stringify(_self.listPath), 
@@ -268,7 +340,7 @@
 				})
 			}
 		},
-		 components: {uniCollapse,uniCollapseItem}
+		 components: {uniCollapse,uniCollapseItem,avatar}
 	}
 </script>
 
@@ -281,7 +353,7 @@ page{
 	color: #999999;
 }
 .btn{
-	background: #1758EA !important;
+	background: #E0AF2F !important;
 }
 .uni-input1{
 	color: #000000;

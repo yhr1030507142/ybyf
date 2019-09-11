@@ -110,10 +110,10 @@
 			// 	})
 			// }
 			if(uni.getStorageSync('openId')===0||!uni.getStorageSync('openId')||uni.getStorageSync('openId')===undefined){
-				_self.pic = '../../../staic/img/mine.png'  
+				_self.pic = '../../../staic/img/head.png'  
 			}else{
 				_self.pic = uni.getStorageSync("pic")
-			}
+			} 
 			_self.componyOwner = uni.getStorageSync("componyOwner")
 			_self.name = uni.getStorageSync("name")
 			_self.trade = uni.getStorageSync("trade")
@@ -131,21 +131,21 @@
 		_self.componyOwner = uni.getStorageSync("componyOwner")
 		_self.name = uni.getStorageSync("name")
 		if(uni.getStorageSync('openId')===0||!uni.getStorageSync('openId')||uni.getStorageSync('openId')===undefined){
-			_self.pic = '../../static/img/yhr.jpg' 
+			_self.pic = '../../static/img/head.png' 
 		}else{
 			_self.pic = uni.getStorageSync("pic")
 		}
 		_self.trade = uni.getStorageSync("trade")
 		_self.componyId = uni.getStorageSync("componyId") 
     },
-		onShow:function(){
+		onShow:function(){ 
 			var _self = this  
-			_self.componyOwner = uni.getStorageSync("componyOwner")
+			_self.getMyInfo()
 			_self.componyOwner = uni.getStorageSync("componyOwner")
 			_self.name = uni.getStorageSync("name")
 			_self.trade = uni.getStorageSync("trade") 
 			if(uni.getStorageSync('openId')===0||!uni.getStorageSync('openId')||uni.getStorageSync('openId')===undefined){
-				_self.pic = '../../static/img/yhr.jpg' 
+				_self.pic = '../../static/img/head.png' 
 			}else{
 				_self.pic = uni.getStorageSync("pic")
 			}
@@ -209,12 +209,17 @@
 			},
 			goIndex:function(content){
 				var _self = this
+				uni.showToast({
+					title:'暂未开放',
+					icon:'none'
+				})
+				return false
 				if(uni.getStorageSync("openId")===0 || !uni.getStorageSync("openId")){
 					uni.showModal({
 							title: '提示',
 							content: '此操作需用户授权，是否进行授权',
 							success: function (res) {
-								if (res.confirm) {
+								if (res.confirm) { 
 									//跳转到授权页面  
 									uni.navigateTo({
 										url:"../login/login"  
@@ -270,10 +275,10 @@
 					success:function(res){ 
 						console.log(res) 
 						 if(res.data == ""){ 
-							// uni.setStorageSync("trade","")
-							// uni.setStorageSync("componyOwner","3") 
-							// uni.setStorageSync("componyId","0")
-							// uni.setStorageSync("tube","0")
+							uni.setStorageSync("trade","")
+							uni.setStorageSync("componyOwner","3") 
+							uni.setStorageSync("componyId","0")
+							uni.setStorageSync("tube","0")
 						}else{
 							uni.setStorageSync("tube",res.data[0].tube)
 							uni.setStorageSync('mark',res.data[0].mark)
@@ -349,7 +354,7 @@
 			border-radius:10upx;
 			width: 45%;
 			height: 70upx;
-			background: #1758EA;
+			background: #E0AF2F;
 			color: #ffffff;
 			font-size: 28upx;
 			.icon{
@@ -394,6 +399,7 @@
 				border-radius:10upx;
 				.icon{
 					font-size: 60upx;
+					color: #E0AF2F;
 				}
 			}
 			.mine-content-text-server-bottom{
@@ -403,24 +409,24 @@
 	}
 }
 .color1{
-	background: #1758EA;
+	background: #ffffff;
 }
 .color2{
-	background: #5282ED;
+	background: #ffffff;
 }
 .color3{
-	background: #1B51C9;
+	background: #ffffff;
 }
 .color4{
-	background: #87C9F3;
+	background: #ffffff;
 }
 .color5{
-	background: #1758EA;
+	background: #ffffff;
 }
 .color6{
-	background: #5282ED;
+	background: #ffffff;
 }
 .color7{
-	background: #5282ED;
+	background: #ffffff;
 }
 </style>
