@@ -33,7 +33,7 @@
 			<view class="mine-title">供求信息收藏</view>
 				<view class="index-notice-content flex row " v-for="(v,i) in List" :key="i" @tap="goInfoDetail(v.Id,v.mark,v.branch)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink | getPic" mode="" class="img"></image>
+							<image :src="v.small_primary" mode="" class="img"></image>
 						</view> 
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
@@ -54,7 +54,7 @@
 			<view class="mine-title">园区服务收藏</view>
 				<view class="index-notice-content flex row " v-for="(v,i) in List1" :key="i" @tap="goLawerDetail(v.Id,v.mark)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink" mode="" class="img"></image>
+							<image :src="v.small_primary" mode="" class="img"></image>
 						</view> 
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
@@ -75,7 +75,7 @@
 			<view class="mine-title">活动收藏</view>
 				<view class="index-notice-content flex row " v-for="(v,i) in List2" :key="i" @tap="goActiveDetail(v.Id)">
 						<view class="index-notice-content-img flex">
-							<image :src="v.shrink" mode="" class="img"></image>
+							<image :src="v.small_primary" mode="" class="img"></image>
 						</view> 
 						<view class="index-notice-content-right flex col">
 								<view class="index-notice-content-right-title">
@@ -312,9 +312,9 @@
 			.index-notice-content-img{
 				width: 200upx;
 				.img{
-					width: 200px;
-					height:200px;
-					margin: 200upx auto;
+					width: 200upx;
+					height:200upx;
+					margin: 0px auto;
 				}
 			}
 			.index-notice-content-right{
@@ -350,7 +350,7 @@
 				}
 			}
 		}
-	}
+	} 
 }
 .marin-100{
 	margin-top: 30upx;

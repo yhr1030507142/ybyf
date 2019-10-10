@@ -34,8 +34,7 @@ page {
 }
 .compony-header .search {
     width: 70%;
-    -webkit-border-radius: 2px;
-            border-radius: 2px;
+    border-radius: 2px;
     height: 70rpx;
     padding-left: 10%;
     border-right: none;
@@ -118,8 +117,7 @@ page {
                 align-items: center;
         width: 120rpx;
         height: 120rpx;
-        -webkit-border-radius: 50%;
-                border-radius: 50%;
+        border-radius: 50%;
         overflow: hidden;
 }
 .server-box .server-ul .server-li .server-icon .primary-img {

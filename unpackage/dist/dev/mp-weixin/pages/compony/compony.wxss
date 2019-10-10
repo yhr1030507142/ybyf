@@ -82,8 +82,7 @@ page {
 }
 .compony .compony-header .compony-header-right .search {
         width: 70%;
-        -webkit-border-radius: 2px;
-                border-radius: 2px;
+        border-radius: 2px;
         border: 1rpx solid #dddddd;
         height: 70rpx;
         padding-left: 10%;

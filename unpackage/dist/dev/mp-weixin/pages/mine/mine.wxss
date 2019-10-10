@@ -40,15 +40,13 @@
 .mine-header .mine-header-pic {
     width: 130rpx;
     height: 130rpx;
-    -webkit-border-radius: 50%;
-            border-radius: 50%;
+    border-radius: 50%;
     margin-top: 50rpx;
 }
 .mine-header .mine-header-pic .img {
       width: 100%;
       height: 100%;
-      -webkit-border-radius: 50%;
-              border-radius: 50%;
+      border-radius: 50%;
 }
 .mine-header .mine-header-title {
     margin-top: 50rpx;
@@ -84,8 +82,7 @@
       -webkit-align-items: center;
           -ms-flex-align: center;
               align-items: center;
-      -webkit-border-radius: 10rpx;
-              border-radius: 10rpx;
+      border-radius: 10rpx;
       width: 45%;
       height: 70rpx;
       background: #E0AF2F;
@@ -144,8 +141,7 @@
         height: 120rpx;
         width: 120rpx;
         color: #ffffff;
-        -webkit-border-radius: 10rpx;
-                border-radius: 10rpx;
+        border-radius: 10rpx;
 }
 .mine-content .mine-content-text .mine-content-text-server .mine-content-text-server-top .icon {
           font-size: 60rpx;

@@ -117,8 +117,7 @@ page {
 .myimg {
   width: 200rpx;
   height: 200rpx;
-  -webkit-border-radius: 0 !important;
-          border-radius: 0 !important;
+  border-radius: 0 !important;
   border: 1px solid #ccc;
 }
 

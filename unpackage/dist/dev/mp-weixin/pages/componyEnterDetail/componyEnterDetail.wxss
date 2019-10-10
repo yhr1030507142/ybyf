@@ -29,8 +29,7 @@ page {
   background: #e8e7e7;
 }
 .btn {
-  -webkit-border-radius: 5rpx;
-          border-radius: 5rpx;
+  border-radius: 5rpx;
   background: #E0AF2F !important;
 }
 .compony-detail {

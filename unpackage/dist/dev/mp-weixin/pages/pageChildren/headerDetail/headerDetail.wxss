@@ -127,8 +127,7 @@ page {
 }
 .bottom_btn .bottom_btn_left button::after {
       border: none;
-      -webkit-border-radius: 0;
-              border-radius: 0;
+      border-radius: 0;
       color: #333333;
 }
 .bottom_btn .bottom_btn_left .button-hover {
@@ -176,8 +175,7 @@ page {
   -webkit-align-items: center;
       -ms-flex-align: center;
           align-items: center;
-  -webkit-border-radius: 10rpx;
-          border-radius: 10rpx;
+  border-radius: 10rpx;
   font-size: 32rpx;
   color: #000000;
   font-weight: 600;
@@ -200,9 +198,7 @@ page {
     bottom: 0;
     font-size: 28rpx;
     font-weight: 600;
-    -webkit-border-bottom-left-radius: 10rpx;
-            border-bottom-left-radius: 10rpx;
-    -webkit-border-bottom-right-radius: 10rpx;
-            border-bottom-right-radius: 10rpx;
+    border-bottom-left-radius: 10rpx;
+    border-bottom-right-radius: 10rpx;
 }
 

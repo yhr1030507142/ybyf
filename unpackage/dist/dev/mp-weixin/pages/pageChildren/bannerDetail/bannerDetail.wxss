@@ -29,8 +29,7 @@ page {
 }
 .btn {
   background: #E0AF2F !important;
-  -webkit-border-radius: 10rpx;
-          border-radius: 10rpx;
+  border-radius: 10rpx;
   margin-top: 20rpx;
 }
 .textarea-select {

@@ -106,8 +106,7 @@ page {
       color: #000000;
 }
 .btn {
-  -webkit-border-radius: 5rpx;
-          border-radius: 5rpx;
+  border-radius: 5rpx;
   background: #E0AF2F !important;
 }
 

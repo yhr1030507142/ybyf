@@ -96,8 +96,7 @@
   width: 80%;
   max-width: 600rpx;
   border: 2rpx solid #ccc;
-  -webkit-border-radius: 10rpx;
-          border-radius: 10rpx;
+  border-radius: 10rpx;
   -webkit-box-sizing: bordre-box;
           box-sizing: bordre-box;
   -webkit-transform: translate(-50%, -50%);
@@ -119,8 +118,7 @@
   width: 80%;
   height:85rpx;
   border: 1px solid #ccc;
-  -webkit-border-radius: 10rpx;
-          border-radius: 10rpx;
+  border-radius: 10rpx;
 }
 .prompt-btn-group{
   display: -webkit-box;

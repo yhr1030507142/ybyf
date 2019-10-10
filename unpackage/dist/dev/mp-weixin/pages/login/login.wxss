@@ -33,8 +33,7 @@ page {
   margin: 200rpx auto;
   height: 500rpx;
   background: #ffffff;
-  -webkit-border-radius: 10rpx;
-          border-radius: 10rpx;
+  border-radius: 10rpx;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
       -ms-flex-pack: justify;

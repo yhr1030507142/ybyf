@@ -30,8 +30,7 @@ page {
 .addInfo {
   width: 150rpx;
   height: 150rpx;
-  -webkit-border-radius: 50%;
-          border-radius: 50%;
+  border-radius: 50%;
   opacity: 0.8;
   background: #FFA41B;
   color: #ffffff;
@@ -365,8 +364,7 @@ page {
 .server-input .search {
     margin-top: 20rpx;
     width: 90%;
-    -webkit-border-radius: 5px;
-            border-radius: 5px;
+    border-radius: 5px;
     border: 1rpx solid #dddddd;
     height: 70rpx;
     padding-left: 10%;

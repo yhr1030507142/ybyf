@@ -206,7 +206,6 @@ page {
   text-align: center;
   height: 70rpx;
   line-height: 70rpx;
-  -webkit-border-radius: 5rpx;
   border-radius: 5rpx;
   overflow: hidden;
   background: #E0AF2F;

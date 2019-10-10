@@ -33,8 +33,7 @@
 .header .search {
     margin-top: 70rpx;
     width: 90%;
-    -webkit-border-radius: 5px;
-            border-radius: 5px;
+    border-radius: 5px;
     border: 1rpx solid #dddddd;
     height: 70rpx;
     padding-left: 10%;

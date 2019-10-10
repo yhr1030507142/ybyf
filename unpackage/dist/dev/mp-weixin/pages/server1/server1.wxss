@@ -30,8 +30,7 @@ page {
 .addInfo {
   width: 150rpx;
   height: 150rpx;
-  -webkit-border-radius: 50%;
-          border-radius: 50%;
+  border-radius: 50%;
   background-color: rgba(255, 164, 27, 0.8);
   color: #ffffff;
   -webkit-box-align: center;

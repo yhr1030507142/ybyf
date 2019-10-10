@@ -13,8 +13,7 @@
 .my-avatar {
 	width: 150rpx;
 	height: 150rpx;
-	-webkit-border-radius: 100%;
-	        border-radius: 100%;
+	border-radius: 100%;
 }
 .oper-canvas {
 	display: -webkit-box;
@@ -115,13 +114,11 @@
 	font-size: 16px;
 	color: #333;
 	border: 1px solid #f1f1f1;
-	-webkit-border-radius: 6%;
-	        border-radius: 6%;
+	border-radius: 6%;
 }
 .hover {
 	background: #f1f1f1;
-	-webkit-border-radius: 6%;
-	        border-radius: 6%;
+	border-radius: 6%;
 }
 .clr-wrapper {
 	display: -webkit-box;
@@ -154,8 +151,7 @@
 	font-size: 16px;
 	color: #333;
 	border: 1px solid #f1f1f1;
-	-webkit-border-radius: 6%;
-	        border-radius: 6%;
+	border-radius: 6%;
 }
 .my-slider {
 	-webkit-box-flex: 1;

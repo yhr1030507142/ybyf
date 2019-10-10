@@ -138,8 +138,7 @@ page {
   text-align: center;
   height: 70rpx;
   line-height: 70rpx;
-  -webkit-border-radius: 5rpx;
-          border-radius: 5rpx;
+  border-radius: 5rpx;
 }
 .content {
   padding: 10rpx;
